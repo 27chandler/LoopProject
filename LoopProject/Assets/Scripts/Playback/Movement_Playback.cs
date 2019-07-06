@@ -5,49 +5,67 @@ using System;
 
 public class Movement_Playback : MonoBehaviour
 {
+    [SerializeField] public bool is_playing;
+    [Space]
     [SerializeField] private Transform target;
+    [SerializeField] private Transform camera_target;
+
+    [Space]
+    [SerializeField] private Transform this_camera;
     [SerializeField] private float delay;
 
     private float current_time = 0.0f;
     private int timestamp_index = 0;
     private Vector3 last_position = new Vector3();
-    [SerializeField] private List<Position_Data> position_buffer = new List<Position_Data>();
+    [SerializeField] private List<Record_Data> position_buffer = new List<Record_Data>();
 
-    [Serializable] public struct Position_Data
+    [Serializable] public struct Record_Data
     {
         public Vector3 position;
+        public Quaternion view_rotation;
         public float timestamp;
     };
 
     // Start is called before the first frame update
     void Start()
     {
-        Add_To_Buffer(target.position, current_time);
-        Add_To_Buffer(target.position, current_time);
+        Add_To_Buffer(target.position, camera_target.localRotation, current_time);
+        Add_To_Buffer(target.position, camera_target.localRotation, current_time);
     }
 
     // Update is called once per frame
     void Update()
     {
-        current_time += Time.deltaTime;
-
-        if ((position_buffer[position_buffer.Count-1].position != target.position))
+        
+        if (is_playing)
         {
-            Add_To_Buffer(target.position,current_time);
-        }
-
-        if (position_buffer[timestamp_index+1].timestamp <= current_time - delay)
-        {
-            timestamp_index++;
-            transform.position = position_buffer[timestamp_index].position;
+            Run_Playback();
         }
     }
 
-    void Add_To_Buffer(Vector3 i_pos, float i_time)
+    void Run_Playback()
     {
-        Position_Data input_data = new Position_Data();
+        current_time += Time.deltaTime;
+
+        if ((position_buffer[position_buffer.Count - 1].position != target.position) || (position_buffer[position_buffer.Count - 1].view_rotation != camera_target.localRotation))
+        {
+            Add_To_Buffer(target.position, camera_target.localRotation, current_time);
+        }
+
+        if (position_buffer[timestamp_index + 1].timestamp <= current_time - delay)
+        {
+            timestamp_index++;
+            transform.position = position_buffer[timestamp_index].position;
+            this_camera.localRotation = position_buffer[timestamp_index].view_rotation;
+        }
+    }
+
+    void Add_To_Buffer(Vector3 i_pos,Quaternion i_local_rot, float i_time)
+    {
+        Record_Data input_data = new Record_Data();
         input_data.position = i_pos;
         input_data.timestamp = i_time;
+        input_data.view_rotation = i_local_rot;
 
         position_buffer.Add(input_data);
     }
