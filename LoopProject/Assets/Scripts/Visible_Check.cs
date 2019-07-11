@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Visible_Check : MonoBehaviour
 {
-    [SerializeField] private Camera cam;
+    [SerializeField] private List<Camera> cams;
     private Plane[] planes;
     private Collider obj_collider;
     // Start is called before the first frame update
@@ -13,22 +13,31 @@ public class Visible_Check : MonoBehaviour
         obj_collider = GetComponent<Collider>();
     }
 
+    public void Add_Camera(Camera i_cam)
+    {
+        cams.Add(i_cam);
+    }
+
     // Update is called once per frame
     void Update()
     {
-        planes = GeometryUtility.CalculateFrustumPlanes(cam);
-        if (GeometryUtility.TestPlanesAABB(planes, obj_collider.bounds))
+        foreach(var camera in cams)
         {
-            Vector3 ray_direction = cam.transform.position - transform.position;
-
-            RaycastHit hit;
-            Physics.Raycast(transform.position, ray_direction, out hit);
-            Debug.DrawRay(transform.position, ray_direction);
-            if (hit.transform.parent == cam.transform.parent)
+            planes = GeometryUtility.CalculateFrustumPlanes(camera);
+            if (GeometryUtility.TestPlanesAABB(planes, obj_collider.bounds))
             {
-                Debug.Log(gameObject.name + " has been detected!");
+                Vector3 ray_direction = camera.transform.position - transform.position;
+
+                RaycastHit hit;
+                Physics.Raycast(transform.position, ray_direction, out hit);
+                Debug.DrawRay(transform.position, ray_direction);
+                if (hit.transform.parent == camera.transform.parent)
+                {
+                    Debug.Log(gameObject.name + " has been detected!");
+                }
+
             }
-            
         }
+
     }
 }

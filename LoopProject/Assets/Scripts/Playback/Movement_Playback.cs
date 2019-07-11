@@ -7,11 +7,11 @@ public class Movement_Playback : MonoBehaviour
 {
     [SerializeField] public bool is_playing;
     [Space]
-    [SerializeField] private Transform target;
-    [SerializeField] private Transform pivot_target;
+    [SerializeField] public Transform target;
+    [SerializeField] public Transform pivot_target;
 
     [Space]
-    [SerializeField] private Transform this_pivot;
+    [SerializeField] public Transform this_pivot;
     [SerializeField] private float delay;
 
     private float current_time = 0.0f;
