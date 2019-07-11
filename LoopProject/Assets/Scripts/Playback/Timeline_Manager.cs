@@ -5,12 +5,16 @@ using UnityEngine;
 public class Timeline_Manager : MonoBehaviour
 {
     [SerializeField] private float iteration_delay;
+    [Space]
+    // Player looping
+    [SerializeField] private Visible_Check vis;
     [SerializeField] private GameObject loop_obj;
     [SerializeField] private GameObject original_obj;
     private GameObject previous_obj;
 
     private Movement_Playback new_obj;
     private Movement_Playback old_obj;
+    //
 
     private float current_time = 0.0f;
     // Start is called before the first frame update
@@ -36,6 +40,9 @@ public class Timeline_Manager : MonoBehaviour
         GameObject spawned_obj = Instantiate(loop_obj);
         new_obj = spawned_obj.GetComponent<Movement_Playback>();
 
+        vis.Add_Camera(spawned_obj.GetComponentInChildren<Camera>());
+
+        new_obj.delay = iteration_delay;
         if (old_obj == null)
         {
             new_obj.target = original_obj.transform;

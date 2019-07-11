@@ -12,7 +12,7 @@ public class Movement_Playback : MonoBehaviour
 
     [Space]
     [SerializeField] public Transform this_pivot;
-    [SerializeField] private float delay;
+    [SerializeField] public float delay;
 
     private float current_time = 0.0f;
     private int timestamp_index = 0;

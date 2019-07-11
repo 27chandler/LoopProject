@@ -7,6 +7,8 @@ public class Visible_Check : MonoBehaviour
     [SerializeField] private List<Camera> cams;
     private Plane[] planes;
     private Collider obj_collider;
+
+    public bool is_seen = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +23,8 @@ public class Visible_Check : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach(var camera in cams)
+        is_seen = false;
+        foreach (var camera in cams)
         {
             planes = GeometryUtility.CalculateFrustumPlanes(camera);
             if (GeometryUtility.TestPlanesAABB(planes, obj_collider.bounds))
@@ -31,10 +34,15 @@ public class Visible_Check : MonoBehaviour
                 RaycastHit hit;
                 Physics.Raycast(transform.position, ray_direction, out hit);
                 Debug.DrawRay(transform.position, ray_direction);
-                if (hit.transform.parent == camera.transform.parent)
+                if (hit.transform != null)
                 {
-                    Debug.Log(gameObject.name + " has been detected!");
+                    if (hit.transform.parent == camera.transform.parent)
+                    {
+                        Debug.Log(gameObject.name + " has been detected!");
+                        is_seen = true;
+                    }
                 }
+
 
             }
         }
