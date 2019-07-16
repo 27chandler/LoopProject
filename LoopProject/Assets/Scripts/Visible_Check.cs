@@ -9,6 +9,7 @@ public class Visible_Check : MonoBehaviour
     private Collider obj_collider;
 
     public bool is_seen = false;
+    public List<Camera> seen_cams = new List<Camera>();
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +24,8 @@ public class Visible_Check : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        seen_cams.Clear();
+
         is_seen = false;
         foreach (var camera in cams)
         {
@@ -40,6 +43,7 @@ public class Visible_Check : MonoBehaviour
                     {
                         Debug.Log(gameObject.name + " has been detected!");
                         is_seen = true;
+                        seen_cams.Add(camera);
                     }
                 }
 

@@ -290,6 +290,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f6f4dfc2ad493e40ab28367ac5cec9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &295882117 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4948035619958883053, guid: 505f89ee7ad07a04e8563a25fe6b2993,
+    type: 3}
+  m_PrefabInstance: {fileID: 415139019}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &415139019
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -301,6 +307,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player_Controlled
+      objectReference: {fileID: 0}
+    - target: {fileID: 6741861688287113916, guid: 505f89ee7ad07a04e8563a25fe6b2993,
+        type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6741861688287113916, guid: 505f89ee7ad07a04e8563a25fe6b2993,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4948035619958883053, guid: 505f89ee7ad07a04e8563a25fe6b2993,
         type: 3}
@@ -356,16 +372,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6741861688287113916, guid: 505f89ee7ad07a04e8563a25fe6b2993,
-        type: 3}
-      propertyPath: cam
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6741861688287113916, guid: 505f89ee7ad07a04e8563a25fe6b2993,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 505f89ee7ad07a04e8563a25fe6b2993, type: 3}
@@ -577,6 +583,7 @@ MonoBehaviour:
   vc: {fileID: 636762129}
   is_picked_up: 0
   hold_pos: {x: 0, y: 0, z: 0}
+  timestamp_index: 0
   delay: 30
   position_buffer: []
 --- !u!114 &636762129
@@ -593,6 +600,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cams: []
   is_seen: 0
+  seen_cams: []
 --- !u!1 &918075952
 GameObject:
   m_ObjectHideFlags: 0
@@ -805,10 +813,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iteration_delay: 30
+  iteration_num: 0
+  time_speed: 1
+  player_target: {fileID: 295882117}
+  player_look_pivot: {fileID: 1212086973}
   vis: {fileID: 295882116}
   loop_obj: {fileID: 1195624464444332471, guid: a42df1d82d3680a44964470114b0aa68,
     type: 3}
   original_obj: {fileID: 295882115}
+  duplicate_obj_list: []
+  position_buffer: []
 --- !u!4 &1109323495
 Transform:
   m_ObjectHideFlags: 0
@@ -847,6 +861,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5441f0d9b8dc94f4990531f813caa425, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trigger_grab: 0
+--- !u!4 &1212086973 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 771532792990417208, guid: 505f89ee7ad07a04e8563a25fe6b2993,
+    type: 3}
+  m_PrefabInstance: {fileID: 415139019}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1253957572
 GameObject:
   m_ObjectHideFlags: 0

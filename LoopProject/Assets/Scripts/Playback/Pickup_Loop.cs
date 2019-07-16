@@ -40,7 +40,7 @@ public class Pickup_Loop : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Run_Playback();
+        //Run_Playback();
 
         if (is_picked_up)
         {
@@ -50,6 +50,14 @@ public class Pickup_Loop : MonoBehaviour
         else
         {
             rb.useGravity = true;
+        }
+
+        if (vc.is_seen)
+        {
+            foreach(var cam in vc.seen_cams)
+            {
+                cam.GetComponentInParent<Movement_Playback>().Add_To_Object_Memory(transform.position,gameObject.name);
+            }
         }
     }
 
