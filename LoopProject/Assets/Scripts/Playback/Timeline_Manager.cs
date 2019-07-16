@@ -124,7 +124,12 @@ public class Timeline_Manager : MonoBehaviour
                 {
                     if (position_buffer[duplicate_obj_list[i].timestamp - 1].timestamp >= (current_time - (iteration_delay * (i + 1))))
                     {
-                        if (duplicate_obj_list[i].timestamp > 0)
+                        if (duplicate_obj_list[i].timestamp <= 1)
+                        {
+                            duplicate_obj_list[i].timestamp = 1;
+                            is_done = true;
+                        }
+                        else
                         {
                             duplicate_obj_list[i].timestamp--;
                         }
