@@ -416,7 +416,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1195624464444332471}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 830e60ded2f703b459bd9c4596025e65, type: 3}
   m_Name: 
@@ -427,6 +427,8 @@ MonoBehaviour:
   this_pivot: {fileID: 1193545666}
   delay: 10
   position_buffer: []
+  object_buffer: []
+  current_temp_memory: []
 --- !u!114 &6285599566252047430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -440,3 +442,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cams: []
+  is_seen: 0
+  seen_cams: []

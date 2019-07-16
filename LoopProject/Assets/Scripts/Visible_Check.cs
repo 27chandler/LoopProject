@@ -41,7 +41,7 @@ public class Visible_Check : MonoBehaviour
                 {
                     if (hit.transform.parent == camera.transform.parent)
                     {
-                        Debug.Log(gameObject.name + " has been detected!");
+                        //Debug.Log(gameObject.name + " has been detected!");
                         is_seen = true;
                         seen_cams.Add(camera);
                     }
