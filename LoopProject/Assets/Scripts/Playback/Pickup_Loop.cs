@@ -44,9 +44,15 @@ public class Pickup_Loop : MonoBehaviour
 
         if (is_picked_up)
         {
-            float move_force = Vector3.Distance(hold_pos, transform.position) / 3.0f;
+            float move_force = Vector3.Distance(hold_pos,transform.position) * 40.0f;
             rb.useGravity = false;
-            rb.AddForce((hold_pos - transform.position));
+
+            //if (rb. > move_force)
+            //{
+
+            //}
+
+            rb.AddForce((hold_pos - transform.position).normalized * move_force);
         }
         else
         {

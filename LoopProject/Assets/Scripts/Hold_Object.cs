@@ -5,7 +5,7 @@ using UnityEngine;
 public class Hold_Object : MonoBehaviour
 {
     public bool trigger_grab = false;
-    private bool is_holding = false;
+    public bool is_holding = false;
     private Pickup_Loop grabbed_item;
     // Start is called before the first frame update
     void Start()
@@ -16,7 +16,7 @@ public class Hold_Object : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) || trigger_grab)
+        if (trigger_grab)
         {
             trigger_grab = false;
             if (!is_holding)

@@ -16,6 +16,7 @@ public class Timeline_Manager : MonoBehaviour
     // Player
     [SerializeField] public Transform player_target;
     [SerializeField] public Transform player_look_pivot;
+    [SerializeField] private Hold_Object player_obj_holder;
 
     //
     [Space]
@@ -54,6 +55,7 @@ public class Timeline_Manager : MonoBehaviour
         public Vector3 position;
         public Quaternion view_rotation;
         public bool is_jumping;
+        public bool is_grab_activated;
         public float timestamp;
     };
 
@@ -62,6 +64,8 @@ public class Timeline_Manager : MonoBehaviour
     {
         public GameObject obj;
         public Transform obj_look_pivot;
+        public Hold_Object object_holder;
+        public bool has_grabbed_this_interval;
         public int timestamp;
     };
     //
@@ -116,11 +120,17 @@ public class Timeline_Manager : MonoBehaviour
         input_data.timestamp = i_time;
 
         object_timeline_memory.Insert(object_timestamp_index, input_data);
-        Debug.Log("INSERTED AT: " + object_timestamp_index);
+        //Debug.Log("INSERTED AT: " + object_timestamp_index);
     }
 
     void Run_Playback()
     {
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            player_obj_holder.trigger_grab = true;
+            Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time,false,true);
+        }
 
         // Record Movement
         if (current_time >= last_update_time + update_frequency)
@@ -134,7 +144,7 @@ public class Timeline_Manager : MonoBehaviour
             if (moveable_objects[0].is_seen)
             {
                 Add_Object_Data(moveable_objects[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
-                Debug.Log(moveable_objects[0].transform.position);
+                //Debug.Log(moveable_objects[0].transform.position);
             }
         }
         // Record Objects
@@ -165,7 +175,7 @@ public class Timeline_Manager : MonoBehaviour
                         //duplicate_obj_list[i].obj.transform.position = position_buffer[duplicate_obj_list[i].timestamp].position;
                         //duplicate_obj_list[i].obj_look_pivot.localRotation = position_buffer[duplicate_obj_list[i].timestamp].view_rotation;
 
-                        
+                        duplicate_obj_list[i].has_grabbed_this_interval = false;
                     }
                     else
                     {
@@ -185,6 +195,8 @@ public class Timeline_Manager : MonoBehaviour
                         {
                             duplicate_obj_list[i].timestamp--;
                         }
+
+                        duplicate_obj_list[i].has_grabbed_this_interval = false;
 
                         //Set_Playback_States(duplicate_obj_list[i]);
                     }
@@ -215,7 +227,7 @@ public class Timeline_Manager : MonoBehaviour
     {
         Collider[] found_objs = Physics.OverlapSphere(object_timeline_memory[object_timestamp_index].position, 1.0f);
 
-        Debug.Log("FOUND: " + found_objs.Length);
+        //Debug.Log("FOUND: " + found_objs.Length);
     }
 
     void Set_Playback_States(Duplicate_Data i_dupe)
@@ -223,6 +235,13 @@ public class Timeline_Manager : MonoBehaviour
         i_dupe.obj.transform.position = Vector3.Lerp(i_dupe.obj.transform.position, timeline_memory[i_dupe.timestamp].position, 0.4f);
         i_dupe.obj_look_pivot.localRotation = timeline_memory[i_dupe.timestamp].view_rotation;
         i_dupe.obj.SetActive(!timeline_memory[i_dupe.timestamp].is_jumping);
+
+        if ((timeline_memory[i_dupe.timestamp].is_grab_activated) && (i_dupe.has_grabbed_this_interval == false))
+        {
+            i_dupe.has_grabbed_this_interval = true;
+            Debug.Log("GRABBED");
+            i_dupe.object_holder.trigger_grab = true;
+        }
     }
 
     void Add_To_Buffer(Vector3 i_pos, Quaternion i_local_rot, float i_time)
@@ -232,6 +251,7 @@ public class Timeline_Manager : MonoBehaviour
         input_data.timestamp = i_time;
         input_data.view_rotation = i_local_rot;
         input_data.is_jumping = false;
+        input_data.is_grab_activated = false;
 
         timeline_memory.Add(timeline_memory.Count,input_data);
     }
@@ -243,6 +263,19 @@ public class Timeline_Manager : MonoBehaviour
         input_data.timestamp = i_time;
         input_data.view_rotation = i_local_rot;
         input_data.is_jumping = i_jump_state;
+        input_data.is_grab_activated = false;
+
+        timeline_memory.Add(timeline_memory.Count, input_data);
+    }
+
+    void Add_To_Buffer(Vector3 i_pos, Quaternion i_local_rot, float i_time, bool i_jump_state, bool i_is_grab_toggled)
+    {
+        Record_Data input_data = new Record_Data();
+        input_data.position = i_pos;
+        input_data.timestamp = i_time;
+        input_data.view_rotation = i_local_rot;
+        input_data.is_jumping = i_jump_state;
+        input_data.is_grab_activated = i_is_grab_toggled;
 
         timeline_memory.Add(timeline_memory.Count, input_data);
     }
@@ -257,11 +290,13 @@ public class Timeline_Manager : MonoBehaviour
         dupe_data.obj = spawned_obj;
         dupe_data.timestamp = 1;
         dupe_data.obj_look_pivot = spawned_obj.GetComponent<Movement_Playback>().this_pivot;
+        dupe_data.object_holder = spawned_obj.GetComponentInChildren<Hold_Object>();
+        dupe_data.has_grabbed_this_interval = false;
 
 
         //new_obj = spawned_obj.GetComponent<Movement_Playback>();
 
-        
+
 
         vis.Add_Camera(spawned_obj.GetComponentInChildren<Camera>());
 
