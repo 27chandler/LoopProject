@@ -24,12 +24,16 @@ public class Hold_Object : MonoBehaviour
                 RaycastHit hit;
                 Physics.Raycast(transform.position, transform.forward, out hit, 5.0f);
 
-                Pickup_Loop pickup = hit.collider.GetComponent<Pickup_Loop>();
-                if (pickup != null)
+                if (hit.collider != null)
                 {
-                    is_holding = true;
-                    pickup.is_picked_up = true;
-                    grabbed_item = pickup;
+                    Pickup_Loop pickup = hit.collider.GetComponent<Pickup_Loop>();
+                    if (pickup != null)
+                    {
+                        is_holding = true;
+                        pickup.is_picked_up = true;
+                        grabbed_item = pickup;
+                    }
+
                 }
             }
             else

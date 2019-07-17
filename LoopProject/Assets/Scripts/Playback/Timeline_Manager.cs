@@ -6,7 +6,7 @@ using System;
 public class Timeline_Manager : MonoBehaviour
 {
     [SerializeField] private float iteration_delay;
-    [SerializeField] private int iteration_num = 0;
+    [SerializeField] public int iteration_num = 0;
     [SerializeField] private float time_speed = 1.0f;
 
     private float current_time = 0.0f;
@@ -37,7 +37,12 @@ public class Timeline_Manager : MonoBehaviour
     // Objects
     //[SerializeField] private Dictionary<int, Object_Memory_Data> object_timeline_memory = new Dictionary<int, Object_Memory_Data>();
     [SerializeField] private List<Object_Memory_Data> object_timeline_memory = new List<Object_Memory_Data>();
-    [SerializeField] private List<Visible_Check> moveable_objects = new List<Visible_Check>();
+    [SerializeField] private List<Visible_Check> moveable_objects_vis = new List<Visible_Check>();
+
+    [SerializeField] private List<Transform> moveable_object_spawn_transforms = new List<Transform>();
+    private List<Vector3> moveable_object_spawns = new List<Vector3>();
+
+    [SerializeField] private GameObject box_prefab;
     [SerializeField] private int object_timestamp_index = 0;
 
     [Serializable]
@@ -74,15 +79,21 @@ public class Timeline_Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        foreach (var spawn in moveable_object_spawn_transforms)
+        {
+            moveable_object_spawns.Add(spawn.position);
+            moveable_objects_vis.Add(spawn.gameObject.GetComponent<Visible_Check>());
+        }
+
         current_time = 0.0f;
 
         Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time);
         Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time);
         Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time);
 
-        Add_Object_Data(moveable_objects[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
-        Add_Object_Data(moveable_objects[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
-        Add_Object_Data(moveable_objects[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
+        Add_Object_Data(moveable_objects_vis[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
+        Add_Object_Data(moveable_objects_vis[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
+        Add_Object_Data(moveable_objects_vis[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
     }
 
     // Update is called once per frame
@@ -141,25 +152,12 @@ public class Timeline_Manager : MonoBehaviour
                 Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time);
             }
 
-            if (moveable_objects[0].is_seen)
+            if (moveable_objects_vis[0].is_seen)
             {
-                Add_Object_Data(moveable_objects[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
+                Add_Object_Data(moveable_objects_vis[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
                 //Debug.Log(moveable_objects[0].transform.position);
             }
         }
-        // Record Objects
-        if (player_target != transform)
-        {
-            //Movement_Playback target_mp = player_target.GetComponent<Movement_Playback>();
-            //if (target_mp.current_temp_memory.Count >= 1)
-            //{
-            //    foreach (var obj in target_mp.current_temp_memory)
-            //    {
-            //        object_buffer.Add(obj);
-            //    }
-            //}
-        }
-        //
 
         for (int i = 0; i < duplicate_obj_list.Count; i++)
         {
@@ -282,6 +280,11 @@ public class Timeline_Manager : MonoBehaviour
 
     void Restart_Loop()
     {
+        foreach(var spawnpoint in moveable_object_spawns)
+        {
+            Instantiate(box_prefab, spawnpoint,new Quaternion());
+        }
+
         object_timestamp_index = 0;
 
         GameObject spawned_obj = Instantiate(loop_obj);

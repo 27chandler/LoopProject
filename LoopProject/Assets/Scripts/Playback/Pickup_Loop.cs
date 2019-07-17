@@ -5,7 +5,6 @@ using System;
 
 public class Pickup_Loop : MonoBehaviour
 {
-    [SerializeField] private Camera player_cam;
     [SerializeField] private Visible_Check vc;
 
     public bool is_picked_up;
@@ -19,6 +18,8 @@ public class Pickup_Loop : MonoBehaviour
     [SerializeField] public float delay = 30.0f;
 
     [SerializeField] private List<Record_Data> position_buffer = new List<Record_Data>();
+    private Timeline_Manager timeline_manager;
+    private int last_iteration_num;
 
     [Serializable]
     public struct Record_Data
@@ -30,8 +31,13 @@ public class Pickup_Loop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        vc.Add_Camera(player_cam);
+
+
+        vc.Add_Camera(GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Camera>());
         rb = GetComponent<Rigidbody>();
+
+        timeline_manager = GameObject.FindGameObjectWithTag("Timeline_Manager").GetComponent<Timeline_Manager>();
+        last_iteration_num = timeline_manager.iteration_num;
 
         Add_To_Buffer(transform.position, transform.localRotation, current_time);
         Add_To_Buffer(transform.position, transform.localRotation, current_time);
@@ -64,6 +70,16 @@ public class Pickup_Loop : MonoBehaviour
             foreach(var cam in vc.seen_cams)
             {
                 cam.GetComponentInParent<Movement_Playback>().Add_To_Object_Memory(transform.position,gameObject.name);
+            }
+        }
+
+        if (last_iteration_num != timeline_manager.iteration_num)
+        {
+            last_iteration_num = timeline_manager.iteration_num;
+
+            if (is_picked_up == false)
+            {
+                Destroy(gameObject);
             }
         }
     }

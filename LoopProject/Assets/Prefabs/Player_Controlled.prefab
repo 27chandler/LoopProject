@@ -12,6 +12,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player_Controlled
       objectReference: {fileID: 0}
+    - target: {fileID: 1195624464444332471, guid: a42df1d82d3680a44964470114b0aa68,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 5629496041234975767, guid: a42df1d82d3680a44964470114b0aa68,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -67,6 +72,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1195624464444332472, guid: a42df1d82d3680a44964470114b0aa68,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5677447379092148236, guid: a42df1d82d3680a44964470114b0aa68,
         type: 3}
       propertyPath: is_playing
@@ -82,19 +92,6 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 4948035619958883053}
-    - target: {fileID: 1100785653, guid: a42df1d82d3680a44964470114b0aa68, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1100785654, guid: a42df1d82d3680a44964470114b0aa68, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1195624464444332472, guid: a42df1d82d3680a44964470114b0aa68,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6285599566252047430, guid: a42df1d82d3680a44964470114b0aa68,
         type: 3}
       propertyPath: cam
@@ -102,6 +99,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6285599566252047430, guid: a42df1d82d3680a44964470114b0aa68,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1100785653, guid: a42df1d82d3680a44964470114b0aa68, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1100785654, guid: a42df1d82d3680a44964470114b0aa68, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
