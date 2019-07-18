@@ -16,6 +16,7 @@ public class Pickup_Loop : MonoBehaviour
     private Rigidbody rb;
 
     [SerializeField] public float delay = 30.0f;
+    [SerializeField] public Vector3 snap_pos;
 
     [SerializeField] private List<Record_Data> position_buffer = new List<Record_Data>();
     private Timeline_Manager timeline_manager;

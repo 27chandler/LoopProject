@@ -8,6 +8,7 @@ public class Timeline_Manager : MonoBehaviour
     [SerializeField] private float iteration_delay;
     [SerializeField] public int iteration_num = 0;
     [SerializeField] private float time_speed = 1.0f;
+    private bool loop_restarted = false;
 
     private float current_time = 0.0f;
     private float last_update_time = 0.0f;
@@ -17,6 +18,7 @@ public class Timeline_Manager : MonoBehaviour
     [SerializeField] public Transform player_target;
     [SerializeField] public Transform player_look_pivot;
     [SerializeField] private Hold_Object player_obj_holder;
+    [SerializeField] private Vector3 hidden_start_pos; // This is the position the timeloop duplicates will be held before their iteration begins
 
     //
     [Space]
@@ -87,9 +89,9 @@ public class Timeline_Manager : MonoBehaviour
 
         current_time = 0.0f;
 
-        Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time);
-        Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time);
-        Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time);
+        Add_To_Buffer(hidden_start_pos, player_look_pivot.localRotation, current_time);
+        Add_To_Buffer(hidden_start_pos, player_look_pivot.localRotation, current_time);
+        Add_To_Buffer(hidden_start_pos, player_look_pivot.localRotation, current_time);
 
         Add_Object_Data(moveable_objects_vis[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
         Add_Object_Data(moveable_objects_vis[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
@@ -99,6 +101,19 @@ public class Timeline_Manager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (loop_restarted)
+        {
+            loop_restarted = false;
+            for (int i = 0; i < moveable_objects_vis.Count; i++)
+            {
+                if (moveable_objects_vis[i] == null)
+                {
+                    moveable_objects_vis.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
             Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time,true);
@@ -152,10 +167,12 @@ public class Timeline_Manager : MonoBehaviour
                 Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time);
             }
 
-            if (moveable_objects_vis[0].is_seen)
+            foreach(var vis in moveable_objects_vis)
             {
-                Add_Object_Data(moveable_objects_vis[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
-                //Debug.Log(moveable_objects[0].transform.position);
+                if (vis.is_seen)
+                {
+                    Add_Object_Data(vis.transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
+                }
             }
         }
 
@@ -210,13 +227,27 @@ public class Timeline_Manager : MonoBehaviour
         }
 
         // Check Objects
-        if (object_timestamp_index < object_timeline_memory.Count)
+        bool is_done_objs = false;
+
+        while (!is_done_objs)
         {
-            //Debug.Log("CURRENT: " + (current_time - (iteration_delay * (iteration_num-1))) + " TIMESTAMP: " + object_timeline_memory[object_timestamp_index].timestamp);
-            if (current_time - (iteration_delay * (iteration_num - 1)) >= object_timeline_memory[object_timestamp_index].timestamp)
+            if (object_timestamp_index < object_timeline_memory.Count)
             {
-                Check_Object_State();
-                object_timestamp_index++;
+                transform.position = object_timeline_memory[object_timestamp_index].position;
+                //Debug.Log("CURRENT: " + (current_time - (iteration_delay * (iteration_num-1))) + " TIMESTAMP: " + object_timeline_memory[object_timestamp_index].timestamp);
+                if (current_time - (iteration_delay * (iteration_num - 1)) >= object_timeline_memory[object_timestamp_index].timestamp)
+                {
+                    Check_Object_State();
+                    object_timestamp_index++;
+                }
+                else
+                {
+                    is_done_objs = true;
+                }
+            }
+            else
+            {
+                is_done_objs = true;
             }
         }
     }
@@ -280,9 +311,11 @@ public class Timeline_Manager : MonoBehaviour
 
     void Restart_Loop()
     {
-        foreach(var spawnpoint in moveable_object_spawns)
+        loop_restarted = true;
+        foreach (var spawnpoint in moveable_object_spawns)
         {
-            Instantiate(box_prefab, spawnpoint,new Quaternion());
+            GameObject created_obj = Instantiate(box_prefab, spawnpoint,new Quaternion());
+            moveable_objects_vis.Add(created_obj.GetComponent<Visible_Check>());
         }
 
         object_timestamp_index = 0;
