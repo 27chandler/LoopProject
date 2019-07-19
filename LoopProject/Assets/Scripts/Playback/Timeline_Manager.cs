@@ -34,12 +34,24 @@ public class Timeline_Manager : MonoBehaviour
     private Movement_Playback new_obj;
     private Movement_Playback old_obj;
 
-    [SerializeField] private List<Duplicate_Data> duplicate_obj_list = new List<Duplicate_Data>();
+    [SerializeField] private List<Duplicate_Data> duplicate_player_list = new List<Duplicate_Data>();
 
     [SerializeField] private Dictionary<int, Record_Data> timeline_memory = new Dictionary<int, Record_Data>();
 
+    // Object experimental
+    [SerializeField] private List<Object_Dupe_Tracking_Data> timeline_memory_vision = new List<Object_Dupe_Tracking_Data>();
+    [SerializeField] private List<Duplicate_Data> dupe_objs = new List<Duplicate_Data>();
+
+
+    [Serializable]
+    public class Object_Dupe_Tracking_Data
+    {
+        public Vector3 position;
+        public float timestamp;
+    };
+
     // Objects
-    //[SerializeField] private Dictionary<int, Object_Memory_Data> object_timeline_memory = new Dictionary<int, Object_Memory_Data>();
+
     [SerializeField] private List<Object_Memory_Data> object_timeline_memory = new List<Object_Memory_Data>();
     [SerializeField] private List<Visible_Check> moveable_objects_vis = new List<Visible_Check>();
 
@@ -73,12 +85,22 @@ public class Timeline_Manager : MonoBehaviour
     public class Duplicate_Data
     {
         public GameObject obj;
+        public Visible_Check vis;
         public Transform obj_look_pivot;
         public Hold_Object object_holder;
         public bool has_grabbed_this_interval;
         public int timestamp;
     };
     //
+
+    void Add_To_Obj_Timeline(Vector3 i_pos,int i_timestamp_index, float i_time)
+    {
+        Object_Dupe_Tracking_Data input_data = new Object_Dupe_Tracking_Data();
+        input_data.position = i_pos;
+        input_data.timestamp = i_time;
+
+        timeline_memory_vision.Insert(i_timestamp_index, input_data);
+    }
 
 
     // Start is called before the first frame update
@@ -87,7 +109,12 @@ public class Timeline_Manager : MonoBehaviour
         foreach (var spawn in moveable_object_spawn_transforms)
         {
             moveable_object_spawns.Add(spawn.position);
-            moveable_objects_vis.Add(spawn.gameObject.GetComponent<Visible_Check>());
+            //moveable_objects_vis.Add(spawn.gameObject.GetComponent<Visible_Check>());
+        }
+
+        foreach (var obj in dupe_objs)
+        {
+            obj.vis = obj.obj.GetComponent<Visible_Check>();
         }
 
         current_time = 0.0f;
@@ -96,14 +123,19 @@ public class Timeline_Manager : MonoBehaviour
         Add_To_Buffer(hidden_start_pos, player_look_pivot.localRotation, current_time);
         Add_To_Buffer(hidden_start_pos, player_look_pivot.localRotation, current_time);
 
-        Add_Object_Data(moveable_objects_vis[0].transform.position, 0, (current_time - (iteration_delay * (iteration_num - 1))));
-        Add_Object_Data(moveable_objects_vis[0].transform.position, 0, (current_time - (iteration_delay * (iteration_num - 1))));
-        Add_Object_Data(moveable_objects_vis[0].transform.position, 0, (current_time - (iteration_delay * (iteration_num - 1))));
+        //Add_Object_Data(moveable_objects_vis[0].transform.position, 0, (current_time - (iteration_delay * (iteration_num - 1))));
+        //Add_Object_Data(moveable_objects_vis[0].transform.position, 0, (current_time - (iteration_delay * (iteration_num - 1))));
+        //Add_Object_Data(moveable_objects_vis[0].transform.position, 0, (current_time - (iteration_delay * (iteration_num - 1))));
+
+        Add_To_Obj_Timeline(hidden_start_pos, 0, current_time);
+        Add_To_Obj_Timeline(hidden_start_pos, 0, current_time);
+        Add_To_Obj_Timeline(hidden_start_pos, 0, current_time);
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(current_time);
         if (loop_restarted)
         {
             loop_restarted = false;
@@ -171,20 +203,27 @@ public class Timeline_Manager : MonoBehaviour
                 Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time);
             }
 
-            int index = 0;
-            foreach(var vis in moveable_objects_vis)
+            //int index = 0;
+            //foreach(var vis in moveable_objects_vis)
+            //{
+            //    if ((vis.is_seen) && (object_timeline_memory[object_timestamp_index].id != index))
+            //    {
+            //        Add_Object_Data(vis.transform.position, index, (current_time - (iteration_delay * (iteration_num - 1))));
+            //    }
+
+            //    index++;
+            //}
+
+            foreach (var dupe in dupe_objs)
             {
-                //if ((vis.is_seen) && (object_timeline_memory[object_timestamp_index].id != index))
-                if ((vis.is_seen) && (object_timeline_memory[object_timestamp_index].id != index))
+                if (dupe.vis.is_seen)
                 {
-                    Debug.Log(index);
-                    Add_Object_Data(vis.transform.position, index, (current_time - (iteration_delay * (iteration_num - 1))));
+                    Add_To_Obj_Timeline(dupe.obj.transform.position, dupe.timestamp, current_time);
                 }
-                index++;
             }
         }
 
-        for (int i = 0; i < duplicate_obj_list.Count; i++)
+        for (int i = 0; i < duplicate_player_list.Count; i++)
         {
             bool is_done = false;
 
@@ -192,13 +231,13 @@ public class Timeline_Manager : MonoBehaviour
             {
                 if (time_speed >= 0.0f)
                 {
-                    if (timeline_memory[duplicate_obj_list[i].timestamp + 1].timestamp <= (current_time - (iteration_delay * (i + 1))))
+                    if (timeline_memory[duplicate_player_list[i].timestamp + 1].timestamp <= (current_time - (iteration_delay * (i + 1))))
                     {
-                        duplicate_obj_list[i].timestamp++;
+                        duplicate_player_list[i].timestamp++;
                         //duplicate_obj_list[i].obj.transform.position = position_buffer[duplicate_obj_list[i].timestamp].position;
                         //duplicate_obj_list[i].obj_look_pivot.localRotation = position_buffer[duplicate_obj_list[i].timestamp].view_rotation;
 
-                        duplicate_obj_list[i].has_grabbed_this_interval = false;
+                        duplicate_player_list[i].has_grabbed_this_interval = false;
                     }
                     else
                     {
@@ -207,19 +246,19 @@ public class Timeline_Manager : MonoBehaviour
                 }
                 else
                 {
-                    if (timeline_memory[duplicate_obj_list[i].timestamp - 1].timestamp >= (current_time - (iteration_delay * (i + 1))))
+                    if (timeline_memory[duplicate_player_list[i].timestamp - 1].timestamp >= (current_time - (iteration_delay * (i + 1))))
                     {
-                        if (duplicate_obj_list[i].timestamp <= 1)
+                        if (duplicate_player_list[i].timestamp <= 1)
                         {
-                            duplicate_obj_list[i].timestamp = 1;
+                            duplicate_player_list[i].timestamp = 1;
                             is_done = true;
                         }
                         else
                         {
-                            duplicate_obj_list[i].timestamp--;
+                            duplicate_player_list[i].timestamp--;
                         }
 
-                        duplicate_obj_list[i].has_grabbed_this_interval = false;
+                        duplicate_player_list[i].has_grabbed_this_interval = false;
 
                         //Set_Playback_States(duplicate_obj_list[i]);
                     }
@@ -229,7 +268,7 @@ public class Timeline_Manager : MonoBehaviour
                     }
                 }
             }
-            Set_Playback_States(duplicate_obj_list[i]);
+            Set_Playback_States(duplicate_player_list[i]);
 
 
         }
@@ -324,7 +363,13 @@ public class Timeline_Manager : MonoBehaviour
         foreach (var spawnpoint in moveable_object_spawns)
         {
             GameObject created_obj = Instantiate(box_prefab, spawnpoint,new Quaternion());
-            moveable_objects_vis.Add(created_obj.GetComponent<Visible_Check>());
+            Duplicate_Data input_data = new Duplicate_Data();
+            input_data.obj = created_obj;
+            input_data.vis = created_obj.GetComponent<Visible_Check>();
+            input_data.timestamp = 0;
+
+            dupe_objs.Add(input_data);
+            //moveable_objects_vis.Add(created_obj.GetComponent<Visible_Check>());
         }
 
         object_timestamp_index = 0;
@@ -338,28 +383,8 @@ public class Timeline_Manager : MonoBehaviour
         dupe_data.object_holder = spawned_obj.GetComponentInChildren<Hold_Object>();
         dupe_data.has_grabbed_this_interval = false;
 
-
-        //new_obj = spawned_obj.GetComponent<Movement_Playback>();
-
-
-
         vis.Add_Camera(spawned_obj.GetComponentInChildren<Camera>());
 
-        //new_obj.delay = iteration_delay;
-        //if (old_obj == null)
-        //{
-        //    new_obj.target = original_obj.transform;
-        //    new_obj.pivot_target = original_obj.GetComponent<Movement_Playback>().this_pivot;
-
-        //}
-        //else
-        //{
-        //    new_obj.target = old_obj.transform;
-        //    new_obj.pivot_target = old_obj.this_pivot;
-        //}
-
-        duplicate_obj_list.Add(dupe_data);
-
-        //old_obj = new_obj;
+        duplicate_player_list.Add(dupe_data);
     }
 }
