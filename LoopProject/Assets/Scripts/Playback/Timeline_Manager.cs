@@ -50,10 +50,11 @@ public class Timeline_Manager : MonoBehaviour
     [SerializeField] private int object_timestamp_index = 0;
 
     [Serializable]
-    public struct Object_Memory_Data
+    public class Object_Memory_Data
     {
         public Vector3 position;
         public string name;
+        public int id;
         public float timestamp;
     };
     //
@@ -95,9 +96,9 @@ public class Timeline_Manager : MonoBehaviour
         Add_To_Buffer(hidden_start_pos, player_look_pivot.localRotation, current_time);
         Add_To_Buffer(hidden_start_pos, player_look_pivot.localRotation, current_time);
 
-        Add_Object_Data(moveable_objects_vis[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
-        Add_Object_Data(moveable_objects_vis[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
-        Add_Object_Data(moveable_objects_vis[0].transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
+        Add_Object_Data(moveable_objects_vis[0].transform.position, 0, (current_time - (iteration_delay * (iteration_num - 1))));
+        Add_Object_Data(moveable_objects_vis[0].transform.position, 0, (current_time - (iteration_delay * (iteration_num - 1))));
+        Add_Object_Data(moveable_objects_vis[0].transform.position, 0, (current_time - (iteration_delay * (iteration_num - 1))));
     }
 
     // Update is called once per frame
@@ -141,11 +142,12 @@ public class Timeline_Manager : MonoBehaviour
         }
     }
 
-    void Add_Object_Data(Vector3 i_pos, float i_time)
+    void Add_Object_Data(Vector3 i_pos, int i_id, float i_time)
     {
         Object_Memory_Data input_data = new Object_Memory_Data();
         input_data.position = i_pos;
         input_data.timestamp = i_time;
+        input_data.id = i_id;
 
         object_timeline_memory.Insert(object_timestamp_index, input_data);
         //Debug.Log("INSERTED AT: " + object_timestamp_index);
@@ -169,12 +171,16 @@ public class Timeline_Manager : MonoBehaviour
                 Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time);
             }
 
+            int index = 0;
             foreach(var vis in moveable_objects_vis)
             {
-                if (vis.is_seen)
+                //if ((vis.is_seen) && (object_timeline_memory[object_timestamp_index].id != index))
+                if ((vis.is_seen) && (object_timeline_memory[object_timestamp_index].id != index))
                 {
-                    Add_Object_Data(vis.transform.position, (current_time - (iteration_delay * (iteration_num - 1))));
+                    Debug.Log(index);
+                    Add_Object_Data(vis.transform.position, index, (current_time - (iteration_delay * (iteration_num - 1))));
                 }
+                index++;
             }
         }
 
@@ -235,7 +241,7 @@ public class Timeline_Manager : MonoBehaviour
         {
             if (object_timestamp_index < object_timeline_memory.Count)
             {
-                snap_markers[0].transform.position = object_timeline_memory[object_timestamp_index].position;
+                snap_markers[object_timeline_memory[object_timestamp_index].id].transform.position = object_timeline_memory[object_timestamp_index].position;
                 //transform.position = object_timeline_memory[object_timestamp_index].position;
                 //Debug.Log("CURRENT: " + (current_time - (iteration_delay * (iteration_num-1))) + " TIMESTAMP: " + object_timeline_memory[object_timestamp_index].timestamp);
                 if (current_time - (iteration_delay * (iteration_num - 1)) >= object_timeline_memory[object_timestamp_index].timestamp)

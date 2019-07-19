@@ -37,14 +37,23 @@ public class Visible_Check : MonoBehaviour
                 RaycastHit hit;
                 Physics.Raycast(transform.position, ray_direction, out hit);
                 Debug.DrawRay(transform.position, ray_direction);
+                //Debug.Log(hit.collider.gameObject.transform.parent.name + " has been detected!");
                 if (hit.transform != null)
                 {
-                    if (hit.transform.parent == camera.transform.parent)
+                    //Debug.Log("YES");
+
+                    if (hit.collider.gameObject.tag == "Player")
                     {
-                        //Debug.Log(gameObject.name + " has been detected!");
                         is_seen = true;
                         seen_cams.Add(camera);
+                        //Debug.Log("YES");
                     }
+
+                    //if (hit.transform.parent == camera.transform.parent)
+                    //{
+                    //    is_seen = true;
+                    //    seen_cams.Add(camera);
+                    //}
                 }
 
 
