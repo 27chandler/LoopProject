@@ -10,6 +10,8 @@ public class Timeline_Manager : MonoBehaviour
     [SerializeField] private float time_speed = 1.0f;
     private bool loop_restarted = false;
 
+    [SerializeField] private GameObject[] snap_markers;
+
     private float current_time = 0.0f;
     private float last_update_time = 0.0f;
     [SerializeField] float update_frequency;
@@ -233,7 +235,8 @@ public class Timeline_Manager : MonoBehaviour
         {
             if (object_timestamp_index < object_timeline_memory.Count)
             {
-                transform.position = object_timeline_memory[object_timestamp_index].position;
+                snap_markers[0].transform.position = object_timeline_memory[object_timestamp_index].position;
+                //transform.position = object_timeline_memory[object_timestamp_index].position;
                 //Debug.Log("CURRENT: " + (current_time - (iteration_delay * (iteration_num-1))) + " TIMESTAMP: " + object_timeline_memory[object_timestamp_index].timestamp);
                 if (current_time - (iteration_delay * (iteration_num - 1)) >= object_timeline_memory[object_timestamp_index].timestamp)
                 {
