@@ -89,6 +89,7 @@ public class Timeline_Manager : MonoBehaviour
         public Transform obj_look_pivot;
         public Hold_Object object_holder;
         public bool has_grabbed_this_interval;
+        public int iter_num;
         public int timestamp;
     };
     //
@@ -274,29 +275,52 @@ public class Timeline_Manager : MonoBehaviour
         }
 
         // Check Objects
-        bool is_done_objs = false;
-
-        while (!is_done_objs)
+        int index = 0;
+        foreach(var dupe in dupe_objs)
         {
-            if (object_timestamp_index < object_timeline_memory.Count)
+            bool is_done_objs = false;
+            if (dupe.timestamp + 1 < timeline_memory_vision.Count)
             {
-                snap_markers[object_timeline_memory[object_timestamp_index].id].transform.position = object_timeline_memory[object_timestamp_index].position;
-                //transform.position = object_timeline_memory[object_timestamp_index].position;
-                //Debug.Log("CURRENT: " + (current_time - (iteration_delay * (iteration_num-1))) + " TIMESTAMP: " + object_timeline_memory[object_timestamp_index].timestamp);
-                if (current_time - (iteration_delay * (iteration_num - 1)) >= object_timeline_memory[object_timestamp_index].timestamp)
+                while (!is_done_objs)
                 {
-                    Check_Object_State();
-                    object_timestamp_index++;
-                }
-                else
-                {
-                    is_done_objs = true;
+                    if (timeline_memory_vision[dupe.timestamp + 1].timestamp <= (current_time - (iteration_delay * (dupe.iter_num-1))))
+                    {
+                        dupe.timestamp++;
+                        Debug.Log("DODODO");
+                    }
+                    else
+                    {
+                        is_done_objs = true;
+                    }
+
+
+
+                    //if (object_timestamp_index < object_timeline_memory.Count)
+                    //{
+                    //    snap_markers[object_timeline_memory[object_timestamp_index].id].transform.position = object_timeline_memory[object_timestamp_index].position;
+                    //    //transform.position = object_timeline_memory[object_timestamp_index].position;
+                    //    //Debug.Log("CURRENT: " + (current_time - (iteration_delay * (iteration_num-1))) + " TIMESTAMP: " + object_timeline_memory[object_timestamp_index].timestamp);
+                    //    if (current_time - (iteration_delay * (iteration_num - 1)) >= object_timeline_memory[object_timestamp_index].timestamp)
+                    //    {
+                    //        Check_Object_State();
+                    //        object_timestamp_index++;
+                    //    }
+                    //    else
+                    //    {
+                    //        is_done_objs = true;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    is_done_objs = true;
+                    //}
+                    snap_markers[dupe.iter_num].transform.position = timeline_memory_vision[dupe.timestamp].position;
                 }
             }
-            else
-            {
-                is_done_objs = true;
-            }
+
+
+
+            index++;
         }
     }
 
@@ -367,9 +391,19 @@ public class Timeline_Manager : MonoBehaviour
             input_data.obj = created_obj;
             input_data.vis = created_obj.GetComponent<Visible_Check>();
             input_data.timestamp = 0;
+            input_data.iter_num = iteration_num;
 
             dupe_objs.Add(input_data);
             //moveable_objects_vis.Add(created_obj.GetComponent<Visible_Check>());
+        }
+
+        for(int i = 0; i < dupe_objs.Count; i++)
+        {
+            if (dupe_objs[i].obj == null)
+            {
+                dupe_objs.RemoveAt(i);
+                i--;
+            }
         }
 
         object_timestamp_index = 0;
