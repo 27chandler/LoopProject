@@ -8,7 +8,7 @@ public class Align_Check : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        renderer.enabled = false;
+        renderer.enabled = true;
     }
 
     // Update is called once per frame
@@ -28,7 +28,7 @@ public class Align_Check : MonoBehaviour
 
         if (is_obj_present)
         {
-            renderer.enabled = false;
+            //renderer.enabled = false;
         }
         else
         {

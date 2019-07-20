@@ -7,6 +7,7 @@ public class Hold_Object : MonoBehaviour
     public bool trigger_grab = false;
     public bool is_holding = false;
     private Pickup_Loop grabbed_item;
+    public GameObject grabbed_item_obj;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +28,7 @@ public class Hold_Object : MonoBehaviour
                 if (hit.collider != null)
                 {
                     Pickup_Loop pickup = hit.collider.GetComponent<Pickup_Loop>();
+                    grabbed_item_obj = pickup.gameObject;
                     if (pickup != null)
                     {
                         is_holding = true;
