@@ -105,3 +105,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderer: {fileID: 1388751754928349200}
+  completion_time: 0
+  current_time: 0
+  max_health: 50

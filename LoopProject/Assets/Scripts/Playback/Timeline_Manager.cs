@@ -25,6 +25,7 @@ public class Timeline_Manager : MonoBehaviour
     [SerializeField] private Hold_Object player_obj_holder;
     private bool is_grabbing = false;
     [SerializeField] private Vector3 hidden_start_pos; // This is the position the timeloop duplicates will be held before their iteration begins
+    private int last_obj_seen_timestamp = 0;
 
     //
     [Space]
@@ -76,12 +77,13 @@ public class Timeline_Manager : MonoBehaviour
     //
 
     [Serializable]
-    public struct Record_Data
+    public class Record_Data
     {
         public Vector3 position;
 
         public bool is_obj_seen;
         public Vector3[] seen_objs_positions;
+        public int next_obj_seen_timestamp; // the timestamp in which the player will next observe an object
 
         public Quaternion view_rotation;
         public bool is_jumping;
@@ -103,15 +105,6 @@ public class Timeline_Manager : MonoBehaviour
     };
     //
 
-    //void Add_To_Obj_Timeline(Vector3 i_pos,int i_timestamp_index, float i_time)
-    //{
-    //    Object_Dupe_Tracking_Data input_data = new Object_Dupe_Tracking_Data();
-    //    input_data.position = i_pos;
-    //    input_data.timestamp = i_time;
-
-    //    timeline_memory_vision.Insert(i_timestamp_index, input_data);
-    //}
-
 
     // Start is called before the first frame update
     void Start()
@@ -124,7 +117,7 @@ public class Timeline_Manager : MonoBehaviour
         foreach (var obj in dupe_objs)
         {
             obj.vis = obj.obj.GetComponent<Visible_Check>();
-            snap_markers.Add(Instantiate(marker));
+            //snap_markers.Add(Instantiate(marker));
         }
 
         current_time = 0.0f;
@@ -161,7 +154,7 @@ public class Timeline_Manager : MonoBehaviour
                 if (dupe.obj != null)
                 {
                     dupe_objs_temp.Add(dupe);
-                    snap_markers.Add(Instantiate(marker));
+                    //snap_markers.Add(Instantiate(marker));
                 }
             }
 
@@ -246,6 +239,8 @@ public class Timeline_Manager : MonoBehaviour
                 if (is_seen_by_player_original)
                 {
                     Add_To_Buffer(player_target.position, player_look_pivot.localRotation, obj_pos_array.ToArray(), current_time);
+                    timeline_memory[last_obj_seen_timestamp].next_obj_seen_timestamp = timeline_memory.Count;
+                    last_obj_seen_timestamp = timeline_memory.Count;
                 }
                 else
                 {
@@ -317,25 +312,64 @@ public class Timeline_Manager : MonoBehaviour
             Set_Playback_States(duplicate_player_list[i]);
         }
 
-        foreach (var marker in snap_markers)
-        {
-            Destroy(marker.gameObject);
-        }
+        //foreach (var marker in snap_markers)
+        //{
+        //    Destroy(marker.gameObject);
+        //}
 
-        snap_markers.Clear();
+        //snap_markers.Clear();
 
         foreach (var dupe in duplicate_player_list)
         {
-            if (timeline_memory[dupe.timestamp+1].is_obj_seen)
+            //if (timeline_memory[dupe.timestamp+1].is_obj_seen)
+            //{
+            //    foreach (var obj in timeline_memory[dupe.timestamp+1].seen_objs_positions)
+            //    {
+            //        Debug.DrawLine(obj, obj + new Vector3(0.0f, 0.1f, 0.0f), new Color(1.0f, 0.0f, 0.0f), 5.0f);
+
+            //        GameObject new_marker = Instantiate(marker, obj, new Quaternion());
+            //        snap_markers.Add(new_marker);
+            //        new_marker.GetComponent<Align_Check>().completion_time = timeline_memory[timeline_memory[dupe.timestamp + 2].next_obj_seen_timestamp].timestamp + (iteration_delay * dupe.iter_num);
+            //        //Debug.Log("-----------------------------");
+            //        //Debug.Log("CURRENT TIME: " + current_time);
+            //        //Debug.Log("COMPLETION TIME: " + new_marker.GetComponent<Align_Check>().completion_time);
+            //        //Debug.Log("-----------------------------");
+            //    }
+            //}
+
+            Debug.Log("NEXT SEEN TIMESTAMP: " + timeline_memory[dupe.timestamp].next_obj_seen_timestamp);
+
+            if (timeline_memory[dupe.timestamp].next_obj_seen_timestamp != 0)
             {
-                foreach (var obj in timeline_memory[dupe.timestamp+1].seen_objs_positions)
+                int next_timestamp = timeline_memory[dupe.timestamp].next_obj_seen_timestamp;
+                foreach (var obj in timeline_memory[next_timestamp].seen_objs_positions)
                 {
-                    Debug.Log(obj);
                     Debug.DrawLine(obj, obj + new Vector3(0.0f, 0.1f, 0.0f), new Color(1.0f, 0.0f, 0.0f), 5.0f);
-                    snap_markers.Add(Instantiate(marker,obj,new Quaternion()));
+
+                    GameObject new_marker = Instantiate(marker, obj, new Quaternion());
+                    snap_markers.Add(new_marker);
+                    new_marker.GetComponent<Align_Check>().completion_time = timeline_memory[next_timestamp].timestamp + (iteration_delay * dupe.iter_num);
+                    //Debug.Log("-----------------------------");
+                    //Debug.Log("CURRENT TIME: " + current_time);
+                    //Debug.Log("COMPLETION TIME: " + new_marker.GetComponent<Align_Check>().completion_time);
+                    //Debug.Log("-----------------------------");
                 }
             }
         }
+
+        List<GameObject> temp_markers = new List<GameObject>();
+
+        foreach (var marker in snap_markers)
+        {
+            if (marker != null)
+            {
+                marker.GetComponent<Align_Check>().current_time = current_time;
+                temp_markers.Add(marker);
+            }
+        }
+
+        snap_markers.Clear();
+        snap_markers = temp_markers;
     }
 
     void Check_Object_State()
@@ -433,12 +467,12 @@ public class Timeline_Manager : MonoBehaviour
             //moveable_objects_vis.Add(created_obj.GetComponent<Visible_Check>());
         }
 
-        foreach (var marker in snap_markers)
-        {
-            Destroy(marker.gameObject);
-        }
+        //foreach (var marker in snap_markers)
+        //{
+        //    Destroy(marker.gameObject);
+        //}
 
-        snap_markers.Clear();
+        //snap_markers.Clear();
 
         object_timestamp_index = 0;
 
@@ -447,6 +481,7 @@ public class Timeline_Manager : MonoBehaviour
         Duplicate_Data dupe_data = new Duplicate_Data();
         dupe_data.obj = spawned_obj;
         dupe_data.timestamp = 1;
+        dupe_data.iter_num = iteration_num;
         dupe_data.obj_look_pivot = spawned_obj.GetComponent<Movement_Playback>().this_pivot;
         dupe_data.object_holder = spawned_obj.GetComponentInChildren<Hold_Object>();
         dupe_data.has_grabbed_this_interval = false;
