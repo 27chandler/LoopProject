@@ -28,12 +28,18 @@ public class Hold_Object : MonoBehaviour
                 if (hit.collider != null)
                 {
                     Pickup_Loop pickup = hit.collider.GetComponent<Pickup_Loop>();
-                    grabbed_item_obj = pickup.gameObject;
+                    Click_Button click_button = hit.collider.GetComponent<Click_Button>();
+
                     if (pickup != null)
                     {
+                        grabbed_item_obj = pickup.gameObject;
                         is_holding = true;
                         pickup.is_picked_up = true;
                         grabbed_item = pickup;
+                    }
+                    else if (click_button != null)
+                    {
+                        click_button.is_activated = !click_button.is_activated;
                     }
 
                 }

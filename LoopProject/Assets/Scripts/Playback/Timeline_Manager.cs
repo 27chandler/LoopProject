@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Timeline_Manager : MonoBehaviour
 {
-    [SerializeField] private float iteration_delay;
+    [SerializeField] public float iteration_delay;
     [SerializeField] public int iteration_num = 0;
     [SerializeField] private float time_speed = 1.0f;
     private bool loop_restarted = false;
@@ -346,46 +346,97 @@ public class Timeline_Manager : MonoBehaviour
             // Find next time this object is seen
             if (timeline_memory[dupe.timestamp].is_obj_seen == true)
             {
-                bool is_completion_time_found = false;
-                int current_timestamp_check = timeline_memory[dupe.timestamp].next_obj_seen_timestamp;
-
-                int counter = 0;
-                while (!is_completion_time_found)
+                foreach (var pos_check in timeline_memory[dupe.timestamp].seen_objs_positions)
                 {
-                    if ((current_timestamp_check == 0) || (timeline_memory[current_timestamp_check].timestamp >= (iteration_delay * (dupe.iter_num))))
-                    {
-                        is_completion_time_found = true;
-                        break;
-                    }
+                    bool is_completion_time_found = false;
+                    //int current_timestamp_check = timeline_memory[dupe.timestamp].next_obj_seen_timestamp;
+                    int current_timestamp_check = dupe.timestamp + 1;
 
-                    foreach (var pos_check in timeline_memory[dupe.timestamp].seen_objs_positions)
+                    int counter = 0;
+                    while (!is_completion_time_found)
                     {
-                        if (timeline_memory[current_timestamp_check].seen_objs_positions == null)
-                        {
-                            is_completion_time_found = true;
-                            break;
-                        }
+                    //if ((current_timestamp_check == 0) || (timeline_memory[current_timestamp_check].timestamp >= (iteration_delay * (dupe.iter_num))))
+                    //{
+                    //    //Debug.Log("---------------------------------");
+                    //    //Debug.Log("CURRENT TIME: " + timeline_memory[current_timestamp_check].timestamp);
+                    //    //Debug.Log("CURRENT TIME + ITER: " + (timeline_memory[current_timestamp_check].timestamp));
+                    //    //Debug.Log("ITER CHECK TIME: " + (iteration_delay * (dupe.iter_num)));
+                    //    //Debug.Log("---------------------------------");
+                    //    is_completion_time_found = true;
+                    //    break;
+                    //}
 
-                        foreach (var obj in timeline_memory[current_timestamp_check].seen_objs_positions)
+                    //foreach (var pos_check in timeline_memory[dupe.timestamp].seen_objs_positions)
+                    //{
+
+                        //if (timeline_memory[current_timestamp_check].seen_objs_positions == null)
+                        //{
+                        //    is_completion_time_found = true;
+                        //    break;
+                        //}
+
+                        if (timeline_memory[current_timestamp_check].seen_objs_positions != null)
                         {
-                            if (Vector3.Distance(pos_check, obj) <= 1.0f)
+
+
+
+                            foreach (var obj in timeline_memory[current_timestamp_check].seen_objs_positions)
                             {
-                                is_completion_time_found = true;
+                                if (Vector3.Distance(pos_check, obj) <= 1.0f)
+                                {
+                                    is_completion_time_found = true;
 
-                                GameObject new_marker = Instantiate(marker, obj, new Quaternion());
-                                snap_markers.Add(new_marker);
-                                new_marker.GetComponent<Align_Check>().completion_time = timeline_memory[current_timestamp_check].timestamp + (iteration_delay * dupe.iter_num);
+                                    if ((current_timestamp_check == 0)/* || (timeline_memory[current_timestamp_check].timestamp >= (iteration_delay * (iteration_num - dupe.iter_num)))*/)
+                                    {
+                                        //Debug.Log("FAIL");
+                                        //Debug.Log("TIME: " + timeline_memory[current_timestamp_check].timestamp + "   is greater than: " + (iteration_delay * (iteration_num - dupe.iter_num)));
+                                        //Debug.Log("CURRENT TIME: " + timeline_memory[current_timestamp_check].timestamp);
+                                        //Debug.Log("CURRENT TIME + ITER: " + (timeline_memory[current_timestamp_check].timestamp));
+                                        //Debug.Log("ITER CHECK TIME: " + (iteration_delay * (dupe.iter_num)));
+                                        //Debug.Log("---------------------------------");
+                                        is_completion_time_found = true;
+                                        //break;
+                                    }
+                                    else
+                                    {
+
+                                        float time_difference = 0.0f; // How long until the check needs to be made
+
+
+                                        GameObject new_marker = Instantiate(marker, obj, new Quaternion());
+                                        snap_markers.Add(new_marker);
+                                        new_marker.GetComponent<Align_Check>().completion_time = timeline_memory[current_timestamp_check].timestamp + (iteration_delay * dupe.iter_num);
+
+                                        //Debug.Log("---------------------------------");
+                                        //Debug.Log("CURRENT TIME: " + current_time);
+                                        //Debug.Log("TIMESTAMP TIME: " + timeline_memory[current_timestamp_check].timestamp);
+                                        //Debug.Log("COMPLETION TIME: " + (timeline_memory[current_timestamp_check].timestamp + (iteration_delay * dupe.iter_num)));
+                                        //Debug.Log("---------------------------------");
+
+                                        //Debug.Log("TIME DIFFERENCE: " + (current_time - timeline_memory[current_timestamp_check].timestamp + (iteration_delay * dupe.iter_num)));
+
+                                    }
+                                }
                             }
                         }
+
+                        if (!is_completion_time_found)
+                        {
+                            //current_timestamp_check = timeline_memory[current_timestamp_check].next_obj_seen_timestamp;
+                            current_timestamp_check++;
+                        }
+
+                        if (current_timestamp_check >= timeline_memory.Count)
+                        {
+                            is_completion_time_found = true;
+                        }
+                        counter++;
                     }
 
-                    if (!is_completion_time_found)
-                    {
-                        current_timestamp_check = timeline_memory[current_timestamp_check].next_obj_seen_timestamp;
-                    }
-                    counter++;
+
                 }
-                
+
+                //Debug.Log(dupe.iter_num + " : " + (current_timestamp_check - dupe.timestamp));
             }
         }
 

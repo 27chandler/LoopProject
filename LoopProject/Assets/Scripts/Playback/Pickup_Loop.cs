@@ -40,30 +40,41 @@ public class Pickup_Loop : MonoBehaviour
         timeline_manager = GameObject.FindGameObjectWithTag("Timeline_Manager").GetComponent<Timeline_Manager>();
         last_iteration_num = timeline_manager.iteration_num;
 
-        Add_To_Buffer(transform.position, transform.localRotation, current_time);
-        Add_To_Buffer(transform.position, transform.localRotation, current_time);
+        //Add_To_Buffer(transform.position, transform.localRotation, current_time);
+        //Add_To_Buffer(transform.position, transform.localRotation, current_time);
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //Run_Playback();
 
         if (is_picked_up)
         {
-            float move_force = Vector3.Distance(hold_pos,transform.position) * 40.0f;
+            rb.MovePosition(Vector3.Lerp(rb.position,hold_pos,0.2f));
+
+            //float distance = Vector3.Distance(hold_pos, transform.position);
+            //float move_force = distance * 60.0f;
             rb.useGravity = false;
 
-            //if (rb. > move_force)
-            //{
+            ////if (rb. > move_force)
+            ////{
 
-            //}
+            ////}
 
-            rb.AddForce((hold_pos - transform.position).normalized * move_force);
+            //move_force /= 5.0f - distance;
+
+            ////move_force = Mathf.Pow(move_force, 2.0f);
+
+            //rb.AddForce((hold_pos - transform.position).normalized * move_force);
         }
         else
         {
             rb.useGravity = true;
+            if ((Vector3.Distance(transform.position,snap_pos) <= 0.5f) && (rb.velocity.magnitude <= 0.1f))
+            {
+                transform.position = snap_pos;
+            }
         }
 
         if (vc.is_seen)

@@ -7,6 +7,8 @@ public class Player_Movement : MonoBehaviour
     private CharacterController cc;
 
     [SerializeField] private float movement_speed;
+    private Vector3 jump_movement = new Vector3();
+    [SerializeField] private float jump_strength;
     [SerializeField] private Transform object_dir;
     private Movement_Playback mp;
 
@@ -34,11 +36,28 @@ public class Player_Movement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (is_controlled)
         {
             Vector3 movement = new Vector3();
+
+            if (cc.isGrounded)
+            {
+                if (jump_movement.y < 0.0f)
+                {
+                    jump_movement.y = -(0.8f * Time.deltaTime);
+                }
+
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    jump_movement.y = jump_strength;
+                }
+            }
+            else
+            {
+                jump_movement.y -= (0.8f * Time.deltaTime);
+            }
 
             if (Input.GetKey(KeyCode.D))
             {
@@ -58,7 +77,10 @@ public class Player_Movement : MonoBehaviour
                 movement -= object_dir.forward;
             }
 
-            cc.SimpleMove(movement * Time.deltaTime * movement_speed);
+            movement.y = 0.0f;
+            movement.Normalize();
+
+            cc.Move((movement + jump_movement) * Time.deltaTime * movement_speed);
         }
     }
 }
