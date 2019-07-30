@@ -77,6 +77,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1195624464444332472, guid: a42df1d82d3680a44964470114b0aa68,
+        type: 3}
+      propertyPath: is_controlled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5677447379092148236, guid: a42df1d82d3680a44964470114b0aa68,
         type: 3}
       propertyPath: is_playing
@@ -108,6 +113,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1100785654, guid: a42df1d82d3680a44964470114b0aa68, type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1100785654, guid: a42df1d82d3680a44964470114b0aa68, type: 3}
+      propertyPath: is_controlled
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

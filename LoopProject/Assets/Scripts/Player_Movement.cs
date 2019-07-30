@@ -12,7 +12,7 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private Transform object_dir;
     private Movement_Playback mp;
 
-    private bool is_controlled = false;
+    public bool is_controlled = false;
 
     // Start is called before the first frame update
     void Start()
@@ -22,16 +22,6 @@ public class Player_Movement : MonoBehaviour
         if (object_dir == null)
         {
             object_dir = this.transform;
-        }
-
-        mp = GetComponent<Movement_Playback>();
-        if (mp == null)
-        {
-            is_controlled = true;
-        }
-        else
-        {
-            is_controlled = !mp.is_playing;
         }
     }
 

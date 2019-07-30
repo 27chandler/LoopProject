@@ -9,10 +9,14 @@ public class Player_Camera_Movement : MonoBehaviour
 
     [SerializeField] private Transform rotation_origin;
     private Movement_Playback mp;
-    bool is_controlled = false;
+    public bool is_controlled = false;
+
+    private Field_Of_View fov;
     // Start is called before the first frame update
     void Start()
     {
+        fov = GetComponentInParent<Field_Of_View>();
+
         if (rotation_origin == null)
         {
             rotation_origin = this.transform;
@@ -37,6 +41,13 @@ public class Player_Camera_Movement : MonoBehaviour
             rotation_y += Input.GetAxis("Mouse Y");
             rotation_x += Input.GetAxis("Mouse X");
             rotation_origin.localEulerAngles = new Vector3(-rotation_y, rotation_x, transform.localEulerAngles.z);
+        }
+
+        if (fov != null)
+        {
+            Vector3 direct_forward = transform.forward; // forward ignoring the y
+            direct_forward.y = 0.0f;
+            //fov.Set_View_Dir(direct_forward);
         }
 
     }
