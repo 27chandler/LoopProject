@@ -11,25 +11,24 @@ public class Player_Camera_Movement : MonoBehaviour
     private Movement_Playback mp;
     public bool is_controlled = false;
 
+    [Space]
+    [SerializeField] private GameObject fov_prefab;
     private Field_Of_View fov;
     // Start is called before the first frame update
     void Start()
     {
-        fov = GetComponentInParent<Field_Of_View>();
-
-        if (rotation_origin == null)
+        if (!is_controlled)
         {
-            rotation_origin = this.transform;
-        }
-
-        mp = GetComponentInParent<Movement_Playback>();
-        if (mp == null)
-        {
-            is_controlled = true;
+            GameObject this_fov = Instantiate(fov_prefab);
+            this_fov.GetComponent<Field_Of_View>().target_transform = transform.parent;
+            fov = this_fov.GetComponent<Field_Of_View>();
         }
         else
         {
-            is_controlled = !mp.is_playing;
+            if (rotation_origin == null)
+            {
+                rotation_origin = this.transform;
+            }
         }
     }
 
@@ -42,13 +41,9 @@ public class Player_Camera_Movement : MonoBehaviour
             rotation_x += Input.GetAxis("Mouse X");
             rotation_origin.localEulerAngles = new Vector3(-rotation_y, rotation_x, transform.localEulerAngles.z);
         }
-
-        if (fov != null)
+        else
         {
-            Vector3 direct_forward = transform.forward; // forward ignoring the y
-            direct_forward.y = 0.0f;
-            //fov.Set_View_Dir(direct_forward);
+            fov.Set_View_Dir(transform.forward);
         }
-
     }
 }

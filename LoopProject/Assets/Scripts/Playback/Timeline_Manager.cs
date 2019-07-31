@@ -462,6 +462,7 @@ public class Timeline_Manager : MonoBehaviour
 
     void Set_Playback_States(Duplicate_Data i_dupe)
     {
+        Debug.Log(timeline_memory[i_dupe.timestamp].view_rotation);
         i_dupe.obj.transform.position = Vector3.Lerp(i_dupe.obj.transform.position, timeline_memory[i_dupe.timestamp].position, 0.4f);
         i_dupe.obj_look_pivot.localRotation = timeline_memory[i_dupe.timestamp].view_rotation;
         i_dupe.obj.SetActive(!timeline_memory[i_dupe.timestamp].is_jumping);
