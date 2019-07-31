@@ -21,6 +21,7 @@ public class Timeline_Manager : MonoBehaviour
     [Space]
     // Player
     [SerializeField] public Transform player_target;
+    [SerializeField] private Camera player_cam;
     [SerializeField] public Transform player_look_pivot;
     [SerializeField] private Hold_Object player_obj_holder;
     private bool is_grabbing = false;
@@ -44,6 +45,15 @@ public class Timeline_Manager : MonoBehaviour
     [SerializeField] private Dictionary<int, Record_Data> timeline_memory = new Dictionary<int, Record_Data>();
 
     [SerializeField] private List<Duplicate_Data> dupe_objs = new List<Duplicate_Data>();
+    [SerializeField] private List<Door_Activation> door_list = new List<Door_Activation>();
+
+    [Serializable]
+    public class Door_Data
+    {
+        public bool last_state;
+        public Door_Activation door_activation;
+        public GameObject door_obj;
+    }
 
 
     [Serializable]
@@ -54,25 +64,13 @@ public class Timeline_Manager : MonoBehaviour
     };
 
     // Objects
-
-    //[SerializeField] private List<Object_Memory_Data> object_timeline_memory = new List<Object_Memory_Data>();
-    [SerializeField] private List<Visible_Check> moveable_objects_vis = new List<Visible_Check>();
+    [SerializeField] private List<Visible_Check> objects_vis = new List<Visible_Check>();
 
     [SerializeField] private List<Transform> moveable_object_spawn_transforms = new List<Transform>();
     private List<Vector3> moveable_object_spawns = new List<Vector3>();
 
     [SerializeField] private GameObject box_prefab;
     [SerializeField] private int object_timestamp_index = 0;
-
-    //[Serializable]
-    //public class Object_Memory_Data
-    //{
-    //    public Vector3 position;
-    //    public string name;
-    //    public int id;
-    //    public float timestamp;
-    //};
-    ////
 
     [Serializable]
     public class Record_Data
@@ -82,6 +80,8 @@ public class Timeline_Manager : MonoBehaviour
         public bool is_obj_seen;
         public Vector3[] seen_objs_positions;
         public int next_obj_seen_timestamp; // the timestamp in which the player will next observe an object
+
+        public Door_Data[] door_data_record;
 
         public Quaternion view_rotation;
         public bool is_jumping;
@@ -103,7 +103,6 @@ public class Timeline_Manager : MonoBehaviour
     };
     //
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -112,10 +111,32 @@ public class Timeline_Manager : MonoBehaviour
             moveable_object_spawns.Add(spawn.position);
         }
 
+        GameObject[] doors = GameObject.FindGameObjectsWithTag("Door");
+
+
+        foreach (var door in doors)
+        {
+            //Door_Data input_data = new Door_Data();
+            //input_data.door_obj = door;
+            //input_data.door_activation = GetComponent<Door_Activation>();
+            //input_data.last_state = false;
+            door_list.Add(door.GetComponentInChildren<Door_Activation>());
+            door.GetComponentInChildren<Visible_Check>().Add_Camera(player_cam);
+            //    Duplicate_Data input_data = new Duplicate_Data();
+            //    input_data.obj = door;
+            //    input_data.vis = door.GetComponent<Visible_Check>();
+            //    input_data.timestamp = 0;
+            //    input_data.iter_num = iteration_num;
+
+            //    dupe_objs.Add(input_data);
+
+        }
+
+
         foreach (var obj in dupe_objs)
         {
-            obj.vis = obj.obj.GetComponent<Visible_Check>();
-            //snap_markers.Add(Instantiate(marker));
+            obj.vis = obj.obj.GetComponentInChildren<Visible_Check>();
+            obj.vis.Add_Camera(player_cam);
         }
 
         current_time = 0.0f;
@@ -123,10 +144,6 @@ public class Timeline_Manager : MonoBehaviour
         Add_To_Buffer(hidden_start_pos, player_look_pivot.localRotation, current_time);
         Add_To_Buffer(hidden_start_pos, player_look_pivot.localRotation, current_time);
         Add_To_Buffer(hidden_start_pos, player_look_pivot.localRotation, current_time);
-
-        //Add_To_Obj_Timeline(hidden_start_pos, 0, current_time);
-        //Add_To_Obj_Timeline(hidden_start_pos, 0, current_time);
-        //Add_To_Obj_Timeline(hidden_start_pos, 0, current_time);
     }
 
     // Update is called once per frame
@@ -136,11 +153,11 @@ public class Timeline_Manager : MonoBehaviour
         if (loop_restarted)
         {
             loop_restarted = false;
-            for (int i = 0; i < moveable_objects_vis.Count; i++)
+            for (int i = 0; i < objects_vis.Count; i++)
             {
-                if (moveable_objects_vis[i] == null)
+                if (objects_vis[i] == null)
                 {
-                    moveable_objects_vis.RemoveAt(i);
+                    objects_vis.RemoveAt(i);
                     i--;
                 }
             }
@@ -190,19 +207,8 @@ public class Timeline_Manager : MonoBehaviour
         }
     }
 
-    //void Add_Object_Data(Vector3 i_pos, int i_id, float i_time)
-    //{
-    //    Object_Memory_Data input_data = new Object_Memory_Data();
-    //    input_data.position = i_pos;
-    //    input_data.timestamp = i_time;
-    //    input_data.id = i_id;
-
-    //    object_timeline_memory.Insert(object_timestamp_index, input_data);
-    //}
-
-    void Run_Playback()
+    void Record_Player_Actions()
     {
-
         if (Input.GetKeyDown(KeyCode.E))
         {
             is_grabbing = true;
@@ -230,39 +236,49 @@ public class Timeline_Manager : MonoBehaviour
                 }
             }
 
+
+            bool is_door_seen_by_player_original = false;
+            List<Door_Data> door_data_list = new List<Door_Data>();
+            foreach (var door in door_list)
+            {
+                Visible_Check vis_check = door.gameObject.GetComponent<Visible_Check>();
+                if (door.GetComponentInChildren<Visible_Check>().is_seen)
+                {
+                    foreach (var cam in vis_check.seen_cams)
+                    {
+                        if (cam.gameObject == player_look_pivot.GetComponentInChildren<Camera>().gameObject)
+                        {
+                            is_door_seen_by_player_original = true;
+
+                            Door_Data record_data = new Door_Data();
+                            record_data.door_activation = door;
+                            record_data.door_obj = door.gameObject;
+                            record_data.last_state = door.is_open;
+
+                            door_data_list.Add(record_data);
+                        }
+                    }
+                }
+            }
+
             if ((timeline_memory[timeline_memory.Count - 1].position != player_target.position)
                 || (timeline_memory[timeline_memory.Count - 1].view_rotation != player_look_pivot.localRotation)
-                || (is_seen_by_player_original) || (is_grabbing))
+                || (is_seen_by_player_original) || (is_grabbing) || (is_door_seen_by_player_original))
             {
+                if (is_door_seen_by_player_original)
+                {
+                    Add_To_Buffer(player_target.position, player_look_pivot.localRotation, door_data_list.ToArray(), current_time);
+                    Debug.Log("DOOR LOGGED");
+                }
+
                 if (is_seen_by_player_original)
                 {
 
 
                     Add_To_Buffer(player_target.position, player_look_pivot.localRotation, obj_pos_array.ToArray(), current_time);
-                    timeline_memory[last_obj_seen_timestamp].next_obj_seen_timestamp = timeline_memory.Count-1;
+                    timeline_memory[last_obj_seen_timestamp].next_obj_seen_timestamp = timeline_memory.Count - 1;
 
-                    //Debug.Log("----------------------------");
-                    //Debug.Log("FROM: " + last_obj_seen_timestamp);
-                    //if (last_obj_seen_timestamp != 0)
-                    //{
-                    //    if (timeline_memory[last_obj_seen_timestamp].seen_objs_positions != null)
-                    //    {
-                    //        Debug.Log("OBJECT: " + timeline_memory[last_obj_seen_timestamp].seen_objs_positions[0]);
-                    //    }
-                    //    else
-                    //    {
-                    //        Debug.Log("OBJECT: NULL");
-                    //    }
-                        
-                    //}
-                    
-                    //Debug.Log("TO: " + (timeline_memory.Count-1));
-                    //Debug.Log("----------------------------");
-
-                    last_obj_seen_timestamp = timeline_memory.Count-1;
-
-
-
+                    last_obj_seen_timestamp = timeline_memory.Count - 1;
                 }
                 else
                 {
@@ -275,13 +291,13 @@ public class Timeline_Manager : MonoBehaviour
                     Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time, false, true);
                     player_obj_holder.trigger_grab = true;
                 }
-                
+
             }
 
             int num_of_seen_objs = 0;
-            foreach(var obj in dupe_objs)
+            foreach (var obj in dupe_objs)
             {
-                foreach(var cam in obj.vis.seen_cams)
+                foreach (var cam in obj.vis.seen_cams)
                 {
                     if (cam.gameObject == player_look_pivot.GetComponentInChildren<Camera>().gameObject)
                     {
@@ -290,6 +306,11 @@ public class Timeline_Manager : MonoBehaviour
                 }
             }
         }
+    }
+
+    void Run_Playback()
+    {
+        Record_Player_Actions();
 
         for (int i = 0; i < duplicate_player_list.Count; i++)
         {
@@ -330,10 +351,109 @@ public class Timeline_Manager : MonoBehaviour
                         is_done = true;
                     }
                 }
+
+                Object_Check();
             }
             Set_Playback_States(duplicate_player_list[i]);
         }
 
+        ////foreach (var marker in snap_markers)
+        ////{
+        ////    Destroy(marker.gameObject);
+        ////}
+
+        ////snap_markers.Clear();
+
+        //foreach (var dupe in duplicate_player_list)
+        //{
+        //    // Find next time this object is seen
+        //    if (timeline_memory[dupe.timestamp].is_obj_seen == true)
+        //    {
+        //        foreach (var pos_check in timeline_memory[dupe.timestamp].seen_objs_positions)
+        //        {
+        //            bool is_completion_time_found = false;
+        //            //int current_timestamp_check = timeline_memory[dupe.timestamp].next_obj_seen_timestamp;
+        //            int current_timestamp_check = dupe.timestamp + 1;
+
+        //            int counter = 0;
+        //            while (!is_completion_time_found)
+        //            {
+
+        //                if (timeline_memory[current_timestamp_check].seen_objs_positions != null)
+        //                {
+
+        //                    foreach (var obj in timeline_memory[current_timestamp_check].seen_objs_positions)
+        //                    {
+        //                        if (Vector3.Distance(pos_check, obj) <= 1.0f)
+        //                        {
+        //                            is_completion_time_found = true;
+
+        //                            if ((current_timestamp_check == 0)/* || (timeline_memory[current_timestamp_check].timestamp >= (iteration_delay * (iteration_num - dupe.iter_num)))*/)
+        //                            {
+        //                                is_completion_time_found = true;
+        //                            }
+        //                            else
+        //                            {
+
+        //                                float time_difference = 0.0f; // How long until the check needs to be made
+
+
+        //                                GameObject new_marker = Instantiate(marker, obj, new Quaternion());
+        //                                snap_markers.Add(new_marker);
+        //                                new_marker.GetComponent<Align_Check>().completion_time = timeline_memory[current_timestamp_check].timestamp + (iteration_delay * dupe.iter_num);
+
+        //                            }
+        //                        }
+        //                    }
+        //                }
+
+        //                if (!is_completion_time_found)
+        //                {
+        //                    //current_timestamp_check = timeline_memory[current_timestamp_check].next_obj_seen_timestamp;
+        //                    current_timestamp_check++;
+        //                }
+
+        //                if (current_timestamp_check >= timeline_memory.Count)
+        //                {
+        //                    is_completion_time_found = true;
+        //                }
+        //                counter++;
+        //            }
+
+
+        //        }
+
+        //        //Debug.Log(dupe.iter_num + " : " + (current_timestamp_check - dupe.timestamp));
+        //    }
+
+        //    Debug.Log("--------------------------------");
+        //    Debug.Log(timeline_memory[dupe.timestamp].door_data_record);
+        //    Debug.Log(dupe.timestamp);
+        //    Debug.Log("--------------------------------");
+
+        //    if (timeline_memory[dupe.timestamp].door_data_record != null)
+        //    {
+        //        Debug.Log("DOOR");
+        //    }
+        //}
+
+        //List<GameObject> temp_markers = new List<GameObject>();
+
+        //foreach (var marker in snap_markers)
+        //{
+        //    if (marker != null)
+        //    {
+        //        marker.GetComponent<Align_Check>().current_time = current_time;
+        //        temp_markers.Add(marker);
+        //    }
+        //}
+
+        //snap_markers.Clear();
+        //snap_markers = temp_markers;
+    }
+
+    void Object_Check()
+    {
         //foreach (var marker in snap_markers)
         //{
         //    Destroy(marker.gameObject);
@@ -355,30 +475,9 @@ public class Timeline_Manager : MonoBehaviour
                     int counter = 0;
                     while (!is_completion_time_found)
                     {
-                    //if ((current_timestamp_check == 0) || (timeline_memory[current_timestamp_check].timestamp >= (iteration_delay * (dupe.iter_num))))
-                    //{
-                    //    //Debug.Log("---------------------------------");
-                    //    //Debug.Log("CURRENT TIME: " + timeline_memory[current_timestamp_check].timestamp);
-                    //    //Debug.Log("CURRENT TIME + ITER: " + (timeline_memory[current_timestamp_check].timestamp));
-                    //    //Debug.Log("ITER CHECK TIME: " + (iteration_delay * (dupe.iter_num)));
-                    //    //Debug.Log("---------------------------------");
-                    //    is_completion_time_found = true;
-                    //    break;
-                    //}
-
-                    //foreach (var pos_check in timeline_memory[dupe.timestamp].seen_objs_positions)
-                    //{
-
-                        //if (timeline_memory[current_timestamp_check].seen_objs_positions == null)
-                        //{
-                        //    is_completion_time_found = true;
-                        //    break;
-                        //}
 
                         if (timeline_memory[current_timestamp_check].seen_objs_positions != null)
                         {
-
-
 
                             foreach (var obj in timeline_memory[current_timestamp_check].seen_objs_positions)
                             {
@@ -388,14 +487,7 @@ public class Timeline_Manager : MonoBehaviour
 
                                     if ((current_timestamp_check == 0)/* || (timeline_memory[current_timestamp_check].timestamp >= (iteration_delay * (iteration_num - dupe.iter_num)))*/)
                                     {
-                                        //Debug.Log("FAIL");
-                                        //Debug.Log("TIME: " + timeline_memory[current_timestamp_check].timestamp + "   is greater than: " + (iteration_delay * (iteration_num - dupe.iter_num)));
-                                        //Debug.Log("CURRENT TIME: " + timeline_memory[current_timestamp_check].timestamp);
-                                        //Debug.Log("CURRENT TIME + ITER: " + (timeline_memory[current_timestamp_check].timestamp));
-                                        //Debug.Log("ITER CHECK TIME: " + (iteration_delay * (dupe.iter_num)));
-                                        //Debug.Log("---------------------------------");
                                         is_completion_time_found = true;
-                                        //break;
                                     }
                                     else
                                     {
@@ -406,14 +498,6 @@ public class Timeline_Manager : MonoBehaviour
                                         GameObject new_marker = Instantiate(marker, obj, new Quaternion());
                                         snap_markers.Add(new_marker);
                                         new_marker.GetComponent<Align_Check>().completion_time = timeline_memory[current_timestamp_check].timestamp + (iteration_delay * dupe.iter_num);
-
-                                        //Debug.Log("---------------------------------");
-                                        //Debug.Log("CURRENT TIME: " + current_time);
-                                        //Debug.Log("TIMESTAMP TIME: " + timeline_memory[current_timestamp_check].timestamp);
-                                        //Debug.Log("COMPLETION TIME: " + (timeline_memory[current_timestamp_check].timestamp + (iteration_delay * dupe.iter_num)));
-                                        //Debug.Log("---------------------------------");
-
-                                        //Debug.Log("TIME DIFFERENCE: " + (current_time - timeline_memory[current_timestamp_check].timestamp + (iteration_delay * dupe.iter_num)));
 
                                     }
                                 }
@@ -438,6 +522,18 @@ public class Timeline_Manager : MonoBehaviour
 
                 //Debug.Log(dupe.iter_num + " : " + (current_timestamp_check - dupe.timestamp));
             }
+
+            // Create the check for this
+            //
+            //
+            //
+            //
+            //
+
+            if (timeline_memory[dupe.timestamp].door_data_record != null)
+            {
+                Debug.Log("DOOR");
+            }
         }
 
         List<GameObject> temp_markers = new List<GameObject>();
@@ -455,14 +551,8 @@ public class Timeline_Manager : MonoBehaviour
         snap_markers = temp_markers;
     }
 
-    //void Check_Object_State()
-    //{
-    //    Collider[] found_objs = Physics.OverlapSphere(object_timeline_memory[object_timestamp_index].position, 1.0f);
-    //}
-
     void Set_Playback_States(Duplicate_Data i_dupe)
     {
-        Debug.Log(timeline_memory[i_dupe.timestamp].view_rotation);
         i_dupe.obj.transform.position = Vector3.Lerp(i_dupe.obj.transform.position, timeline_memory[i_dupe.timestamp].position, 0.4f);
         i_dupe.obj_look_pivot.localRotation = timeline_memory[i_dupe.timestamp].view_rotation;
         i_dupe.obj.SetActive(!timeline_memory[i_dupe.timestamp].is_jumping);
@@ -472,16 +562,6 @@ public class Timeline_Manager : MonoBehaviour
             i_dupe.has_grabbed_this_interval = true;
             i_dupe.object_holder.trigger_grab = true;
         }
-
-        //if (timeline_memory[i_dupe.timestamp].is_obj_seen)
-        //{
-        //    foreach (var obj in timeline_memory[i_dupe.timestamp].seen_objs_positions)
-        //    {
-        //        Debug.Log(obj);
-        //        Debug.DrawLine(obj, obj + new Vector3(0.0f, 0.1f, 0.0f), new Color(1.0f, 0.0f, 0.0f), 5.0f);
-        //        //snap_markers[0].transform.position = timeline_memory[i_dupe.timestamp].seen_obj_position;
-        //    }
-        //}
     }
 
     void Add_To_Buffer(Vector3 i_pos, Quaternion i_local_rot, float i_time)
@@ -507,6 +587,21 @@ public class Timeline_Manager : MonoBehaviour
 
         input_data.is_obj_seen = true;
         input_data.seen_objs_positions = i_objs_pos;
+
+        timeline_memory.Add(timeline_memory.Count, input_data);
+    }
+
+    void Add_To_Buffer(Vector3 i_pos, Quaternion i_local_rot, Door_Data[] i_door_data, float i_time) // Seen object version
+    {
+        Record_Data input_data = new Record_Data();
+        input_data.position = i_pos;
+        input_data.timestamp = i_time;
+        input_data.view_rotation = i_local_rot;
+        input_data.is_jumping = false;
+        input_data.is_grab_activated = false;
+
+
+        input_data.door_data_record = i_door_data;
 
         timeline_memory.Add(timeline_memory.Count, input_data);
     }

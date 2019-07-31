@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Visible_Check : MonoBehaviour
 {
-    [SerializeField] private List<Camera> cams;
+    [SerializeField] public List<Camera> cams;
     private Plane[] planes;
     private Collider obj_collider;
 
@@ -46,6 +46,7 @@ public class Visible_Check : MonoBehaviour
                     {
                         is_seen = true;
                         seen_cams.Add(camera);
+                        //Debug.Log("SEEN");
                         //Debug.Log("YES");
                     }
 

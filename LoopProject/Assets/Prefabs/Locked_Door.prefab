@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 6277846091095364235}
   - component: {fileID: 4608920740309247666}
   - component: {fileID: 2899549056145399559}
+  - component: {fileID: 2184261355216247265}
   m_Layer: 0
   m_Name: Locked_Door
   m_TagString: Untagged
@@ -202,6 +203,22 @@ MonoBehaviour:
   last_click_state_opposite: 0
   door_renderer: {fileID: 6277846091095364235}
   door_collider: {fileID: 4608920740309247666}
+  is_open: 0
+--- !u!114 &2184261355216247265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2790737937468091494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f6f4dfc2ad493e40ab28367ac5cec9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cams: []
+  is_seen: 0
+  seen_cams: []
 --- !u!1 &6169754478947452839
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,7 +321,7 @@ GameObject:
   - component: {fileID: 6496801590526029855}
   m_Layer: 0
   m_Name: Locked_Door
-  m_TagString: Untagged
+  m_TagString: Door
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -13,7 +13,7 @@ public class Door_Activation : MonoBehaviour
     [SerializeField] private Renderer door_renderer;
     [SerializeField] private Collider door_collider;
 
-    private bool is_open = false;
+    public bool is_open = false;
     // Start is called before the first frame update
     void Start()
     {
