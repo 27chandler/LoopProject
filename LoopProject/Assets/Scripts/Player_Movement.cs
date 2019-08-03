@@ -14,6 +14,8 @@ public class Player_Movement : MonoBehaviour
 
     public bool is_controlled = false;
 
+    private bool is_flying = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +24,29 @@ public class Player_Movement : MonoBehaviour
         if (object_dir == null)
         {
             object_dir = this.transform;
+        }
+    }
+
+    void Levitate()
+    {
+        
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Levitate")
+        {
+            is_flying = true;
+            Debug.Log("ENTER");
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Levitate")
+        {
+            is_flying = false;
+            Debug.Log("EXIT");
         }
     }
 
@@ -69,6 +94,12 @@ public class Player_Movement : MonoBehaviour
 
             movement.y = 0.0f;
             movement.Normalize();
+
+            if (is_flying)
+            {
+                movement += Vector3.up;
+                jump_movement.y = -(0.8f * Time.deltaTime);
+            }
 
             cc.Move((movement + jump_movement) * Time.deltaTime * movement_speed);
         }

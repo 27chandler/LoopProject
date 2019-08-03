@@ -14,6 +14,8 @@ public class Timeline_Manager : MonoBehaviour
     [SerializeField] private List<GameObject> snap_markers = new List<GameObject>();
     [SerializeField] private GameObject marker;
 
+    [SerializeField] private GameObject door_marker;
+
     private float current_time = 0.0f;
     [SerializeField] private Text time_display;
     private float last_update_time = 0.0f;
@@ -268,7 +270,6 @@ public class Timeline_Manager : MonoBehaviour
                 if (is_door_seen_by_player_original)
                 {
                     Add_To_Buffer(player_target.position, player_look_pivot.localRotation, door_data_list.ToArray(), current_time);
-                    Debug.Log("DOOR LOGGED");
                 }
 
                 if (is_seen_by_player_original)
@@ -532,7 +533,64 @@ public class Timeline_Manager : MonoBehaviour
 
             if (timeline_memory[dupe.timestamp].door_data_record != null)
             {
-                Debug.Log("DOOR");
+                foreach (var door in timeline_memory[dupe.timestamp].door_data_record)
+                {
+                    if (door.last_state != door.door_activation.is_open)
+                    {
+                        Debug.Log("FAILURE FOR DOOR");
+                    }
+
+
+
+                    bool is_completion_time_found = false;
+                    //int current_timestamp_check = timeline_memory[dupe.timestamp].next_obj_seen_timestamp;
+                    int current_timestamp_check = dupe.timestamp + 1;
+
+                    int counter = 0;
+                    while (!is_completion_time_found)
+                    {
+
+                        if (timeline_memory[current_timestamp_check].door_data_record != null)
+                        {
+
+                            foreach (var door_data in timeline_memory[current_timestamp_check].door_data_record)
+                            {
+                                if (door.door_activation == door_data.door_activation)
+                                {
+                                    is_completion_time_found = true;
+
+                                    if ((current_timestamp_check == 0)/* || (timeline_memory[current_timestamp_check].timestamp >= (iteration_delay * (iteration_num - dupe.iter_num)))*/)
+                                    {
+                                        is_completion_time_found = true;
+                                    }
+                                    else
+                                    {
+                                        //Debug.Log("DOOR TIMER AT: " + timeline_memory[current_timestamp_check].timestamp);
+
+                                        GameObject new_marker = Instantiate(door_marker, door_data.door_obj.transform.position, new Quaternion());
+                                        Door_State_Check state_checker = new_marker.GetComponent<Door_State_Check>();
+                                        state_checker.Set_Linked_Door(door.door_activation);
+                                        state_checker.expected_state = door_data.last_state;
+                                        state_checker.completion_time = timeline_memory[current_timestamp_check].timestamp + (iteration_delay * dupe.iter_num);
+                                        snap_markers.Add(new_marker);
+                                    }
+                                }
+                            }
+                        }
+
+                        if (!is_completion_time_found)
+                        {
+                            //current_timestamp_check = timeline_memory[current_timestamp_check].next_obj_seen_timestamp;
+                            current_timestamp_check++;
+                        }
+
+                        if (current_timestamp_check >= timeline_memory.Count)
+                        {
+                            is_completion_time_found = true;
+                        }
+                        counter++;
+                    }
+                }
             }
         }
 
@@ -542,8 +600,21 @@ public class Timeline_Manager : MonoBehaviour
         {
             if (marker != null)
             {
-                marker.GetComponent<Align_Check>().current_time = current_time;
-                temp_markers.Add(marker);
+                Align_Check object_align = marker.GetComponent<Align_Check>();
+                Door_State_Check door_check = marker.GetComponent<Door_State_Check>();
+
+                if (object_align != null)
+                {
+                    object_align.current_time = current_time;
+                    temp_markers.Add(marker);
+                }
+                else if (door_check != null)
+                {
+                    door_check.current_time = current_time;
+                    temp_markers.Add(marker);
+                    //Debug.Log("ADDED TIME");
+                }
+
             }
         }
 
@@ -646,6 +717,7 @@ public class Timeline_Manager : MonoBehaviour
 
             foreach (var dupe in duplicate_player_list)
             {
+                // objects
                 int index = 0;
                 while (index < timeline_memory.Count)
                 {
@@ -660,6 +732,34 @@ public class Timeline_Manager : MonoBehaviour
                                 new_marker.GetComponent<Align_Check>().completion_time = timeline_memory[index].timestamp + (iteration_delay * dupe.iter_num);
 
                                 index = timeline_memory.Count;
+                            }
+                        }
+                    }
+                    index++;
+                }
+
+
+                // doors
+
+                List<Door_Activation> set_door_list = new List<Door_Activation>();
+
+                index = 0;
+                while (index < timeline_memory.Count)
+                {
+                    if (timeline_memory[index].door_data_record != null)
+                    {
+                        foreach (var door_datas in timeline_memory[index].door_data_record)
+                        {
+                            if (!set_door_list.Contains(door_datas.door_activation))
+                            {
+                                GameObject new_marker = Instantiate(door_marker, door_datas.door_obj.transform.position, new Quaternion());
+                                Door_State_Check state_checker = new_marker.GetComponent<Door_State_Check>();
+                                state_checker.Set_Linked_Door(door_datas.door_activation);
+                                state_checker.expected_state = door_datas.last_state;
+                                state_checker.completion_time = timeline_memory[index].timestamp + (iteration_delay * dupe.iter_num);
+                                snap_markers.Add(new_marker);
+
+                                set_door_list.Add(door_datas.door_activation);
                             }
                         }
                     }

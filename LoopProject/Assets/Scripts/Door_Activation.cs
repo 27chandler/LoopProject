@@ -14,6 +14,7 @@ public class Door_Activation : MonoBehaviour
     [SerializeField] private Collider door_collider;
 
     public bool is_open = false;
+    private bool is_door_opening = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,13 +33,13 @@ public class Door_Activation : MonoBehaviour
     {
         if (buttons.Count >= 1)
         {
-            is_open = true;
+            is_door_opening = true;
 
             foreach (var input in buttons)
             {
                 if (!input.is_activated)
                 {
-                    is_open = false;
+                    is_door_opening = false;
                 }
             }
         }
@@ -78,15 +79,19 @@ public class Door_Activation : MonoBehaviour
 
 
 
-        if ((is_open) || (last_click_state))
+        if ((is_door_opening) || (last_click_state))
         {
             door_renderer.enabled = false;
             door_collider.enabled = false;
+
+            is_open = true;
         }
         else
         {
             door_renderer.enabled = true;
             door_collider.enabled = true;
+
+            is_open = false;
         }
     }
 }

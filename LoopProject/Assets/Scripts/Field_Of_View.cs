@@ -48,7 +48,7 @@ public class Field_Of_View : MonoBehaviour
 
     void LateUpdate()
     {
-        transform.position = target_transform.position - new Vector3(0.0f,1.0f,0.0f);
+        transform.position = target_transform.position - new Vector3(0.0f,1.5f,0.0f);
         DrawFieldOfView();
     }
 
@@ -120,10 +120,13 @@ public class Field_Of_View : MonoBehaviour
         {
             Transform temp_trans = target_transform;
             Quaternion rotation_holder = target_transform.rotation;
+            Vector3 scale_holder = target_transform.localScale;
             temp_trans.localRotation = new Quaternion();
+            temp_trans.localScale = new Vector3(2.0f,1.0f,2.0f);
             vertices[i + 1] = temp_trans.InverseTransformPoint(viewPoints[i]) + Vector3.forward * maskCutawayDst;
 
             target_transform.rotation = rotation_holder;
+            target_transform.localScale = scale_holder;
 
             if (i < vertexCount - 2)
             {
