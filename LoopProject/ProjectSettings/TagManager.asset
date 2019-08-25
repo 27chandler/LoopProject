@@ -7,6 +7,9 @@ TagManager:
   - Timeline_Manager
   - Door
   - Levitate
+  - HUD
+  - Player_Dupe
+  - Power_Cell
   layers:
   - Default
   - TransparentFX

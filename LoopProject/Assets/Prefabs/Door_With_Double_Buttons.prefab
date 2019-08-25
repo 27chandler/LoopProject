@@ -18,7 +18,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!4 &4175481922635932096
 Transform:
@@ -172,6 +172,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7030889585883446717, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 475996054940356260, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6972609395120090949, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758211621061180528, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2416420956233760741, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2386570624366480538, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1433905076180288644, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2117172100471683045, guid: e35ad76fda30235438c10763415d3ffb,
         type: 3}
       propertyPath: buttons.Array.size
@@ -182,16 +217,6 @@ PrefabInstance:
       propertyPath: open_button_opposite
       value: 
       objectReference: {fileID: 7977601017965414598}
-    - target: {fileID: 475996054940356260, guid: e35ad76fda30235438c10763415d3ffb,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7030889585883446717, guid: e35ad76fda30235438c10763415d3ffb,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e35ad76fda30235438c10763415d3ffb, type: 3}
 --- !u!4 &6228545280618833346 stripped

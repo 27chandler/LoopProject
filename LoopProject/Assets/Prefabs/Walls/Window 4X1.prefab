@@ -282,6 +282,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall Triple (131)
       objectReference: {fileID: 0}
+    - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2840019112334453067, guid: eabc1c1a192854944aa6bf366d2bb3cf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -352,6 +357,16 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 38f74d03c4b150d449372394fb409298, type: 2}
+    - target: {fileID: 3730309888835058012, guid: eabc1c1a192854944aa6bf366d2bb3cf,
+        type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3730309888835058012, guid: eabc1c1a192854944aa6bf366d2bb3cf,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eabc1c1a192854944aa6bf366d2bb3cf, type: 3}
 --- !u!4 &1837882220063365043 stripped

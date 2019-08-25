@@ -18,6 +18,8 @@ public class Timeline_Manager : MonoBehaviour
 
     private float current_time = 0.0f;
     [SerializeField] private Text time_display;
+    [SerializeField] private Text health_display;
+    public float health = 100.0f;
     private float last_update_time = 0.0f;
     [SerializeField] float update_frequency;
     [Space]
@@ -68,7 +70,7 @@ public class Timeline_Manager : MonoBehaviour
     // Objects
     [SerializeField] private List<Visible_Check> objects_vis = new List<Visible_Check>();
 
-    [SerializeField] private List<Transform> moveable_object_spawn_transforms = new List<Transform>();
+    private List<Transform> moveable_object_spawn_transforms = new List<Transform>();
     private List<Vector3> moveable_object_spawns = new List<Vector3>();
 
     [SerializeField] private GameObject box_prefab;
@@ -108,6 +110,12 @@ public class Timeline_Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameObject[] object_array = GameObject.FindGameObjectsWithTag("Power_Cell");
+        foreach (var obj in object_array)
+        {
+            moveable_object_spawn_transforms.Add(obj.transform);
+        }
+
         foreach (var spawn in moveable_object_spawn_transforms)
         {
             moveable_object_spawns.Add(spawn.position);
@@ -152,6 +160,7 @@ public class Timeline_Manager : MonoBehaviour
     void Update()
     {
         time_display.text = Mathf.Ceil(current_time - (iteration_delay * (iteration_num-1))).ToString();
+        health_display.text = "Health: " + Mathf.CeilToInt(health).ToString();
         if (loop_restarted)
         {
             loop_restarted = false;
@@ -274,8 +283,6 @@ public class Timeline_Manager : MonoBehaviour
 
                 if (is_seen_by_player_original)
                 {
-
-
                     Add_To_Buffer(player_target.position, player_look_pivot.localRotation, obj_pos_array.ToArray(), current_time);
                     timeline_memory[last_obj_seen_timestamp].next_obj_seen_timestamp = timeline_memory.Count - 1;
 
@@ -535,10 +542,10 @@ public class Timeline_Manager : MonoBehaviour
             {
                 foreach (var door in timeline_memory[dupe.timestamp].door_data_record)
                 {
-                    if (door.last_state != door.door_activation.is_open)
-                    {
-                        Debug.Log("FAILURE FOR DOOR");
-                    }
+                    //if (door.last_state != door.door_activation.is_open)
+                    //{
+                    //    Debug.Log("FAILURE FOR DOOR");
+                    //}
 
 
 

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8524934600818022935}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Door_No_Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 5172593457765060749}
   - component: {fileID: 6157988426547598672}
   - component: {fileID: 5684800247641907063}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall Single (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 6742143675587372970}
   - component: {fileID: 6753626887238245343}
   - component: {fileID: 5053944298579257571}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Wall Single (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

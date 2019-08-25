@@ -12,6 +12,11 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private Transform object_dir;
     private Movement_Playback mp;
 
+    private float default_height;
+    [SerializeField] private float crouch_height = 0.6f;
+
+    private bool is_crouching = false;
+
     public bool is_controlled = false;
 
     private bool is_flying = false;
@@ -20,6 +25,8 @@ public class Player_Movement : MonoBehaviour
     void Start()
     {
         cc = GetComponent<CharacterController>();
+
+        default_height = cc.height;
 
         if (object_dir == null)
         {
@@ -99,6 +106,30 @@ public class Player_Movement : MonoBehaviour
             {
                 movement += Vector3.up;
                 jump_movement.y = -(0.8f * Time.deltaTime);
+            }
+
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                RaycastHit hit;
+
+                Physics.Raycast(transform.position, Vector3.up, out hit, default_height);
+
+                if (hit.collider == null)
+                {
+                    is_crouching = !is_crouching;
+
+                    if (!is_crouching)
+                    {
+                        Debug.Log("Up by: " + (default_height - cc.height).ToString());
+                        movement += new Vector3(0.0f, (default_height - cc.height), 0.0f);
+                        cc.height = default_height;
+                    }
+                    else
+                    {
+                        cc.height = crouch_height;
+                    }
+                }
+
             }
 
             cc.Move((movement + jump_movement) * Time.deltaTime * movement_speed);

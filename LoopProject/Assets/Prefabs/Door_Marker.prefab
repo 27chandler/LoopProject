@@ -107,5 +107,5 @@ MonoBehaviour:
   renderer: {fileID: 8777321216788729800}
   completion_time: 0
   current_time: 0
-  max_health: 50
+  max_health: 30
   expected_state: 0
