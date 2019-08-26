@@ -11,6 +11,7 @@ public class Visible_Check : MonoBehaviour
     [SerializeField] private Transform origin_position;
     [SerializeField] private bool use_custom_origin = false;
 
+
     public bool is_seen = false;
     public List<Camera> seen_cams = new List<Camera>();
 
@@ -53,7 +54,6 @@ public class Visible_Check : MonoBehaviour
 
                 RaycastHit hit;
                 Physics.Raycast(target_pos, ray_direction, out hit, obstacleMask);
-                Debug.DrawRay(target_pos, ray_direction);
                 //Debug.Log(hit.collider.gameObject.transform.parent.name + " has been detected!");
                 if (hit.collider != null)
                 {
@@ -63,17 +63,20 @@ public class Visible_Check : MonoBehaviour
                         seen_cams.Add(camera);
                         //Debug.Log(name + " SEEN");
                         //Debug.Log("YES");
+                        Debug.DrawRay(target_pos, ray_direction);
                     }
                     else if ((hit.collider.gameObject.tag == "Player_Dupe") && (tag == "Player"))
                     {
                         is_seen = true;
                         seen_cams.Add(camera);
                         tm.Activate_Paradox_Increment(1.0f);
+                        Debug.DrawRay(target_pos, ray_direction,Color.red);
                     }
                     else if (hit.collider.gameObject.tag == "Player_Dupe")
                     {
                         is_seen = true;
                         seen_cams.Add(camera);
+                        Debug.DrawRay(target_pos, ray_direction);
                     }
 
                     //if (hit.transform.parent == camera.transform.parent)

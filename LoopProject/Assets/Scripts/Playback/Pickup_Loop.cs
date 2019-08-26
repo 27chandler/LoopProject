@@ -7,8 +7,15 @@ public class Pickup_Loop : MonoBehaviour
 {
     [SerializeField] private Visible_Check vc;
 
+    [SerializeField] private Material hold_mat;
+    private Material default_mat;
+
     public bool is_picked_up;
     public Vector3 hold_pos;
+    public GameObject object_holding_this; // The player object which is holding the object
+
+    Collider col;
+    MeshRenderer meshrenderer;
 
     private float current_time = 0.0f;
     [SerializeField] private int timestamp_index = 0;
@@ -17,6 +24,9 @@ public class Pickup_Loop : MonoBehaviour
 
     [SerializeField] public float delay = 30.0f;
     [SerializeField] public Vector3 snap_pos;
+
+    private Vector3 last_pos;
+    bool is_moving = false;
 
     [SerializeField] private List<Record_Data> position_buffer = new List<Record_Data>();
     private Timeline_Manager timeline_manager;
@@ -32,13 +42,17 @@ public class Pickup_Loop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        col = GetComponent<Collider>();
+        meshrenderer = GetComponent<MeshRenderer>();
+        default_mat = meshrenderer.material;
 
         vc.Add_Camera(GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Camera>());
         rb = GetComponent<Rigidbody>();
 
         timeline_manager = GameObject.FindGameObjectWithTag("Timeline_Manager").GetComponent<Timeline_Manager>();
         last_iteration_num = timeline_manager.iteration_num;
+
+        last_pos = transform.position;
 
         //Add_To_Buffer(transform.position, transform.localRotation, current_time);
         //Add_To_Buffer(transform.position, transform.localRotation, current_time);
@@ -49,8 +63,34 @@ public class Pickup_Loop : MonoBehaviour
     {
         //Run_Playback();
 
+        if (last_pos != transform.position)
+        {
+            is_moving = true;
+            last_pos = transform.position;
+        }
+        else
+        {
+            is_moving = false;
+        }
+
         if (is_picked_up)
         {
+            meshrenderer.material = hold_mat;
+            if (object_holding_this.activeInHierarchy == false)
+            {
+                col.enabled = false;
+                meshrenderer.enabled = false;
+                vc.enabled = false;
+                vc.seen_cams.Clear();
+                vc.is_seen = false;
+            }
+            else if (col.enabled == false)
+            {
+                col.enabled = true;
+                meshrenderer.enabled = true;
+                vc.enabled = true;
+            }
+
             rb.MovePosition(Vector3.Lerp(rb.position,hold_pos,0.2f));
 
             //float distance = Vector3.Distance(hold_pos, transform.position);
@@ -70,6 +110,7 @@ public class Pickup_Loop : MonoBehaviour
         }
         else
         {
+            meshrenderer.material = default_mat;
             rb.useGravity = true;
             if ((Vector3.Distance(transform.position,snap_pos) <= 0.5f) && (rb.velocity.magnitude <= 0.1f))
             {
@@ -81,7 +122,10 @@ public class Pickup_Loop : MonoBehaviour
         {
             foreach(var cam in vc.seen_cams)
             {
-                cam.GetComponentInParent<Movement_Playback>().Add_To_Object_Memory(transform.position,gameObject.name);
+                if (cam.gameObject.activeInHierarchy)
+                {
+                    cam.GetComponentInParent<Movement_Playback>().Add_To_Object_Memory(transform.position, gameObject.name);
+                }
             }
         }
 

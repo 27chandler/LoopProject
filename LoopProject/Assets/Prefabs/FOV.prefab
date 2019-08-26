@@ -101,8 +101,8 @@ MonoBehaviour:
     m_Bits: 1024
   target_transform: {fileID: 0}
   visibleTargets: []
-  meshResolution: 10
-  edgeResolveIterations: 8
-  edgeDstThreshold: 3
+  meshResolution: 4
+  edgeResolveIterations: 4
+  edgeDstThreshold: 1
   maskCutawayDst: 0.1
   viewMeshFilter: {fileID: 8392549092211684851}

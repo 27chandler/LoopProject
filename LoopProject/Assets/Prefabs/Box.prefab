@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bfa9a5262a1d3f14ead6bc6e3bfe0539, type: 2}
+  - {fileID: 2100000, guid: 221c782fefc85c74dbfe924ec91a7f7e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -126,6 +126,8 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 1024
+  origin_position: {fileID: 0}
+  use_custom_origin: 0
   is_seen: 0
   seen_cams: []
 --- !u!114 &3940395655078686913
@@ -141,8 +143,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vc: {fileID: 3940395655078686912}
+  hold_mat: {fileID: 2100000, guid: dba8e22058af2cf41aba6228378318b4, type: 2}
   is_picked_up: 0
   hold_pos: {x: 0, y: 0, z: 0}
+  object_holding_this: {fileID: 0}
   timestamp_index: 0
   delay: 30
   snap_pos: {x: 0, y: 0, z: 0}

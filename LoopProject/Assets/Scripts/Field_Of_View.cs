@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Field_Of_View : MonoBehaviour
 {
+    MeshRenderer meshrenderer;
+
+
     public float viewRadius;
     [Range(0, 360)]
     public float viewAngle;
@@ -29,6 +32,8 @@ public class Field_Of_View : MonoBehaviour
 
     void Start()
     {
+        meshrenderer = GetComponent<MeshRenderer>();
+
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
@@ -48,12 +53,23 @@ public class Field_Of_View : MonoBehaviour
 
     void LateUpdate()
     {
-        Vector3 position_to_set = new Vector3();
+        if (target_transform.gameObject.activeInHierarchy == false)
+        {
+            meshrenderer.enabled = false;
+        }
+        else if (meshrenderer.enabled == false)
+        {
+            meshrenderer.enabled = true;
+        }
+        else
+        {
+            Vector3 position_to_set = new Vector3();
 
-        position_to_set = target_transform.position - new Vector3(0.0f,1.5f,0.0f);
-        position_to_set.y = (Mathf.Round(position_to_set.y / 5.0f) * 5.0f) + 0.1f;
-        transform.position = position_to_set;
-        DrawFieldOfView();
+            position_to_set = target_transform.position - new Vector3(0.0f, 1.5f, 0.0f);
+            position_to_set.y = (Mathf.Round(position_to_set.y / 5.0f) * 5.0f) + 0.1f;
+            transform.position = position_to_set;
+            DrawFieldOfView();
+        }
     }
 
     void FindVisibleTargets()

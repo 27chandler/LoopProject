@@ -6,7 +6,7 @@ public class Hold_Object : MonoBehaviour
 {
     public bool trigger_grab = false;
     public bool is_holding = false;
-    private Pickup_Loop grabbed_item;
+    public Pickup_Loop grabbed_item;
     public GameObject grabbed_item_obj;
     // Start is called before the first frame update
     void Start()
@@ -57,7 +57,8 @@ public class Hold_Object : MonoBehaviour
 
         if (grabbed_item != null)
         {
-            grabbed_item.hold_pos = transform.position + (transform.forward * 3.0f);
+            grabbed_item.hold_pos = transform.position + (transform.forward * 1.5f);
+            grabbed_item.object_holding_this = this.gameObject;
         }
 
 
