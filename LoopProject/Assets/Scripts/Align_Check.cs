@@ -96,7 +96,7 @@ public class Align_Check : MonoBehaviour
         if (health <= 0)
         {
             Debug.Log("FAILED");
-            tm.health -= 1.0f;
+            tm.Activate_Paradox_Increment(2.0f);
             Destroy(this.gameObject);
         }
 

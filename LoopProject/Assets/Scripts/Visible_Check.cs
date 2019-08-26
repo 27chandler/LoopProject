@@ -8,6 +8,8 @@ public class Visible_Check : MonoBehaviour
     private Plane[] planes;
     private Collider obj_collider;
     [SerializeField] private LayerMask obstacleMask;
+    [SerializeField] private Transform origin_position;
+    [SerializeField] private bool use_custom_origin = false;
 
     public bool is_seen = false;
     public List<Camera> seen_cams = new List<Camera>();
@@ -30,17 +32,28 @@ public class Visible_Check : MonoBehaviour
     {
         seen_cams.Clear();
 
+        Vector3 target_pos = new Vector3();
+
+        if (use_custom_origin)
+        {
+            target_pos = origin_position.position;
+        }
+        else
+        {
+            target_pos = transform.position;
+        }
+
         is_seen = false;
         foreach (var camera in cams)
         {
             planes = GeometryUtility.CalculateFrustumPlanes(camera);
             if (GeometryUtility.TestPlanesAABB(planes, obj_collider.bounds))
             {
-                Vector3 ray_direction = camera.transform.position - transform.position;
+                Vector3 ray_direction = camera.transform.position - target_pos;
 
                 RaycastHit hit;
-                Physics.Raycast(transform.position, ray_direction, out hit, obstacleMask);
-                Debug.DrawRay(transform.position, ray_direction);
+                Physics.Raycast(target_pos, ray_direction, out hit, obstacleMask);
+                Debug.DrawRay(target_pos, ray_direction);
                 //Debug.Log(hit.collider.gameObject.transform.parent.name + " has been detected!");
                 if (hit.collider != null)
                 {
@@ -53,7 +66,14 @@ public class Visible_Check : MonoBehaviour
                     }
                     else if ((hit.collider.gameObject.tag == "Player_Dupe") && (tag == "Player"))
                     {
-                        tm.health -= 10.0f;
+                        is_seen = true;
+                        seen_cams.Add(camera);
+                        tm.Activate_Paradox_Increment(1.0f);
+                    }
+                    else if (hit.collider.gameObject.tag == "Player_Dupe")
+                    {
+                        is_seen = true;
+                        seen_cams.Add(camera);
                     }
 
                     //if (hit.transform.parent == camera.transform.parent)

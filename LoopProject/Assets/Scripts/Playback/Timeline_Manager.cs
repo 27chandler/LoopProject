@@ -9,6 +9,8 @@ public class Timeline_Manager : MonoBehaviour
     [SerializeField] public float iteration_delay;
     [SerializeField] public int iteration_num = 0;
     [SerializeField] private float time_speed = 1.0f;
+    [SerializeField] private int paradox_sensitivity = 100;
+    [SerializeField] private float paradox_regeneration = 0.05f;
     private bool loop_restarted = false;
 
     [SerializeField] private List<GameObject> snap_markers = new List<GameObject>();
@@ -102,6 +104,7 @@ public class Timeline_Manager : MonoBehaviour
         public Hold_Object object_holder;
         public bool has_grabbed_this_interval;
         public int iter_num;
+        public int paradox_suspicion;
         public bool is_seen;
         public int timestamp;
     };
@@ -161,6 +164,12 @@ public class Timeline_Manager : MonoBehaviour
     {
         time_display.text = Mathf.Ceil(current_time - (iteration_delay * (iteration_num-1))).ToString();
         health_display.text = "Health: " + Mathf.CeilToInt(health).ToString();
+
+        if (health < 100.0f)
+        {
+            health += paradox_regeneration;
+        }
+
         if (loop_restarted)
         {
             loop_restarted = false;
@@ -196,7 +205,11 @@ public class Timeline_Manager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time,true);
-            current_time += 25.0f;
+            //current_time += 25.0f;
+
+            iteration_num++;
+            Restart_Loop();
+
             Add_To_Buffer(player_target.position, player_look_pivot.localRotation, current_time,false);
         }
         if (Input.GetKey(KeyCode.F))
@@ -364,113 +377,43 @@ public class Timeline_Manager : MonoBehaviour
             }
             Set_Playback_States(duplicate_player_list[i]);
         }
-
-        ////foreach (var marker in snap_markers)
-        ////{
-        ////    Destroy(marker.gameObject);
-        ////}
-
-        ////snap_markers.Clear();
-
-        //foreach (var dupe in duplicate_player_list)
-        //{
-        //    // Find next time this object is seen
-        //    if (timeline_memory[dupe.timestamp].is_obj_seen == true)
-        //    {
-        //        foreach (var pos_check in timeline_memory[dupe.timestamp].seen_objs_positions)
-        //        {
-        //            bool is_completion_time_found = false;
-        //            //int current_timestamp_check = timeline_memory[dupe.timestamp].next_obj_seen_timestamp;
-        //            int current_timestamp_check = dupe.timestamp + 1;
-
-        //            int counter = 0;
-        //            while (!is_completion_time_found)
-        //            {
-
-        //                if (timeline_memory[current_timestamp_check].seen_objs_positions != null)
-        //                {
-
-        //                    foreach (var obj in timeline_memory[current_timestamp_check].seen_objs_positions)
-        //                    {
-        //                        if (Vector3.Distance(pos_check, obj) <= 1.0f)
-        //                        {
-        //                            is_completion_time_found = true;
-
-        //                            if ((current_timestamp_check == 0)/* || (timeline_memory[current_timestamp_check].timestamp >= (iteration_delay * (iteration_num - dupe.iter_num)))*/)
-        //                            {
-        //                                is_completion_time_found = true;
-        //                            }
-        //                            else
-        //                            {
-
-        //                                float time_difference = 0.0f; // How long until the check needs to be made
-
-
-        //                                GameObject new_marker = Instantiate(marker, obj, new Quaternion());
-        //                                snap_markers.Add(new_marker);
-        //                                new_marker.GetComponent<Align_Check>().completion_time = timeline_memory[current_timestamp_check].timestamp + (iteration_delay * dupe.iter_num);
-
-        //                            }
-        //                        }
-        //                    }
-        //                }
-
-        //                if (!is_completion_time_found)
-        //                {
-        //                    //current_timestamp_check = timeline_memory[current_timestamp_check].next_obj_seen_timestamp;
-        //                    current_timestamp_check++;
-        //                }
-
-        //                if (current_timestamp_check >= timeline_memory.Count)
-        //                {
-        //                    is_completion_time_found = true;
-        //                }
-        //                counter++;
-        //            }
-
-
-        //        }
-
-        //        //Debug.Log(dupe.iter_num + " : " + (current_timestamp_check - dupe.timestamp));
-        //    }
-
-        //    Debug.Log("--------------------------------");
-        //    Debug.Log(timeline_memory[dupe.timestamp].door_data_record);
-        //    Debug.Log(dupe.timestamp);
-        //    Debug.Log("--------------------------------");
-
-        //    if (timeline_memory[dupe.timestamp].door_data_record != null)
-        //    {
-        //        Debug.Log("DOOR");
-        //    }
-        //}
-
-        //List<GameObject> temp_markers = new List<GameObject>();
-
-        //foreach (var marker in snap_markers)
-        //{
-        //    if (marker != null)
-        //    {
-        //        marker.GetComponent<Align_Check>().current_time = current_time;
-        //        temp_markers.Add(marker);
-        //    }
-        //}
-
-        //snap_markers.Clear();
-        //snap_markers = temp_markers;
     }
 
     void Object_Check()
     {
-        //foreach (var marker in snap_markers)
-        //{
-        //    Destroy(marker.gameObject);
-        //}
 
-        //snap_markers.Clear();
-
+        // Find out if an object was seen when it wasn't meant to be
         foreach (var dupe in duplicate_player_list)
         {
+
+            foreach (var vis in dupe_objs)
+            {
+                foreach (var cam in vis.vis.seen_cams)
+                {
+                    if (cam == dupe.obj.GetComponentInChildren<Camera>())
+                    {
+                        
+
+                        Collider[] found_objs = Physics.OverlapSphere(vis.obj.transform.position, 1.0f);
+                        bool is_obj_safe = false;
+
+                        foreach (Collider collider in found_objs)
+                        {
+                            if (collider.tag == "Marker")
+                            {
+                                is_obj_safe = true;
+
+                            }
+                        }
+
+                        if (!is_obj_safe)
+                        {
+                            dupe.paradox_suspicion += 1;
+                        }
+                    }
+                }
+            }
+
             // Find next time this object is seen
             if (timeline_memory[dupe.timestamp].is_obj_seen == true)
             {
@@ -531,21 +474,11 @@ public class Timeline_Manager : MonoBehaviour
                 //Debug.Log(dupe.iter_num + " : " + (current_timestamp_check - dupe.timestamp));
             }
 
-            // Create the check for this
-            //
-            //
-            //
-            //
-            //
 
             if (timeline_memory[dupe.timestamp].door_data_record != null)
             {
                 foreach (var door in timeline_memory[dupe.timestamp].door_data_record)
                 {
-                    //if (door.last_state != door.door_activation.is_open)
-                    //{
-                    //    Debug.Log("FAILURE FOR DOOR");
-                    //}
 
 
 
@@ -598,6 +531,16 @@ public class Timeline_Manager : MonoBehaviour
                         counter++;
                     }
                 }
+            }
+
+            if (dupe.paradox_suspicion >= paradox_sensitivity)
+            {
+                Activate_Paradox_Increment(20.0f);
+                dupe.paradox_suspicion = 0;
+            }
+            else if (dupe.paradox_suspicion > 0)
+            {
+                dupe.paradox_suspicion -= 1;
             }
         }
 
@@ -773,15 +716,7 @@ public class Timeline_Manager : MonoBehaviour
                     index++;
                 }
             }
-            //moveable_objects_vis.Add(created_obj.GetComponent<Visible_Check>());
         }
-
-        //foreach (var marker in snap_markers)
-        //{
-        //    Destroy(marker.gameObject);
-        //}
-
-        //snap_markers.Clear();
 
         object_timestamp_index = 0;
 
@@ -795,8 +730,23 @@ public class Timeline_Manager : MonoBehaviour
         dupe_data.object_holder = spawned_obj.GetComponentInChildren<Hold_Object>();
         dupe_data.has_grabbed_this_interval = false;
 
+        dupe_data.paradox_suspicion = 0;
+
         vis.Add_Camera(spawned_obj.GetComponentInChildren<Camera>());
 
+        foreach (var obj in dupe_objs)
+        {
+            foreach(var cam in vis.cams)
+            {
+                obj.vis.Add_Camera(cam);
+            }
+        }
+
         duplicate_player_list.Add(dupe_data);
+    }
+
+    public void Activate_Paradox_Increment(float i_value)
+    {
+        health -= i_value;
     }
 }

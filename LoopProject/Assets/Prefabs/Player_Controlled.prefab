@@ -112,9 +112,23 @@ PrefabInstance:
       propertyPath: obstacleMask.m_Bits
       value: 1024
       objectReference: {fileID: 0}
+    - target: {fileID: 6285599566252047430, guid: a42df1d82d3680a44964470114b0aa68,
+        type: 3}
+      propertyPath: use_custom_origin
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6285599566252047430, guid: a42df1d82d3680a44964470114b0aa68,
+        type: 3}
+      propertyPath: origin_position
+      value: 
+      objectReference: {fileID: 771532793019296009}
     - target: {fileID: 1100785653, guid: a42df1d82d3680a44964470114b0aa68, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1100785653, guid: a42df1d82d3680a44964470114b0aa68, type: 3}
+      propertyPath: m_TargetDisplay
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1100785654, guid: a42df1d82d3680a44964470114b0aa68, type: 3}
       propertyPath: m_Enabled
@@ -143,6 +157,12 @@ Transform:
 --- !u!4 &771532792990417208 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1193545666, guid: a42df1d82d3680a44964470114b0aa68,
+    type: 3}
+  m_PrefabInstance: {fileID: 771532791969369850}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &771532793019296009 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1100785651, guid: a42df1d82d3680a44964470114b0aa68,
     type: 3}
   m_PrefabInstance: {fileID: 771532791969369850}
   m_PrefabAsset: {fileID: 0}

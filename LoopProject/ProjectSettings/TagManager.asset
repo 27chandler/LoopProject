@@ -10,6 +10,7 @@ TagManager:
   - HUD
   - Player_Dupe
   - Power_Cell
+  - Marker
   layers:
   - Default
   - TransparentFX

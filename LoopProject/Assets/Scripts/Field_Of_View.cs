@@ -48,7 +48,11 @@ public class Field_Of_View : MonoBehaviour
 
     void LateUpdate()
     {
-        transform.position = target_transform.position - new Vector3(0.0f,1.5f,0.0f);
+        Vector3 position_to_set = new Vector3();
+
+        position_to_set = target_transform.position - new Vector3(0.0f,1.5f,0.0f);
+        position_to_set.y = (Mathf.Round(position_to_set.y / 5.0f) * 5.0f) + 0.1f;
+        transform.position = position_to_set;
         DrawFieldOfView();
     }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Door_State_Check : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class Door_State_Check : MonoBehaviour
     private Hold_Object holder;
     [SerializeField] public float completion_time;
     [SerializeField] public float current_time;
+    [SerializeField] private TextMeshPro countdown_text;
     private int health;
     [SerializeField] private int max_health;
 
@@ -49,6 +51,10 @@ public class Door_State_Check : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (countdown_text != null)
+        {
+            countdown_text.text = (completion_time - current_time).ToString();
+        }
 
         if (completion_time > (tm.iteration_num * tm.iteration_delay))
         {
@@ -79,7 +85,7 @@ public class Door_State_Check : MonoBehaviour
 
         if (health <= 0)
         {
-            Debug.Log("FAILED");
+            tm.Activate_Paradox_Increment(1.0f);
             Destroy(this.gameObject);
         }
 
