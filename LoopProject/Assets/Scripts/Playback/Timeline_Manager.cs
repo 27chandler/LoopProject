@@ -557,6 +557,7 @@ public class Timeline_Manager : MonoBehaviour
             {
                 Activate_Paradox_Increment(20.0f);
                 dupe.paradox_suspicion = 0;
+                Debug.Log("MAX PARADOX");
             }
             else if (dupe.paradox_suspicion > 0)
             {
@@ -839,6 +840,29 @@ public class Timeline_Manager : MonoBehaviour
                 }
             }
         }
+
+
+        // Snap marker jump calculations
+        foreach (var marker in snap_markers)
+        {
+            if (marker != null)
+            {
+                Align_Check align_marker = marker.GetComponent<Align_Check>();
+
+                if (align_marker != null)
+                {
+                    float completion_time = align_marker.completion_time;
+
+                    if (completion_time < iteration_delay * iteration_num)
+                    {
+                        align_marker.completion_time += iteration_delay;
+                        Debug.Log("Forward");
+                    }
+                }
+            }
+        }
+
+
     }
 
 }
