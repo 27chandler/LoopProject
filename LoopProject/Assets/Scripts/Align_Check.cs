@@ -12,6 +12,8 @@ public class Align_Check : MonoBehaviour
     private int health;
     [SerializeField] private int max_health;
 
+    private bool is_destroying = false;
+
     private bool is_player_altering = false;
     private Timeline_Manager tm;
     // Start is called before the first frame update
@@ -85,7 +87,13 @@ public class Align_Check : MonoBehaviour
         {
             if (is_obj_present)
             {
-                Destroy(gameObject);
+                if (!is_destroying)
+                {
+                    is_destroying = true;
+                    health = 99999999;
+                    Destroy(this.gameObject);
+                    //StartCoroutine(Destroy_In(0.5f));
+                }
             }
             else
             {
@@ -100,5 +108,11 @@ public class Align_Check : MonoBehaviour
             Destroy(this.gameObject);
         }
 
+    }
+
+    IEnumerator Destroy_In(float i_delay)
+    {
+        yield return new WaitForSeconds(i_delay);
+        Destroy(this.gameObject);
     }
 }

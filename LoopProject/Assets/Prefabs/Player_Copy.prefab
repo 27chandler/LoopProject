@@ -58,7 +58,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 1000
-  field of view: 60
+  field of view: 90
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -114,6 +114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trigger_grab: 0
   is_holding: 0
+  grabbed_item: {fileID: 0}
   grabbed_item_obj: {fileID: 0}
 --- !u!1 &1193545665
 GameObject:
@@ -426,7 +427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8480ee6efd8e5794fa321fef93904dc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement_speed: 10
+  movement_speed: 6
   jump_strength: 0.4
   object_dir: {fileID: 1100785651}
   crouch_height: 0.6
@@ -467,5 +468,7 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
+  origin_position: {fileID: 0}
+  use_custom_origin: 0
   is_seen: 0
   seen_cams: []

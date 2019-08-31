@@ -406,29 +406,50 @@ public class Timeline_Manager : MonoBehaviour
         foreach (var dupe in duplicate_player_list)
         {
 
-            foreach (var vis in dupe_objs)
+            foreach (var visible_obj in dupe_objs)
             {
-                foreach (var cam in vis.vis.seen_cams)
+                foreach (var cam in visible_obj.vis.seen_cams)
                 {
                     if (cam == dupe.obj.GetComponentInChildren<Camera>())
                     {
-                        
-                        Collider[] found_objs = Physics.OverlapSphere(vis.obj.transform.position, 1.0f);
-                        bool is_obj_safe = false;
-
-                        foreach (Collider collider in found_objs)
+                        bool is_obj_new = true;
+                        if (timeline_memory[dupe.timestamp].is_obj_seen)
                         {
-                            if (collider.tag == "Marker")
+                            foreach (var pos in timeline_memory[dupe.timestamp].seen_objs_positions)
                             {
-                                is_obj_safe = true;
-
+                                if (Vector3.Distance(pos, visible_obj.obj.transform.position) <= 1.5f)
+                                {
+                                    is_obj_new = false;
+                                }
                             }
                         }
 
-                        if (!is_obj_safe)
+
+
+                        if (is_obj_new)
                         {
-                            dupe.paradox_suspicion += 1;
+                            Debug.Log("NEW");
                         }
+
+
+                        
+                        //Collider[] found_objs = Physics.OverlapSphere(visible_obj.obj.transform.position, 1.0f);
+                        //bool is_obj_safe = false;
+
+                        //foreach (Collider collider in found_objs)
+                        //{
+                        //    if (collider.tag == "Marker")
+                        //    {
+                        //        is_obj_safe = true;
+
+                        //    }
+                        //}
+
+                        //if (!is_obj_safe)
+                        //{
+                        //    //Debug.Log("Object name: " + vis.obj.name);
+                        //    dupe.paradox_suspicion += 1;
+                        //}
 
 
                     }
