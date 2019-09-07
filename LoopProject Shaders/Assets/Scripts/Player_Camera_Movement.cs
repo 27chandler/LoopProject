@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Player_Camera_Movement : MonoBehaviour
 {
-    private float rotation_y = 0.0f;
+    [SerializeField] private float rotation_y = 0.0f;
     private float rotation_x = 0.0f;
 
     [SerializeField] private Transform rotation_origin;
+    [SerializeField] private float max_look_up = 80.0f;
+    [SerializeField] private float max_look_down = -80.0f;
     private Movement_Playback mp;
     public bool is_controlled = false;
 
@@ -39,7 +41,11 @@ public class Player_Camera_Movement : MonoBehaviour
         {
             rotation_y += Input.GetAxis("Mouse Y");
             rotation_x += Input.GetAxis("Mouse X");
-            rotation_origin.localEulerAngles = new Vector3(-rotation_y, rotation_x, transform.localEulerAngles.z);
+
+            if ((rotation_y > max_look_down) && (rotation_y < max_look_up))
+            {
+                rotation_origin.localEulerAngles = new Vector3(-rotation_y, rotation_x, transform.localEulerAngles.z);
+            }
         }
         else
         {
