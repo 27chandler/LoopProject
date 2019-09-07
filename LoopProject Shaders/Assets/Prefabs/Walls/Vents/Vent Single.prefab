@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7179439134931582099}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Vent Single
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,11 +40,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7179439134931582099}
     m_Modifications:
-    - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
-        type: 3}
-      propertyPath: m_Name
-      value: Wall Triple (11)
-      objectReference: {fileID: 0}
     - target: {fileID: 2840019112334453067, guid: eabc1c1a192854944aa6bf366d2bb3cf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -104,6 +99,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
+        type: 3}
+      propertyPath: m_Name
+      value: Wall Triple (11)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eabc1c1a192854944aa6bf366d2bb3cf, type: 3}
@@ -120,11 +120,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7179439134931582099}
     m_Modifications:
-    - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
-        type: 3}
-      propertyPath: m_Name
-      value: Wall Triple (10)
-      objectReference: {fileID: 0}
     - target: {fileID: 2840019112334453067, guid: eabc1c1a192854944aa6bf366d2bb3cf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -185,6 +180,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
+        type: 3}
+      propertyPath: m_Name
+      value: Wall Triple (10)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eabc1c1a192854944aa6bf366d2bb3cf, type: 3}
 --- !u!4 &6254888405103352698 stripped
@@ -200,11 +200,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7179439134931582099}
     m_Modifications:
-    - target: {fileID: 6579247085075840381, guid: 247cc76b3436e244480e8cda1dd35da2,
-        type: 3}
-      propertyPath: m_Name
-      value: Wall Short Triple
-      objectReference: {fileID: 0}
     - target: {fileID: 3407995899448171173, guid: 247cc76b3436e244480e8cda1dd35da2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -262,13 +257,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3407995899448171173, guid: 247cc76b3436e244480e8cda1dd35da2,
         type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
+      propertyPath: m_LocalScale.y
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 3407995899448171173, guid: 247cc76b3436e244480e8cda1dd35da2,
         type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2.5
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6579247085075840381, guid: 247cc76b3436e244480e8cda1dd35da2,
+        type: 3}
+      propertyPath: m_Name
+      value: Wall Short Triple
+      objectReference: {fileID: 0}
+    - target: {fileID: 6579247085075840381, guid: 247cc76b3436e244480e8cda1dd35da2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 247cc76b3436e244480e8cda1dd35da2, type: 3}

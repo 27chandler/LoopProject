@@ -73,11 +73,13 @@ public class Player_Movement : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
+                    Debug.Log("Jumped");
                     jump_movement.y = jump_strength;
                 }
             }
             else
             {
+                Debug.Log("Falling");
                 jump_movement.y -= (0.8f * Time.deltaTime);
             }
 
@@ -110,6 +112,7 @@ public class Player_Movement : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.C))
             {
+                Debug.Log("Crounched");
                 RaycastHit hit;
 
                 Vector3 ceiling_check_pos = transform.position;

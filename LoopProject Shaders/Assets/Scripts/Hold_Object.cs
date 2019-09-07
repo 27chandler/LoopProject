@@ -18,6 +18,19 @@ public class Hold_Object : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        RaycastHit hit;
+        Physics.Raycast(transform.position, transform.forward, out hit, 5.0f, layer_collision_raycasting);
+
+        if (hit.collider != null)
+        {
+            Click_Button click_button = hit.collider.GetComponent<Click_Button>();
+
+            if (click_button != null)
+            {
+                click_button.is_highlighted = true;
+            }
+        }
+
         if (trigger_grab)
         {
             //Debug.Log("Trigger Grab Ran");
@@ -25,8 +38,6 @@ public class Hold_Object : MonoBehaviour
             if (!is_holding)
             {
                 //Debug.Log("is not holding");
-                RaycastHit hit;
-                Physics.Raycast(transform.position, transform.forward, out hit, 5.0f, layer_collision_raycasting);
                // Debug.Log("HIT: " + hit.collider);
 
                 if (hit.collider != null)

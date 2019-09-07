@@ -42,10 +42,16 @@ public class Player_Camera_Movement : MonoBehaviour
             rotation_y += Input.GetAxis("Mouse Y");
             rotation_x += Input.GetAxis("Mouse X");
 
-            if ((rotation_y > max_look_down) && (rotation_y < max_look_up))
+            if (rotation_y < max_look_down)
             {
-                rotation_origin.localEulerAngles = new Vector3(-rotation_y, rotation_x, transform.localEulerAngles.z);
+                rotation_y = max_look_down;
             }
+            else if (rotation_y > max_look_up)
+            {
+                rotation_y = max_look_up;
+            }
+
+            rotation_origin.localEulerAngles = new Vector3(-rotation_y, rotation_x, transform.localEulerAngles.z);
         }
         else
         {
