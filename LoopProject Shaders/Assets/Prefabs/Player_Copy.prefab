@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1100785652}
   - component: {fileID: 1100785654}
   - component: {fileID: 7103280030089546346}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Player_Cam
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -96,7 +96,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54189076f71ef4e4e841f26d314dc9fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotation_y: 0
   rotation_origin: {fileID: 1193545666}
+  max_look_up: 80
+  max_look_down: -80
   is_controlled: 0
   fov_prefab: {fileID: 1457469228595774215, guid: 396b857a7ca36cf4882925193f82d21f,
     type: 3}
@@ -118,7 +121,7 @@ MonoBehaviour:
   grabbed_item_obj: {fileID: 0}
   layer_collision_raycasting:
     serializedVersion: 2
-    m_Bits: 3072
+    m_Bits: 515
 --- !u!1 &1193545665
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,7 +134,7 @@ GameObject:
   - component: {fileID: 1193545669}
   - component: {fileID: 1193545668}
   - component: {fileID: 1193545667}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Sphere
   m_TagString: Player_Dupe
   m_Icon: {fileID: 0}
@@ -224,7 +227,7 @@ GameObject:
   - component: {fileID: 1686238151}
   - component: {fileID: 1686238150}
   - component: {fileID: 1686238149}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -319,7 +322,7 @@ GameObject:
   - component: {fileID: 1195624464444332472}
   - component: {fileID: 5677447379092148236}
   - component: {fileID: 6285599566252047430}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Player_Copy
   m_TagString: Player_Dupe
   m_Icon: {fileID: 0}

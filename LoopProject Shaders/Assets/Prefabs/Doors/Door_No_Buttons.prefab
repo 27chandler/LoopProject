@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8524934600818022935}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Door_No_Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,12 +45,12 @@ GameObject:
   - component: {fileID: 5172593457765060749}
   - component: {fileID: 6157988426547598672}
   - component: {fileID: 5684800247641907063}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Wall Single (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!4 &6431929012737032300
 Transform:
@@ -60,7 +60,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4523662608807749609}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.56799996, z: 1.4699993}
+  m_LocalPosition: {x: 0, y: 2, z: 1.5}
   m_LocalScale: {x: 1, y: 4, z: 1}
   m_Children: []
   m_Father: {fileID: 8524934600818022935}
@@ -136,12 +136,12 @@ GameObject:
   - component: {fileID: 6742143675587372970}
   - component: {fileID: 6753626887238245343}
   - component: {fileID: 5053944298579257571}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Wall Single (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 1
   m_IsActive: 1
 --- !u!4 &8651637701440287646
 Transform:
@@ -151,7 +151,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8194048426110777656}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.56799996, z: -1.5300007}
+  m_LocalPosition: {x: 0, y: 2, z: -1.5}
   m_LocalScale: {x: 1, y: 4, z: 1}
   m_Children: []
   m_Father: {fileID: 8524934600818022935}
@@ -235,12 +235,12 @@ PrefabInstance:
     - target: {fileID: 6496801590526029855, guid: 4264644f7eece8a41bbae41f7204c65c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.44
       objectReference: {fileID: 0}
     - target: {fileID: 6496801590526029855, guid: 4264644f7eece8a41bbae41f7204c65c,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.008411407
+      value: 0.037
       objectReference: {fileID: 0}
     - target: {fileID: 6496801590526029855, guid: 4264644f7eece8a41bbae41f7204c65c,
         type: 3}

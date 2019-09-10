@@ -53,7 +53,7 @@ public class Visible_Check : MonoBehaviour
                 Vector3 ray_direction = camera.transform.position - target_pos;
 
                 RaycastHit hit;
-                Physics.Raycast(target_pos, ray_direction, out hit, obstacleMask);
+                Physics.Raycast(target_pos, ray_direction, out hit,Mathf.Infinity, obstacleMask);
                 Debug.DrawLine(target_pos, hit.point, Color.blue);
 
                 if ((hit.collider != null) && (Vector3.Distance(hit.point,camera.transform.position) <= 1.0f))

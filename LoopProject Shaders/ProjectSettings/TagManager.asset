@@ -22,8 +22,8 @@ TagManager:
   - 
   - PostProcessing
   - Blocks_Vision
-  - 
-  - 
+  - Blocks_Vision_One_Way
+  - Blocks_Vision_Other_Way
   - 
   - 
   - 

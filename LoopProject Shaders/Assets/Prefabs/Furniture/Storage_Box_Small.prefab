@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3582126426721107204}
   - component: {fileID: 2282231639033825772}
   - component: {fileID: 8260431812562035916}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Storage_Box_Small
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 9152702849615167011}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -25.5, y: 0.85, z: -31.5}
-  m_LocalScale: {x: 1.7, y: 1.7, z: 1.7}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -58,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9f1882eaf4f322045a56f0cfb6e9d2a7, type: 2}
+  - {fileID: 2100000, guid: 9e03d67f63f59f44f8fd140541958dcb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -117,6 +117,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1929682110108774457}
     m_Modifications:
+    - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
+        type: 3}
+      propertyPath: m_Name
+      value: Wall Triple (129)
+      objectReference: {fileID: 0}
     - target: {fileID: 2840019112334453067, guid: eabc1c1a192854944aa6bf366d2bb3cf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -177,11 +182,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
-        type: 3}
-      propertyPath: m_Name
-      value: Wall Triple (129)
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eabc1c1a192854944aa6bf366d2bb3cf, type: 3}
 --- !u!4 &4262099667296672340 stripped
@@ -197,6 +197,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1929682110108774457}
     m_Modifications:
+    - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
+        type: 3}
+      propertyPath: m_Name
+      value: Wall Triple (130)
+      objectReference: {fileID: 0}
     - target: {fileID: 2840019112334453067, guid: eabc1c1a192854944aa6bf366d2bb3cf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -257,11 +262,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
-        type: 3}
-      propertyPath: m_Name
-      value: Wall Triple (130)
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eabc1c1a192854944aa6bf366d2bb3cf, type: 3}
 --- !u!4 &1933064742471791119 stripped
@@ -277,6 +277,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1929682110108774457}
     m_Modifications:
+    - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
+        type: 3}
+      propertyPath: m_Name
+      value: Wall Triple (131)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2840019112334453067, guid: eabc1c1a192854944aa6bf366d2bb3cf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -341,16 +351,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.x
       value: 0.20000012
-      objectReference: {fileID: 0}
-    - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
-        type: 3}
-      propertyPath: m_Name
-      value: Wall Triple (131)
-      objectReference: {fileID: 0}
-    - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3730309888835058012, guid: eabc1c1a192854944aa6bf366d2bb3cf,
         type: 3}

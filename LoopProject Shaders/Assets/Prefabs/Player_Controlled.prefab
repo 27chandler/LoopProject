@@ -110,7 +110,7 @@ PrefabInstance:
     - target: {fileID: 6285599566252047430, guid: a42df1d82d3680a44964470114b0aa68,
         type: 3}
       propertyPath: obstacleMask.m_Bits
-      value: 1024
+      value: 2560
       objectReference: {fileID: 0}
     - target: {fileID: 6285599566252047430, guid: a42df1d82d3680a44964470114b0aa68,
         type: 3}
@@ -141,6 +141,11 @@ PrefabInstance:
     - target: {fileID: 1100785654, guid: a42df1d82d3680a44964470114b0aa68, type: 3}
       propertyPath: is_controlled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7103280030089546346, guid: a42df1d82d3680a44964470114b0aa68,
+        type: 3}
+      propertyPath: layer_collision_raycasting.m_Bits
+      value: 515
       objectReference: {fileID: 0}
     - target: {fileID: 1686238147, guid: a42df1d82d3680a44964470114b0aa68, type: 3}
       propertyPath: m_TagString

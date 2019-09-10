@@ -75,6 +75,7 @@ public class Pickup_Loop : MonoBehaviour
 
         if (is_picked_up)
         {
+            gameObject.layer = 2;
             meshrenderer.material = hold_mat;
             if (object_holding_this.activeInHierarchy == false)
             {
@@ -110,6 +111,7 @@ public class Pickup_Loop : MonoBehaviour
         }
         else
         {
+            gameObject.layer = 0;
             meshrenderer.material = default_mat;
             rb.useGravity = true;
             if ((Vector3.Distance(transform.position,snap_pos) <= 0.5f) && (rb.velocity.magnitude <= 0.1f))

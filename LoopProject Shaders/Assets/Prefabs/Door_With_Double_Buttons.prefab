@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 268967950924638459}
   - component: {fileID: 2409974509321184244}
   - component: {fileID: 7977601017965414598}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Click_Button (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,6 +120,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door_With_Double_Buttons
       objectReference: {fileID: 0}
+    - target: {fileID: 8031526652122618098, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 8031526652122618109, guid: e35ad76fda30235438c10763415d3ffb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -180,15 +185,30 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6972609395120090949, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 5758211621061180528, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758211621061180528, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2416420956233760741, guid: e35ad76fda30235438c10763415d3ffb,
         type: 3}
       propertyPath: m_StaticEditorFlags
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2416420956233760741, guid: e35ad76fda30235438c10763415d3ffb,
         type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 1
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2386570624366480538, guid: e35ad76fda30235438c10763415d3ffb,
         type: 3}
@@ -198,12 +218,17 @@ PrefabInstance:
     - target: {fileID: 2386570624366480538, guid: e35ad76fda30235438c10763415d3ffb,
         type: 3}
       propertyPath: m_Layer
-      value: 11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1433905076180288644, guid: e35ad76fda30235438c10763415d3ffb,
         type: 3}
       propertyPath: m_StaticEditorFlags
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1433905076180288644, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2117172100471683045, guid: e35ad76fda30235438c10763415d3ffb,
         type: 3}

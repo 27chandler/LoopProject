@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4686889766755918575}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Door_Double_Buttons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -195,6 +195,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4686889766755918575}
     m_Modifications:
+    - target: {fileID: 6228545280618833357, guid: a1d20fbc3d868424083db573475a9243,
+        type: 3}
+      propertyPath: m_Name
+      value: Door_With_Double_Buttons (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 6228545280618833346, guid: a1d20fbc3d868424083db573475a9243,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -250,20 +255,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6228545280618833357, guid: a1d20fbc3d868424083db573475a9243,
+    - target: {fileID: 1737060523521765797, guid: a1d20fbc3d868424083db573475a9243,
         type: 3}
-      propertyPath: m_Name
-      value: Door_With_Double_Buttons (1)
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 3973349836460655508, guid: a1d20fbc3d868424083db573475a9243,
         type: 3}
       propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1737060523521765797, guid: a1d20fbc3d868424083db573475a9243,
-        type: 3}
-      propertyPath: m_Layer
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 7341251793548351318, guid: a1d20fbc3d868424083db573475a9243,
         type: 3}
