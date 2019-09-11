@@ -741,6 +741,11 @@ public class Timeline_Manager : MonoBehaviour
     void Restart_Loop()
     {
         loop_restarted = true;
+        foreach (var door in door_list)
+        {
+            door.is_door_opening = false;
+        }
+
         foreach (var spawnpoint in moveable_object_spawns)
         {
             GameObject created_obj = Instantiate(box_prefab, spawnpoint,new Quaternion());
