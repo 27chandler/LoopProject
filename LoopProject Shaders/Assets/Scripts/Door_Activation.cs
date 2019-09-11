@@ -14,7 +14,9 @@ public class Door_Activation : MonoBehaviour
     [SerializeField] private Collider door_collider;
 
     public bool is_open = false;
-    private bool is_door_opening = false;
+    public bool is_door_opening = false;
+
+    [SerializeField] public bool is_inverted = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -77,21 +79,19 @@ public class Door_Activation : MonoBehaviour
             }
         }
 
-
-
         if ((is_door_opening) || (last_click_state))
         {
-            door_renderer.enabled = false;
-            door_collider.enabled = false;
+            door_renderer.enabled = is_inverted;
+            door_collider.enabled = is_inverted;
 
-            is_open = true;
+            is_open = !is_inverted;
         }
         else
         {
-            door_renderer.enabled = true;
-            door_collider.enabled = true;
+            door_renderer.enabled = !is_inverted;
+            door_collider.enabled = !is_inverted;
 
-            is_open = false;
+            is_open = is_inverted;
         }
     }
 }

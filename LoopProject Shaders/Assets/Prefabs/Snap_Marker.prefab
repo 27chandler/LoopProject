@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1388751754928349200}
   - component: {fileID: 8765513364747794356}
   - component: {fileID: 2407014811193477271}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Snap_Marker
   m_TagString: Marker
   m_Icon: {fileID: 0}

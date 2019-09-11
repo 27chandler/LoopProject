@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3940395655078686941}
   - component: {fileID: 3940395655078686912}
   - component: {fileID: 3940395655078686913}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Box
   m_TagString: Power_Cell
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ MonoBehaviour:
   cams: []
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 2560
   origin_position: {fileID: 0}
   use_custom_origin: 0
   is_seen: 0
