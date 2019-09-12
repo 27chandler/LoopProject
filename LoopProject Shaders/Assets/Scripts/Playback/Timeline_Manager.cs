@@ -10,7 +10,7 @@ public class Timeline_Manager : MonoBehaviour
 
     [SerializeField] public float iteration_delay;
     [SerializeField] public int iteration_num = 0;
-    [SerializeField] private float time_speed = 1.0f;
+    [SerializeField] public float time_speed = 1.0f;
     [SerializeField] private int paradox_sensitivity = 100;
     [SerializeField] private float paradox_regeneration = 0.05f;
     private bool loop_restarted = false;
@@ -24,7 +24,7 @@ public class Timeline_Manager : MonoBehaviour
     [SerializeField] private Text time_display;
     [SerializeField] private Text health_display;
     public float health = 100.0f;
-    private bool is_jumping = false;
+    public bool is_jumping = false;
     private float last_update_time = 0.0f;
     [SerializeField] float update_frequency;
     [Space]
@@ -219,14 +219,14 @@ public class Timeline_Manager : MonoBehaviour
         {
             is_jumping = true;
         }
-        if (Input.GetKey(KeyCode.F))
-        {
-            time_speed = 0.1f;
-        }
-        else
-        {
-            time_speed = 1.0f;
-        }
+        //if (Input.GetKey(KeyCode.F))
+        //{
+        //    time_speed = 0.1f;
+        //}
+        //else
+        //{
+        //    time_speed = 1.0f;
+        //}
 
         current_time += Time.deltaTime * time_speed;
         Record_Player_Actions();
@@ -865,10 +865,10 @@ public class Timeline_Manager : MonoBehaviour
                     }
                     else if (jump_timestamp > dupe_timestamp)
                     {
-                        
+
                         if ((timeline_memory[jump_timestamp].is_holding_object) && (!timeline_memory[time_dupe.timestamp].is_holding_object))
                         {
-                            GameObject created_obj = Instantiate(box_prefab, new Vector3(0.0f,0.0f,0.0f), new Quaternion());
+                            GameObject created_obj = Instantiate(box_prefab, new Vector3(0.0f, 0.0f, 0.0f), new Quaternion());
                             Duplicate_Data input_data = new Duplicate_Data();
                             input_data.obj = created_obj;
                             input_data.vis = created_obj.GetComponent<Visible_Check>();
@@ -886,6 +886,13 @@ public class Timeline_Manager : MonoBehaviour
                             time_dupe.object_holder.grabbed_item = spawned_pickup;
                             spawned_pickup.object_holding_this = time_dupe.obj;
                             spawned_pickup.is_picked_up = true;
+                        }
+                        else if ((!timeline_memory[jump_timestamp].is_holding_object) && (timeline_memory[time_dupe.timestamp].is_holding_object))
+                        {
+                            time_dupe.object_holder.is_holding = false;
+                            Destroy(time_dupe.object_holder.grabbed_item_obj);
+                            time_dupe.object_holder.grabbed_item_obj = null;
+                            time_dupe.object_holder.grabbed_item = null;
                         }
 
                         time_dupe.timestamp = jump_timestamp;

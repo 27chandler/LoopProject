@@ -5,19 +5,26 @@ using UnityEngine;
 public class Alarm_Trip : MonoBehaviour
 {
     private Timeline_Manager tm;
+    private Pop_Up_Control puc;
     private int iter_num_last;
 
     [SerializeField] private List<string> trigger_tag = new List<string>();
     [SerializeField] private List<Door_Activation> door_list = new List<Door_Activation>();
 
+    [SerializeField] private string info_text;
+    [SerializeField] private float info_text_display_time;
+
     private bool is_activated = false;
     private bool has_alarm_started = false;
+
+    private bool is_first_activation = true;
 
 
     // Start is called before the first frame update
     void Start()
     {
         tm = GameObject.FindGameObjectWithTag("Timeline_Manager").GetComponent<Timeline_Manager>();
+        puc = GameObject.FindGameObjectWithTag("HUD").GetComponent<Pop_Up_Control>();
     }
 
     // Update is called once per frame
@@ -45,6 +52,15 @@ public class Alarm_Trip : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
 
+        yield return new WaitForSeconds(2.0f);
+
+        if (is_first_activation)
+        {
+            puc.Set_Pop_Up(info_text, info_text_display_time);
+            is_first_activation = false;
+        }
+
+
         yield return null;
     }
 
@@ -57,6 +73,10 @@ public class Alarm_Trip : MonoBehaviour
             if (other.CompareTag(trigger))
             {
                 is_activated = true;
+                if (other.CompareTag("Player"))
+                {
+                    other.GetComponent<Player_Movement>().is_jumping_enabled = true;
+                }
             }
         }
     }

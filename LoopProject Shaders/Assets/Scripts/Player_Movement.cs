@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player_Movement : MonoBehaviour
 {
     private CharacterController cc;
+    private Timeline_Manager tm;
 
     [SerializeField] private float movement_speed;
     private Vector3 jump_movement = new Vector3();
@@ -21,10 +22,13 @@ public class Player_Movement : MonoBehaviour
 
     private bool is_flying = false;
 
+    [SerializeField] public bool is_jumping_enabled = false;
+
     // Start is called before the first frame update
     void Start()
     {
         cc = GetComponent<CharacterController>();
+        tm = GameObject.FindGameObjectWithTag("Timeline_Manager").GetComponent<Timeline_Manager>();
 
         default_height = cc.height;
 
@@ -32,11 +36,6 @@ public class Player_Movement : MonoBehaviour
         {
             object_dir = this.transform;
         }
-    }
-
-    void Levitate()
-    {
-        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -64,6 +63,11 @@ public class Player_Movement : MonoBehaviour
         {
             Vector3 movement = new Vector3();
 
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                tm.is_jumping = true;
+            }
+
             if (cc.isGrounded)
             {
                 if (jump_movement.y < 0.0f)
@@ -73,13 +77,11 @@ public class Player_Movement : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    Debug.Log("Jumped");
                     jump_movement.y = jump_strength;
                 }
             }
             else
             {
-                Debug.Log("Falling");
                 jump_movement.y -= (0.8f * Time.deltaTime);
             }
 

@@ -59,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9f1882eaf4f322045a56f0cfb6e9d2a7, type: 2}
+  - {fileID: 2100000, guid: 0ba3a7997a54fad49bc468463eb87359, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -104,8 +104,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69eb1275338d4144f914eb3dcba56281, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mat_highlighted: {fileID: 2100000, guid: 411e1d7ae484a6144a538de791dcefeb, type: 2}
-  mat_clicked: {fileID: 2100000, guid: 52dc0538f3ea6ea4bbaffefb40744cf3, type: 2}
+  mat_highlighted: {fileID: 2100000, guid: 59f84011686d416459fdddd193e5f381, type: 2}
+  mat_clicked: {fileID: 2100000, guid: 221c782fefc85c74dbfe924ec91a7f7e, type: 2}
   is_activated: 0
   is_highlighted: 0
 --- !u!1001 &4108841973444607295
