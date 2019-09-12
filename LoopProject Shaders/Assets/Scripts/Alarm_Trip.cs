@@ -75,7 +75,7 @@ public class Alarm_Trip : MonoBehaviour
                 is_activated = true;
                 if (other.CompareTag("Player"))
                 {
-                    other.GetComponent<Player_Movement>().is_jumping_enabled = true;
+                    other.GetComponent<Player_Movement>().num_of_jumps++;
                 }
             }
         }

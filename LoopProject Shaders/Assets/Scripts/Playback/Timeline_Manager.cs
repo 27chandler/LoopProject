@@ -214,11 +214,6 @@ public class Timeline_Manager : MonoBehaviour
                 dupe_objs.Add(dupe);
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            is_jumping = true;
-        }
         //if (Input.GetKey(KeyCode.F))
         //{
         //    time_speed = 0.1f;

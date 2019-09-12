@@ -22,7 +22,7 @@ public class Player_Movement : MonoBehaviour
 
     private bool is_flying = false;
 
-    [SerializeField] public bool is_jumping_enabled = false;
+    [SerializeField] public int num_of_jumps = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -63,9 +63,10 @@ public class Player_Movement : MonoBehaviour
         {
             Vector3 movement = new Vector3();
 
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (Input.GetKeyDown(KeyCode.Q) && (num_of_jumps > 0))
             {
                 tm.is_jumping = true;
+                num_of_jumps--;
             }
 
             if (cc.isGrounded)

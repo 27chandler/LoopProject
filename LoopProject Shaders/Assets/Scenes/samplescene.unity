@@ -6922,6 +6922,11 @@ PrefabInstance:
       propertyPath: max_look_up
       value: 80
       objectReference: {fileID: 0}
+    - target: {fileID: 1883277468075218754, guid: 505f89ee7ad07a04e8563a25fe6b2993,
+        type: 3}
+      propertyPath: is_jumping_enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 505f89ee7ad07a04e8563a25fe6b2993, type: 3}
 --- !u!1001 &417523797
@@ -17575,6 +17580,7 @@ MonoBehaviour:
   time_display: {fileID: 1533341234}
   health_display: {fileID: 929402885}
   health: 100
+  is_jumping: 0
   update_frequency: 0.05
   player_target: {fileID: 295882117}
   player_cam: {fileID: 1196259657}
