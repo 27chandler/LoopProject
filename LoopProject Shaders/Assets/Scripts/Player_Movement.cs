@@ -14,7 +14,7 @@ public class Player_Movement : MonoBehaviour
     private Movement_Playback mp;
 
     private float default_height;
-    [SerializeField] private float crouch_height = 0.6f;
+    [SerializeField] private float crouch_height = 0.7f;
 
     private bool is_crouching = false;
 
@@ -69,11 +69,22 @@ public class Player_Movement : MonoBehaviour
                 num_of_jumps--;
             }
 
-            if (cc.isGrounded)
+            float feet_distance = cc.height * 0.55f;
+
+            if (is_crouching)
+            {
+                feet_distance += 0.15f;
+            }
+
+            Debug.DrawLine(transform.position, transform.position + (Vector3.down * (feet_distance)));
+
+            if (Physics.Raycast(transform.position,Vector3.down, feet_distance))
             {
                 if (jump_movement.y < 0.0f)
                 {
-                    jump_movement.y = -(0.8f * Time.deltaTime);
+                    Debug.Log("ok");
+                    //jump_movement.y = -(0.8f * Time.deltaTime);
+                    jump_movement.y = 0.0f;
                 }
 
                 if (Input.GetKeyDown(KeyCode.Space))
@@ -115,22 +126,19 @@ public class Player_Movement : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.C))
             {
-                Debug.Log("Crounched");
-                RaycastHit hit;
+                Debug.Log("C Pressed");
 
                 Vector3 ceiling_check_pos = transform.position;
-                ceiling_check_pos.y += (default_height / 2.0f);
+                ceiling_check_pos.y += (default_height);
 
-                Physics.Raycast(ceiling_check_pos, Vector3.up, out hit, default_height/2.0f);
-
-                if (hit.collider == null)
+                if (!Physics.CheckSphere(ceiling_check_pos, 0.1f))
                 {
                     is_crouching = !is_crouching;
 
                     if (!is_crouching)
                     {
                         Debug.Log("Up by: " + (default_height - cc.height).ToString());
-                        movement += new Vector3(0.0f, (default_height - cc.height), 0.0f);
+                        movement += new Vector3(0.0f, (default_height*3.5f), 0.0f);
                         cc.height = default_height;
                     }
                     else

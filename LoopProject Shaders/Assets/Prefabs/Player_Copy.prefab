@@ -438,6 +438,7 @@ MonoBehaviour:
   object_dir: {fileID: 1100785651}
   crouch_height: 0.6
   is_controlled: 0
+  num_of_jumps: 0
 --- !u!114 &5677447379092148236
 MonoBehaviour:
   m_ObjectHideFlags: 0
