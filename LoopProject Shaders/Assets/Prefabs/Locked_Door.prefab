@@ -58,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 411e1d7ae484a6144a538de791dcefeb, type: 2}
+  - {fileID: 2100000, guid: d7f51387e4700064087c94f3cc942a75, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -204,6 +204,8 @@ MonoBehaviour:
   door_renderer: {fileID: 6277846091095364235}
   door_collider: {fileID: 4608920740309247666}
   is_open: 0
+  is_door_opening: 0
+  is_inverted: 0
 --- !u!114 &2184261355216247265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,7 +284,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 411e1d7ae484a6144a538de791dcefeb, type: 2}
+  - {fileID: 2100000, guid: d7f51387e4700064087c94f3cc942a75, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -407,7 +409,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 411e1d7ae484a6144a538de791dcefeb, type: 2}
+  - {fileID: 2100000, guid: d7f51387e4700064087c94f3cc942a75, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
