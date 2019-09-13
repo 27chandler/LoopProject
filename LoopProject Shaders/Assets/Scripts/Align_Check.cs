@@ -10,6 +10,7 @@ public class Align_Check : MonoBehaviour
     private Hold_Object holder;
     [SerializeField] public float completion_time;
     [SerializeField] public float current_time;
+    [SerializeField] public string obj_tag;
     private int health;
     [SerializeField] private int max_health;
 
@@ -39,7 +40,7 @@ public class Align_Check : MonoBehaviour
 
         foreach (Collider collider in found_objs)
         {
-            if (collider.name == "Box(Clone)" || collider.name == "Box")
+            if (collider.tag == obj_tag)
             {
                 satisfying_obj = collider.gameObject;
                 is_obj_present = true;

@@ -8,7 +8,10 @@ public class Alarm_Trip : MonoBehaviour
     private Pop_Up_Control puc;
     private int iter_num_last;
 
-    [SerializeField] private List<string> trigger_tag = new List<string>();
+    [SerializeField] private Player_Movement pm;
+    [SerializeField] private GameObject object_check; //The alarm will trigger when this object is destroyed
+
+    [SerializeField] private string trigger_tag;
     [SerializeField] private List<Door_Activation> door_list = new List<Door_Activation>();
 
     [SerializeField] private string info_text;
@@ -30,6 +33,15 @@ public class Alarm_Trip : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (object_check == null)
+        {
+            object_check = GameObject.FindGameObjectWithTag(trigger_tag);
+            if (object_check == null)
+            {
+                is_activated = true; //Starts sequence of shutting all doors and givig the player the ability to time jump
+            }
+        }
+
         if (tm.iteration_num != iter_num_last)
         {
             iter_num_last = tm.iteration_num;
@@ -58,6 +70,7 @@ public class Alarm_Trip : MonoBehaviour
         {
             puc.Set_Pop_Up(info_text, info_text_display_time);
             is_first_activation = false;
+            pm.num_of_jumps++;
         }
 
 
@@ -65,19 +78,15 @@ public class Alarm_Trip : MonoBehaviour
     }
 
 
-    private void OnTriggerEnter(Collider other)
-    {
+    //private void OnTriggerEnter(Collider other)
+    //{
         
-        foreach (var trigger in trigger_tag)
-        {
-            if (other.CompareTag(trigger))
-            {
-                is_activated = true;
-                if (other.CompareTag("Player"))
-                {
-                    other.GetComponent<Player_Movement>().num_of_jumps++;
-                }
-            }
-        }
-    }
+    //    foreach (var trigger in trigger_tag)
+    //    {
+    //        if (other.CompareTag(trigger))
+    //        {
+    //            is_activated = true;
+    //        }
+    //    }
+    //}
 }

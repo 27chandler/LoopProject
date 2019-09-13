@@ -11,6 +11,8 @@ TagManager:
   - Power_Cell
   - HUD
   - Timeline_Manager
+  - Blue_Box
+  - Time_Device
   layers:
   - Default
   - TransparentFX
