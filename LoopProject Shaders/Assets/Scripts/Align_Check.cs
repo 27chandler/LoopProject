@@ -33,7 +33,7 @@ public class Align_Check : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Collider[] found_objs = Physics.OverlapSphere(transform.position, 1.0f);
+        Collider[] found_objs = Physics.OverlapSphere(transform.position, 0.1f);
 
 
         bool is_obj_present = false;

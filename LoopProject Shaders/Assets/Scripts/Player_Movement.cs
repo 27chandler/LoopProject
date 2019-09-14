@@ -151,5 +151,9 @@ public class Player_Movement : MonoBehaviour
 
             cc.Move((movement + jump_movement) * Time.deltaTime * movement_speed);
         }
+        else if (tag == "Player")
+        {
+            Debug.Log("Not controlled");
+        }
     }
 }

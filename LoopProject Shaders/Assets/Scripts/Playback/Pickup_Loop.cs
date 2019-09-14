@@ -14,6 +14,8 @@ public class Pickup_Loop : MonoBehaviour
     public Vector3 hold_pos;
     public GameObject object_holding_this; // The player object which is holding the object
 
+    private bool has_spawned = true;
+
     Collider col;
     MeshRenderer meshrenderer;
 
@@ -43,11 +45,14 @@ public class Pickup_Loop : MonoBehaviour
     void Start()
     {
         col = GetComponent<Collider>();
+        col.enabled = false;
+        
         meshrenderer = GetComponent<MeshRenderer>();
         default_mat = meshrenderer.material;
 
         vc.Add_Camera(GameObject.FindGameObjectWithTag("Player").GetComponentInChildren<Camera>());
         rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
 
         timeline_manager = GameObject.FindGameObjectWithTag("Timeline_Manager").GetComponent<Timeline_Manager>();
         last_iteration_num = timeline_manager.iteration_num;
@@ -58,9 +63,22 @@ public class Pickup_Loop : MonoBehaviour
         //Add_To_Buffer(transform.position, transform.localRotation, current_time);
     }
 
+    IEnumerator Activate_Object()
+    {
+        yield return new WaitForFixedUpdate();
+        col.enabled = true;
+        has_spawned = false;
+        rb.isKinematic = false;
+        yield return null;
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (has_spawned)
+        {
+            StartCoroutine(Activate_Object());
+        }
         //Run_Playback();
 
         if (last_pos != transform.position)

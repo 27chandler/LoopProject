@@ -10,6 +10,7 @@ public class Alarm_Trip : MonoBehaviour
 
     [SerializeField] private Player_Movement pm;
     [SerializeField] private GameObject object_check; //The alarm will trigger when this object is destroyed
+    private int detection_counter = 0;
 
     [SerializeField] private string trigger_tag;
     [SerializeField] private List<Door_Activation> door_list = new List<Door_Activation>();
@@ -33,14 +34,23 @@ public class Alarm_Trip : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (object_check == null)
+        if (!is_activated)
         {
-            object_check = GameObject.FindGameObjectWithTag(trigger_tag);
-            if (object_check == null)
+            if (!Physics.CheckSphere(transform.position, 0.1f))
+            {
+                detection_counter++;
+            }
+            else
+            {
+                detection_counter = 0;
+            }
+
+            if (detection_counter >= 10)
             {
                 is_activated = true; //Starts sequence of shutting all doors and givig the player the ability to time jump
             }
         }
+
 
         if (tm.iteration_num != iter_num_last)
         {
@@ -70,7 +80,6 @@ public class Alarm_Trip : MonoBehaviour
         {
             puc.Set_Pop_Up(info_text, info_text_display_time);
             is_first_activation = false;
-            pm.num_of_jumps++;
         }
 
 
