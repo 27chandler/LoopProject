@@ -15,6 +15,8 @@ public class Timeline_Manager : MonoBehaviour
     [SerializeField] private float paradox_regeneration = 0.05f;
     private bool loop_restarted = false;
 
+    private bool is_recording = true;
+
     [SerializeField] private List<GameObject> snap_markers = new List<GameObject>();
     [SerializeField] private GameObject marker;
 
@@ -209,50 +211,53 @@ public class Timeline_Manager : MonoBehaviour
             health += paradox_regeneration;
         }
 
-        if (loop_restarted)
+        if (is_recording)
         {
-            loop_restarted = false;
-            for (int i = 0; i < objects_vis.Count; i++)
+            if (loop_restarted)
             {
-                if (objects_vis[i] == null)
+                loop_restarted = false;
+                for (int i = 0; i < objects_vis.Count; i++)
                 {
-                    objects_vis.RemoveAt(i);
-                    i--;
+                    if (objects_vis[i] == null)
+                    {
+                        objects_vis.RemoveAt(i);
+                        i--;
+                    }
+                }
+
+                List<Duplicate_Data> dupe_objs_temp = new List<Duplicate_Data>();
+
+                foreach (var dupe in dupe_objs)
+                {
+                    if (dupe.obj != null)
+                    {
+                        dupe_objs_temp.Add(dupe);
+                        //snap_markers.Add(Instantiate(marker));
+                    }
+                }
+
+
+                dupe_objs.Clear();
+
+                foreach (var dupe in dupe_objs_temp)
+                {
+                    dupe_objs.Add(dupe);
                 }
             }
+            //if (Input.GetKey(KeyCode.F))
+            //{
+            //    time_speed = 0.1f;
+            //}
+            //else
+            //{
+            //    time_speed = 1.0f;
+            //}
 
-            List<Duplicate_Data> dupe_objs_temp = new List<Duplicate_Data>();
-
-            foreach (var dupe in dupe_objs)
-            {
-                if (dupe.obj != null)
-                {
-                    dupe_objs_temp.Add(dupe);
-                    //snap_markers.Add(Instantiate(marker));
-                }
-            }
-
-
-            dupe_objs.Clear();
-
-            foreach (var dupe in dupe_objs_temp)
-            {
-                dupe_objs.Add(dupe);
-            }
+            current_time += Time.deltaTime * time_speed;
+            Record_Player_Actions();
+            Run_Playback();
+            Object_Check();
         }
-        //if (Input.GetKey(KeyCode.F))
-        //{
-        //    time_speed = 0.1f;
-        //}
-        //else
-        //{
-        //    time_speed = 1.0f;
-        //}
-
-        current_time += Time.deltaTime * time_speed;
-        Record_Player_Actions();
-        Run_Playback();
-        Object_Check();
 
         if (current_time >= iteration_delay * iteration_num)
         {

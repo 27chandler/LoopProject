@@ -29,6 +29,12 @@ public class Door_State_Check : MonoBehaviour
         holder = GameObject.FindGameObjectWithTag("Player").transform.GetChild(0).GetComponentInChildren<Hold_Object>();
         tm = GameObject.FindGameObjectWithTag("Timeline_Manager").GetComponent<Timeline_Manager>();
 
+        renderer.enabled = false;
+        foreach (var textmesh in countdown_text)
+        {
+            textmesh.enabled = false;
+        }
+
 
 
 
@@ -68,10 +74,18 @@ public class Door_State_Check : MonoBehaviour
         if (expected_state == door_activation.is_open)
         {
             renderer.enabled = false;
+            foreach (var textmesh in countdown_text)
+            {
+                textmesh.enabled = false;
+            }
         }
         else
         {
             renderer.enabled = true;
+            foreach (var textmesh in countdown_text)
+            {
+                textmesh.enabled = true;
+            }
         }
 
 

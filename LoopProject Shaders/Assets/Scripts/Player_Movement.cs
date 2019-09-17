@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player_Movement : MonoBehaviour
 {
@@ -22,6 +23,10 @@ public class Player_Movement : MonoBehaviour
 
     private bool is_flying = false;
 
+    [SerializeField] private Text time_device_display;
+    [SerializeField] private bool are_time_jumps_regening = false;
+    [SerializeField] private float regen_time = 60.0f;
+    private float regen_time_counter = 0.0f;
     [SerializeField] public int num_of_jumps = 0;
 
     // Start is called before the first frame update
@@ -45,6 +50,10 @@ public class Player_Movement : MonoBehaviour
             is_flying = true;
             Debug.Log("ENTER");
         }
+        else if (other.CompareTag("Time_Frozen"))
+        {
+            tm.time_speed = 0.0f;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -54,6 +63,11 @@ public class Player_Movement : MonoBehaviour
             is_flying = false;
             Debug.Log("EXIT");
         }
+        else if (other.CompareTag("Time_Frozen"))
+        {
+            tm.time_speed = 1.0f;
+            tm.is_jumping = true;
+        }
     }
 
     // Update is called once per frame
@@ -61,10 +75,23 @@ public class Player_Movement : MonoBehaviour
     {
         if (is_controlled)
         {
+
+
             Vector3 movement = new Vector3();
+
+            if ((are_time_jumps_regening) && (num_of_jumps <= 0))
+            {
+                regen_time_counter += Time.deltaTime;
+                if (regen_time_counter >= regen_time)
+                {
+                    num_of_jumps++;
+                    regen_time_counter = 0.0f;
+                }
+            }
 
             if (Input.GetKeyDown(KeyCode.Q) && (num_of_jumps > 0))
             {
+                are_time_jumps_regening = true;
                 tm.is_jumping = true;
                 num_of_jumps--;
             }
@@ -148,6 +175,8 @@ public class Player_Movement : MonoBehaviour
                 }
 
             }
+
+            time_device_display.text = "Jumps: " + num_of_jumps;
 
             cc.Move((movement + jump_movement) * Time.deltaTime * movement_speed);
         }

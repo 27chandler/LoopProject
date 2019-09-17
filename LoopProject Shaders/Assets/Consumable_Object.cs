@@ -35,11 +35,8 @@ public class Consumable_Object : MonoBehaviour
                         break;
                     }
             }
-
             Destroy(gameObject);
         }
-
-
     }
 
     void Add_Time_Jump()
