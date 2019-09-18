@@ -428,7 +428,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1195624464444332471}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8480ee6efd8e5794fa321fef93904dc6, type: 3}
   m_Name: 
@@ -438,6 +438,9 @@ MonoBehaviour:
   object_dir: {fileID: 1100785651}
   crouch_height: 0.6
   is_controlled: 0
+  time_device_display: {fileID: 0}
+  are_time_jumps_regening: 0
+  regen_time: 60
   num_of_jumps: 0
 --- !u!114 &5677447379092148236
 MonoBehaviour:

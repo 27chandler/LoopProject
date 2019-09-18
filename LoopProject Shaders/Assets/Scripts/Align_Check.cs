@@ -33,7 +33,7 @@ public class Align_Check : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Collider[] found_objs = Physics.OverlapSphere(transform.position, 0.1f);
+        Collider[] found_objs = Physics.OverlapSphere(transform.position, 2.0f);
 
 
         bool is_obj_present = false;
@@ -108,7 +108,7 @@ public class Align_Check : MonoBehaviour
 
         if (health <= 0)
         {
-            Debug.Log("FAILED");
+            Debug.Log("FAILED AT POS: " + transform.position + " COMPLETION TIME: " + completion_time + "CURRENT TIME: " + current_time);
             tm.Activate_Paradox_Increment(2.0f);
             Destroy(this.gameObject);
         }

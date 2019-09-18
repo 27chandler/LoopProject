@@ -478,8 +478,9 @@ public class Timeline_Manager : MonoBehaviour
                                 //Debug.Log("Suspicion: " + dupe.paradox_suspicion);
                             }
 
-                            if (dupe.paradox_suspicion >= 5)
+                            if (dupe.paradox_suspicion >= 15)
                             {
+                                Debug.Log("NEW: OBJECT NAME: " + visible_obj.obj.name + " + POSITION: " + visible_obj.obj.transform.position);
                                 Activate_Paradox_Increment(1.0f);
                                 dupe.paradox_suspicion = 0;
                             }
@@ -610,16 +611,16 @@ public class Timeline_Manager : MonoBehaviour
                 }
             }
 
-            if (dupe.paradox_suspicion >= paradox_sensitivity)
-            {
-                Activate_Paradox_Increment(20.0f);
-                dupe.paradox_suspicion = 0;
-                //Debug.Log("MAX PARADOX");
-            }
-            else if (dupe.paradox_suspicion > 0)
-            {
-                dupe.paradox_suspicion -= 1;
-            }
+            //if (dupe.paradox_suspicion >= paradox_sensitivity)
+            //{
+            //    Activate_Paradox_Increment(20.0f);
+            //    dupe.paradox_suspicion = 0;
+            //    //Debug.Log("MAX PARADOX");
+            //}
+            //else if (dupe.paradox_suspicion > 0)
+            //{
+            //    dupe.paradox_suspicion -= 1;
+            //}
 
             dupe.has_obj_check_completed = true;
             dupe.has_door_check_completed = true;
@@ -658,6 +659,7 @@ public class Timeline_Manager : MonoBehaviour
         i_dupe.obj.transform.position = Vector3.Lerp(i_dupe.obj.transform.position, timeline_memory[i_dupe.timestamp].position, 0.4f);
         i_dupe.obj_look_pivot.localRotation = timeline_memory[i_dupe.timestamp].view_rotation;
         i_dupe.obj.SetActive(!timeline_memory[i_dupe.timestamp].is_jumping);
+        i_dupe.object_holder.gameObject.SetActive(!timeline_memory[i_dupe.timestamp].is_jumping);
 
         if ((timeline_memory[i_dupe.timestamp].is_grab_activated) && (i_dupe.has_grabbed_this_interval == false))
         {
@@ -712,6 +714,17 @@ public class Timeline_Manager : MonoBehaviour
             door.is_door_opening = false;
         }
 
+        //foreach (var pickup in dupe_objs)
+        //{
+        //    if (pickup.obj != null)
+        //    {
+        //        if (!pickup.obj.GetComponent<Pickup_Loop>().is_picked_up)
+        //        {
+        //            Destroy(pickup.obj);
+        //        }
+        //    }
+        //}
+
         foreach (var new_spawn in moveable_object_spawns)
         {
             GameObject created_obj = Instantiate(new_spawn.obj, new_spawn.position, new Quaternion());
@@ -723,60 +736,60 @@ public class Timeline_Manager : MonoBehaviour
 
             dupe_objs.Add(input_data);
 
-            foreach (var dupe in duplicate_player_list)
-            {
-                // objects
-                int index = 0;
-                while (index < timeline_memory.Count)
-                {
-                    if (timeline_memory[index].seen_objs != null)
-                    {
-                        foreach (var obj in timeline_memory[index].seen_objs)
-                        {
-                            if (Vector3.Distance(obj.position, new_spawn.position) <= 1.0f)
-                            {
-                                GameObject new_marker = Instantiate(marker, obj.position, new Quaternion());
-                                snap_markers.Add(new_marker);
+            //foreach (var dupe in duplicate_player_list)
+            //{
+            // objects
+            //List<Door_Activation> set_door_list = new List<Door_Activation>();
 
-                                Align_Check marker_script = new_marker.GetComponent<Align_Check>();
-                                marker_script.completion_time = timeline_memory[index].timestamp + (iteration_delay * dupe.iter_num);
-                                marker_script.obj_tag = obj.tag;
+            //int index = 0;
+            //while (index < timeline_memory.Count)
+            //{
+            //    if (timeline_memory[index].seen_objs != null)
+            //    {
+            //        foreach (var obj in timeline_memory[index].seen_objs)
+            //        {
+            //            if (Vector3.Distance(obj.position, new_spawn.position) <= 1.0f)
+            //            {
+            //                GameObject new_marker = Instantiate(marker, obj.position, new Quaternion());
+            //                snap_markers.Add(new_marker);
 
-                                index = timeline_memory.Count;
-                            }
-                        }
-                    }
-                    index++;
-                }
+            //                Align_Check marker_script = new_marker.GetComponent<Align_Check>();
+            //                marker_script.completion_time = timeline_memory[index].timestamp + (iteration_delay * iteration_num);
+            //                marker_script.obj_tag = obj.tag;
+
+            //                index = timeline_memory.Count;
+            //            }
+            //        }
+            //    }
+            //    index++;
+            //}
 
 
-                // doors
+            // doors
 
-                List<Door_Activation> set_door_list = new List<Door_Activation>();
+               
+            //while (index < timeline_memory.Count)
+            //{
+            //    if (timeline_memory[index].door_data_record != null)
+            //    {
+            //        foreach (var door_datas in timeline_memory[index].door_data_record)
+            //        {
+            //            if (!set_door_list.Contains(door_datas.door_activation))
+            //            {
+            //                GameObject new_marker = Instantiate(door_marker, door_datas.door_obj.transform.position, new Quaternion());
+            //                Door_State_Check state_checker = new_marker.GetComponent<Door_State_Check>();
+            //                state_checker.Set_Linked_Door(door_datas.door_activation);
+            //                state_checker.expected_state = door_datas.last_state;
+            //                state_checker.completion_time = timeline_memory[index].timestamp + (iteration_delay * iteration_num);
+            //                snap_markers.Add(new_marker);
 
-                index = 0;
-                while (index < timeline_memory.Count)
-                {
-                    if (timeline_memory[index].door_data_record != null)
-                    {
-                        foreach (var door_datas in timeline_memory[index].door_data_record)
-                        {
-                            if (!set_door_list.Contains(door_datas.door_activation))
-                            {
-                                GameObject new_marker = Instantiate(door_marker, door_datas.door_obj.transform.position, new Quaternion());
-                                Door_State_Check state_checker = new_marker.GetComponent<Door_State_Check>();
-                                state_checker.Set_Linked_Door(door_datas.door_activation);
-                                state_checker.expected_state = door_datas.last_state;
-                                state_checker.completion_time = timeline_memory[index].timestamp + (iteration_delay * dupe.iter_num);
-                                snap_markers.Add(new_marker);
-
-                                set_door_list.Add(door_datas.door_activation);
-                            }
-                        }
-                    }
-                    index++;
-                }
-            }
+            //                set_door_list.Add(door_datas.door_activation);
+            //            }
+            //        }
+            //    }
+            //    index++;
+            //}
+            //}
         }
 
         object_timestamp_index = 0;
@@ -797,9 +810,12 @@ public class Timeline_Manager : MonoBehaviour
 
         foreach (var obj in dupe_objs)
         {
-            foreach(var cam in vis.cams)
+            if (obj != null)
             {
-                obj.vis.Add_Camera(cam);
+                foreach (var cam in vis.cams)
+                {
+                    obj.vis.Add_Camera(cam);
+                }
             }
         }
 

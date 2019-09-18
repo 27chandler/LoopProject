@@ -65,7 +65,7 @@ public class Pickup_Loop : MonoBehaviour
 
     IEnumerator Activate_Object()
     {
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSeconds(0.1f);
         col.enabled = true;
         has_spawned = false;
         rb.isKinematic = false;

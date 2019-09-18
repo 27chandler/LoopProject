@@ -18,8 +18,8 @@ public class Alarm_Trip : MonoBehaviour
     [SerializeField] private string info_text;
     [SerializeField] private float info_text_display_time;
 
-    private bool is_activated = false;
-    private bool has_alarm_started = false;
+    [SerializeField] private bool is_activated = false;
+    [SerializeField] private bool has_alarm_started = false;
 
     private bool is_first_activation = true;
 
@@ -57,6 +57,7 @@ public class Alarm_Trip : MonoBehaviour
             iter_num_last = tm.iteration_num;
             is_activated = false;
             has_alarm_started = false;
+            detection_counter = 0;
         }
 
         if (is_activated && !has_alarm_started)
