@@ -739,7 +739,7 @@ public class Timeline_Manager : MonoBehaviour
                                 snap_markers.Add(new_marker);
 
                                 Align_Check marker_script = new_marker.GetComponent<Align_Check>();
-                                marker_script.completion_time =timeline_memory[index].timestamp + (iteration_delay * dupe.iter_num);
+                                marker_script.completion_time = timeline_memory[index].timestamp + (iteration_delay * dupe.iter_num);
                                 marker_script.obj_tag = obj.tag;
 
                                 index = timeline_memory.Count;
