@@ -66,6 +66,9 @@ public class Player_Movement : MonoBehaviour
         else if (other.CompareTag("Time_Frozen"))
         {
             tm.time_speed = 1.0f;
+        }
+        else if (other.CompareTag("Time_Jump_Portal"))
+        {
             tm.is_jumping = true;
         }
     }

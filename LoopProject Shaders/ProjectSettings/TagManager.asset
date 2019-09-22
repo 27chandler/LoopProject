@@ -15,6 +15,7 @@ TagManager:
   - Time_Device
   - Storage_Box
   - Time_Frozen
+  - Time_Jump_Portal
   layers:
   - Default
   - TransparentFX
