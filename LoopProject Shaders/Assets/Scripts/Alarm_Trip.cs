@@ -18,6 +18,9 @@ public class Alarm_Trip : MonoBehaviour
     [SerializeField] private string info_text;
     [SerializeField] private float info_text_display_time;
 
+    [SerializeField] private Portal current_level_portal;
+    [SerializeField] private Portal next_level_portal;
+
     [SerializeField] private bool is_activated = false;
     [SerializeField] private bool has_alarm_started = false;
 
@@ -80,7 +83,11 @@ public class Alarm_Trip : MonoBehaviour
         if (is_first_activation)
         {
             puc.Set_Pop_Up(info_text, info_text_display_time);
+            next_level_portal.is_activated = true;
+            next_level_portal.is_open = true;
             is_first_activation = false;
+
+
         }
 
 
