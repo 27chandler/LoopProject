@@ -12413,7 +12413,7 @@ PrefabInstance:
     - target: {fileID: 1883277468075218754, guid: 505f89ee7ad07a04e8563a25fe6b2993,
         type: 3}
       propertyPath: num_of_jumps
-      value: 0
+      value: 34
       objectReference: {fileID: 0}
     - target: {fileID: 1883277468075218754, guid: 505f89ee7ad07a04e8563a25fe6b2993,
         type: 3}

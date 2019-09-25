@@ -274,7 +274,7 @@ public class Timeline_Manager : MonoBehaviour
         }
 
         // Record Movement
-        if (current_time >= last_update_time + update_frequency)
+        if ((current_time >= last_update_time + update_frequency) || is_grabbing)
         {
             last_update_time = current_time;
 
