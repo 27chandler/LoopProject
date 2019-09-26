@@ -48,7 +48,7 @@ public class Player_Movement : MonoBehaviour
         if (other.tag == "Levitate")
         {
             is_flying = true;
-            Debug.Log("ENTER");
+            //Debug.Log("ENTER");
         }
         else if (other.CompareTag("Time_Frozen"))
         {
@@ -61,7 +61,7 @@ public class Player_Movement : MonoBehaviour
         if (other.tag == "Levitate")
         {
             is_flying = false;
-            Debug.Log("EXIT");
+            //Debug.Log("EXIT");
         }
         else if (other.CompareTag("Time_Frozen"))
         {
@@ -112,7 +112,7 @@ public class Player_Movement : MonoBehaviour
             {
                 if (jump_movement.y < 0.0f)
                 {
-                    Debug.Log("ok");
+                    //Debug.Log("ok");
                     //jump_movement.y = -(0.8f * Time.deltaTime);
                     jump_movement.y = 0.0f;
                 }
@@ -167,7 +167,7 @@ public class Player_Movement : MonoBehaviour
 
                     if (!is_crouching)
                     {
-                        Debug.Log("Up by: " + (default_height - cc.height).ToString());
+                        //Debug.Log("Up by: " + (default_height - cc.height).ToString());
                         movement += new Vector3(0.0f, (default_height*3.5f), 0.0f);
                         cc.height = default_height;
                     }
@@ -185,7 +185,7 @@ public class Player_Movement : MonoBehaviour
         }
         else if (tag == "Player")
         {
-            Debug.Log("Not controlled");
+            //Debug.Log("Not controlled");
         }
     }
 }

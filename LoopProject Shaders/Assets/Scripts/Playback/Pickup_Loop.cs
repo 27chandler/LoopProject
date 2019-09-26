@@ -109,23 +109,14 @@ public class Pickup_Loop : MonoBehaviour
                 meshrenderer.enabled = true;
                 vc.enabled = true;
             }
+            Vector3 movement_dir = (rb.position - object_holding_this.transform.position).normalized;
+            float distance_between_objects = Vector3.Distance(rb.position, object_holding_this.transform.position);
+            if (!Physics.Raycast(object_holding_this.transform.position, movement_dir, distance_between_objects))
+            {
+                rb.MovePosition(Vector3.Lerp(rb.position, hold_pos, 0.2f));
+            }
 
-            rb.MovePosition(Vector3.Lerp(rb.position,hold_pos,0.2f));
-
-            //float distance = Vector3.Distance(hold_pos, transform.position);
-            //float move_force = distance * 60.0f;
             rb.useGravity = false;
-
-            ////if (rb. > move_force)
-            ////{
-
-            ////}
-
-            //move_force /= 5.0f - distance;
-
-            ////move_force = Mathf.Pow(move_force, 2.0f);
-
-            //rb.AddForce((hold_pos - transform.position).normalized * move_force);
         }
         else
         {
