@@ -81,4 +81,12 @@ public class Hold_Object : MonoBehaviour
 
 
     }
+
+    public void Drop_Item()
+    {
+        grabbed_item.is_picked_up = false;
+        grabbed_item = null;
+        grabbed_item_obj = null;
+        is_holding = false;
+    }
 }

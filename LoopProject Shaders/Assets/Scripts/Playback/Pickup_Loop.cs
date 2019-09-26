@@ -10,6 +10,8 @@ public class Pickup_Loop : MonoBehaviour
     [SerializeField] private Material hold_mat;
     private Material default_mat;
 
+    [SerializeField] private float max_hold_distance = 4.0f;
+
     public bool is_picked_up;
     public Vector3 hold_pos;
     public GameObject object_holding_this; // The player object which is holding the object
@@ -111,10 +113,16 @@ public class Pickup_Loop : MonoBehaviour
             }
             Vector3 movement_dir = (rb.position - object_holding_this.transform.position).normalized;
             float distance_between_objects = Vector3.Distance(rb.position, object_holding_this.transform.position);
-            if (!Physics.Raycast(object_holding_this.transform.position, movement_dir, distance_between_objects))
+            Ray line_of_sight_ray = new Ray(object_holding_this.transform.position, movement_dir);
+            if (!Physics.Raycast(line_of_sight_ray, distance_between_objects))
             {
                 rb.MovePosition(Vector3.Lerp(rb.position, hold_pos, 0.2f));
             }
+            else if (distance_between_objects >= max_hold_distance)
+            {
+                object_holding_this.GetComponent<Hold_Object>().Drop_Item();
+            }
+            //Debug.DrawRay(object_holding_this.transform.position, movement_dir * distance_between_objects,Color.red,0.1f);
 
             rb.useGravity = false;
         }
