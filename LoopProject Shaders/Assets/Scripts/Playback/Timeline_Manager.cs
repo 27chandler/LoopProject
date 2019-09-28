@@ -28,6 +28,7 @@ public class Timeline_Manager : MonoBehaviour
     [SerializeField] public float modified_current_time;
     [SerializeField] private Text time_display;
     [SerializeField] private Text health_display;
+    [SerializeField] private Text selected_jump_display;
     public float health = 100.0f;
     public bool is_jumping = false;
     private float last_update_time = 0.0f;
@@ -158,7 +159,7 @@ public class Timeline_Manager : MonoBehaviour
 
     [SerializeField] List<Time_Point> time_point_list = new List<Time_Point>();
     [SerializeField] int selected_time_slot = 1;
-    [SerializeField] Time_Point jump_time_point = new Time_Point();
+    //[SerializeField] Time_Point jump_time_point = new Time_Point();
 
     // Start is called before the first frame update
     void Start()
@@ -218,6 +219,7 @@ public class Timeline_Manager : MonoBehaviour
     {
         time_display.text = Mathf.Ceil(current_time - (iteration_delay * (iteration_num-1))).ToString();
         health_display.text = "Health: " + Mathf.CeilToInt(health).ToString();
+        selected_jump_display.text = "ID selected: " + selected_time_slot + "\nDestination: " + time_point_list[selected_time_slot - 1].normalized_timestamp;
 
         if (health < 100.0f)
         {
@@ -286,45 +288,54 @@ public class Timeline_Manager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             selected_time_slot = 1;
+            //jump_time_point = time_point_list[selected_time_slot - 1];
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             selected_time_slot = 2;
+            //jump_time_point = time_point_list[selected_time_slot - 1];
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             selected_time_slot = 3;
+            //jump_time_point = time_point_list[selected_time_slot - 1];
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             selected_time_slot = 4;
+            //jump_time_point = time_point_list[selected_time_slot - 1];
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             selected_time_slot = 5;
+            //jump_time_point = time_point_list[selected_time_slot - 1];
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
             selected_time_slot = 6;
+            //jump_time_point = time_point_list[selected_time_slot - 1];
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7))
         {
             selected_time_slot = 7;
+            //jump_time_point = time_point_list[selected_time_slot - 1];
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8))
         {
             selected_time_slot = 8;
+            //jump_time_point = time_point_list[selected_time_slot - 1];
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             selected_time_slot = 9;
+            //jump_time_point = time_point_list[selected_time_slot - 1];
         }
-        jump_time_point = time_point_list[selected_time_slot - 1];
+        
     }
 
-    void Log_Object_Positions()
+    void Log_Object_Positions(int i_index)
     {
-        jump_time_point.object_locations.Clear();
+        time_point_list[i_index].object_locations.Clear();
         foreach (var obj_type in object_type_list)
         {
             GameObject[] object_array = GameObject.FindGameObjectsWithTag(obj_type.tag);
@@ -332,21 +343,21 @@ public class Timeline_Manager : MonoBehaviour
             {
                 if (obj.GetComponent<Pickup_Loop>().is_picked_up == false)
                 {
-                    jump_time_point.object_location_transforms.Add(obj.transform);
+                    time_point_list[i_index].object_location_transforms.Add(obj.transform);
 
                     Object_Spawns new_spawn = new Object_Spawns();
                     new_spawn.position = obj.transform.position;
                     new_spawn.obj = obj_type.obj;
 
-                    jump_time_point.object_locations.Add(new_spawn);
+                    time_point_list[i_index].object_locations.Add(new_spawn);
                 }
             }
         }
     }
 
-    void Log_Door_States()
+    void Log_Door_States(int i_index)
     {
-        jump_time_point.door_data_states.Clear();
+        time_point_list[i_index].door_data_states.Clear();
 
         foreach (var door_activation in door_list)
         {
@@ -355,32 +366,30 @@ public class Timeline_Manager : MonoBehaviour
             input_door.door_obj = door_activation.gameObject;
             input_door.last_state = door_activation.is_open;
 
-            jump_time_point.door_data_states.Add(input_door);
+            time_point_list[i_index].door_data_states.Add(input_door);
         }
     }
 
-    void Save_Time_Point()
+    void Save_Time_Point(int i_index)
     {
-        jump_time_point.timestamp = current_time;
-        jump_time_point.timestamp_index = timeline_memory.Count;
-        jump_time_point.normalized_timestamp = current_time - (iteration_delay * (iteration_num - 1));
-        jump_time_point.dupe_timestamp_indexes.Clear();
+        time_point_list[i_index].timestamp = current_time;
+        time_point_list[i_index].timestamp_index = timeline_memory.Count;
+        time_point_list[i_index].normalized_timestamp = current_time - (iteration_delay * (iteration_num - 1));
+        time_point_list[i_index].dupe_timestamp_indexes.Clear();
 
-        jump_time_point.dupe_timestamp_indexes.Add(jump_time_point.timestamp_index);
+        time_point_list[i_index].dupe_timestamp_indexes.Add(time_point_list[i_index].timestamp_index);
         foreach (var dupe_player in duplicate_player_list)
         {
-            jump_time_point.dupe_timestamp_indexes.Add(dupe_player.timestamp);
+            time_point_list[i_index].dupe_timestamp_indexes.Add(dupe_player.timestamp);
             //jump_time_point.dupe_held_objects.Add()
         }
 
-        Log_Object_Positions();
-        Log_Door_States();
+        Log_Object_Positions(i_index);
+        Log_Door_States(i_index);
     }
 
     void Record_Player_Actions()
     {
-        bool is_jumping_to_custom_time = false;
-
         if (Input.GetKeyDown(KeyCode.E))
         {
             is_grabbing = true;
@@ -390,15 +399,15 @@ public class Timeline_Manager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.T))
         {
-            Save_Time_Point();
+            Save_Time_Point(selected_time_slot - 1);
 
-            time_point_list[selected_time_slot - 1] = jump_time_point;
+            //time_point_list[selected_time_slot - 1] = new Time_Point(jump_time_point;
         }
 
         if (Input.GetKeyDown(KeyCode.G))
         {
             is_jumping = true;
-            is_jumping_to_custom_time = true;
+            is_jumping_to_custom_time_point = true;
         }
 
         // Record Movement
@@ -474,12 +483,12 @@ public class Timeline_Manager : MonoBehaviour
                     current_time += time_until_next_loop;
                     Debug.Log("Jumped: " + time_until_next_loop);
 
-                    jump_time_point.timestamp += iteration_delay;
+                    time_point_list[selected_time_slot - 1].timestamp += iteration_delay;
 
-                    if (is_jumping_to_custom_time)
+                    if (is_jumping_to_custom_time_point)
                     {
-                        is_jumping_to_custom_time_point = true;
-                        current_time += jump_time_point.normalized_timestamp;
+                        current_time += time_point_list[selected_time_slot - 1].normalized_timestamp;
+                        Debug.Log("Jumped even more: " + time_point_list[selected_time_slot - 1].normalized_timestamp);
                         Skip_Dupes_To_Custom();
 
                         Reset_Objects(time_point_list[selected_time_slot - 1].object_locations);
@@ -537,11 +546,12 @@ public class Timeline_Manager : MonoBehaviour
             {
                 if (duplicate_player_list[i].timestamp == time_point_list[j].timestamp_index)
                 {
-                    Save_Time_Point();
+                    Save_Time_Point(j);
 
-                    time_point_list[j] = jump_time_point;
+                    //Debug.Log("Saved time point from " + time_point_list[j].timestamp + " to " + jump_time_point.timestamp);
+                    //time_point_list[j] = jump_time_point;
 
-                    Debug.Log("Saved time_point");
+                    //jump_time_point = time_point_list[selected_time_slot - 1];
                 }
             }
 
@@ -1000,7 +1010,7 @@ public class Timeline_Manager : MonoBehaviour
         //----------------------------------Object spawning--------------------------------------//
         //---------------------------------------------------------------------------------------//
 
-        foreach (var door_to_set in jump_time_point.door_data_states)
+        foreach (var door_to_set in time_point_list[selected_time_slot - 1].door_data_states)
         {
             door_to_set.door_activation.is_door_opening = door_to_set.last_state;
         }
