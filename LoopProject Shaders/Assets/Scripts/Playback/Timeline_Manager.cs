@@ -463,7 +463,6 @@ public class Timeline_Manager : MonoBehaviour
 
                 Add_To_Buffer(player_target.position, player_look_pivot.localRotation, door_data_list.ToArray(), obj_pos_array.ToArray(), current_time, is_jumping, is_grabbing);
 
-
                 if (is_jumping)
                 {
                     float time_until_next_loop = (iteration_delay * iteration_num) - current_time;
@@ -507,9 +506,6 @@ public class Timeline_Manager : MonoBehaviour
 
             }
 
-
-
-
             int num_of_seen_objs = 0;
             foreach (var obj in dupe_objs)
             {
@@ -521,12 +517,6 @@ public class Timeline_Manager : MonoBehaviour
                     }
                 }
             }
-
-
-
-
-
-
         }
     }
 
@@ -889,7 +879,6 @@ public class Timeline_Manager : MonoBehaviour
             is_jumping_to_custom_time_point = false;
         }
 
-
         GameObject spawned_obj = Instantiate(loop_obj);
 
         Duplicate_Data dupe_data = new Duplicate_Data();
@@ -1000,16 +989,6 @@ public class Timeline_Manager : MonoBehaviour
                     Set_Grabbed_Item(duplicate_player_list[i], obj_to_be_held);
                 }
             }
-
-
-
-
-
-
-
-
-
-
         }
 
         //---------------------------------------------------------------------------------------//
@@ -1020,8 +999,6 @@ public class Timeline_Manager : MonoBehaviour
         {
             door_to_set.door_activation.is_door_opening = door_to_set.last_state;
         }
-
-
     }
 
     private void Skip_Dupes_Forward()

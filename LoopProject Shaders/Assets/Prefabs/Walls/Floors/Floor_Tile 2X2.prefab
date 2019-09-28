@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 940204292283090915}
   - component: {fileID: 2528241528544965387}
   - component: {fileID: 5627512875003960875}
-  m_Layer: 10
+  m_Layer: 9
   m_Name: Floor_Tile 2X2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4881600097358480580}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1, y: 0.5, z: 35}
   m_LocalScale: {x: 2, y: 1, z: 2}
   m_Children: []

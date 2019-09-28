@@ -10,12 +10,17 @@ PrefabInstance:
     - target: {fileID: 4881600097358480580, guid: 62786cba796df214683a8bb6e59408d4,
         type: 3}
       propertyPath: m_Name
-      value: Floor_Tile 4X4
+      value: Floor_Tile 4X4 Variant (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4881600097358480580, guid: 62786cba796df214683a8bb6e59408d4,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4015910179709133596, guid: 62786cba796df214683a8bb6e59408d4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -53
       objectReference: {fileID: 0}
     - target: {fileID: 4015910179709133596, guid: 62786cba796df214683a8bb6e59408d4,
         type: 3}
@@ -25,7 +30,7 @@ PrefabInstance:
     - target: {fileID: 4015910179709133596, guid: 62786cba796df214683a8bb6e59408d4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 14
+      value: -123
       objectReference: {fileID: 0}
     - target: {fileID: 4015910179709133596, guid: 62786cba796df214683a8bb6e59408d4,
         type: 3}
