@@ -14,6 +14,8 @@ public class Movement_Playback : MonoBehaviour
     [SerializeField] public Transform this_pivot;
     [SerializeField] public float delay;
 
+    //
+
     private float current_time = 0.0f;
     private int timestamp_index = 0;
     private Vector3 last_position = new Vector3();

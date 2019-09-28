@@ -146,11 +146,18 @@ public class Timeline_Manager : MonoBehaviour
         public List<GameObject> dupe_held_objects = new List<GameObject>();
     };
 
+    [SerializeField] List<Time_Point> time_point_list = new List<Time_Point>();
+    [SerializeField] int selected_time_slot = 1;
     [SerializeField] Time_Point jump_time_point = new Time_Point();
 
     // Start is called before the first frame update
     void Start()
     {
+        for (int i = 0; i < 9; i++)
+        {
+            time_point_list.Add(new Time_Point());
+        }
+        
         foreach (var obj_type in object_type_list)
         {
             GameObject[] object_array = GameObject.FindGameObjectsWithTag(obj_type.tag);
@@ -262,6 +269,47 @@ public class Timeline_Manager : MonoBehaviour
         }
     }
 
+    void Select_Time_Point_Slot_Input()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            selected_time_slot = 1;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            selected_time_slot = 2;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            selected_time_slot = 3;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            selected_time_slot = 4;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            selected_time_slot = 5;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            selected_time_slot = 6;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            selected_time_slot = 7;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            selected_time_slot = 8;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            selected_time_slot = 9;
+        }
+        jump_time_point = time_point_list[selected_time_slot - 1];
+    }
+
     void Record_Player_Actions()
     {
         bool is_jumping_to_custom_time = false;
@@ -270,6 +318,8 @@ public class Timeline_Manager : MonoBehaviour
         {
             is_grabbing = true;
         }
+
+        Select_Time_Point_Slot_Input();
 
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -284,6 +334,8 @@ public class Timeline_Manager : MonoBehaviour
                 jump_time_point.dupe_timestamp_indexes.Add(dupe_player.timestamp);
                 //jump_time_point.dupe_held_objects.Add()
             }
+
+            time_point_list[selected_time_slot - 1] = jump_time_point;
         }
 
         // Record Movement
