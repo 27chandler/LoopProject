@@ -145,10 +145,14 @@ public class Timeline_Manager : MonoBehaviour
         public float normalized_timestamp;
 
         public List<int> dupe_timestamp_indexes = new List<int>();
-        public List<GameObject> dupe_held_objects = new List<GameObject>();
 
+        // Object setting
         public List<Transform> object_location_transforms = new List<Transform>();
         public List<Object_Spawns> object_locations = new List<Object_Spawns>();
+        //
+
+        // Door settings
+        public List<Door_Data> door_data_states = new List<Door_Data>();
     };
 
     [SerializeField] List<Time_Point> time_point_list = new List<Time_Point>();
@@ -323,14 +327,32 @@ public class Timeline_Manager : MonoBehaviour
             GameObject[] object_array = GameObject.FindGameObjectsWithTag(obj_type.tag);
             foreach (var obj in object_array)
             {
-                jump_time_point.object_location_transforms.Add(obj.transform);
+                if (obj.GetComponent<Pickup_Loop>().is_picked_up == false)
+                {
+                    jump_time_point.object_location_transforms.Add(obj.transform);
 
-                Object_Spawns new_spawn = new Object_Spawns();
-                new_spawn.position = obj.transform.position;
-                new_spawn.obj = obj_type.obj;
+                    Object_Spawns new_spawn = new Object_Spawns();
+                    new_spawn.position = obj.transform.position;
+                    new_spawn.obj = obj_type.obj;
 
-                jump_time_point.object_locations.Add(new_spawn);
+                    jump_time_point.object_locations.Add(new_spawn);
+                }
             }
+        }
+    }
+
+    void Log_Door_States()
+    {
+        jump_time_point.door_data_states.Clear();
+
+        foreach (var door_activation in door_list)
+        {
+            Door_Data input_door = new Door_Data();
+            input_door.door_activation = door_activation;
+            input_door.door_obj = door_activation.gameObject;
+            input_door.last_state = door_activation.is_open;
+
+            jump_time_point.door_data_states.Add(input_door);
         }
     }
 
@@ -360,6 +382,7 @@ public class Timeline_Manager : MonoBehaviour
             }
 
             Log_Object_Positions();
+            Log_Door_States();
 
             time_point_list[selected_time_slot - 1] = jump_time_point;
         }
@@ -449,16 +472,15 @@ public class Timeline_Manager : MonoBehaviour
                         is_jumping_to_custom_time_point = true;
                         current_time += jump_time_point.normalized_timestamp;
                         Skip_Dupes_To_Custom();
-                        
+
+                        Reset_Objects(time_point_list[selected_time_slot - 1].object_locations);
+
                         Debug.Log(current_time);
                     }
                     else
                     {
                         Skip_Dupes_To_Custom();
-                        //Skip_Dupes_Forward();
                     }
-
-                    Reset_Objects(time_point_list[selected_time_slot - 1].object_locations);
 
                     Add_To_Buffer(player_target.position, player_look_pivot.localRotation, door_data_list.ToArray(), obj_pos_array.ToArray(), current_time, false, false);
 
@@ -828,14 +850,15 @@ public class Timeline_Manager : MonoBehaviour
     void Restart_Loop()
     {
         loop_restarted = true;
-        foreach (var door in door_list)
-        {
-            door.is_door_opening = false;
-        }
 
         if (!is_jumping_to_custom_time_point)
         {
             Reset_Objects(moveable_object_spawns);
+
+            foreach (var door in door_list)
+            {
+                door.is_door_opening = false;
+            }
         }
         else
         {
@@ -886,6 +909,7 @@ public class Timeline_Manager : MonoBehaviour
         for (int i = 0; i < duplicate_player_list.Count; i++)
         {
             float skip_adjustment = 0.0f; // Skip by this amount if the playback has been skipped during time travel.
+            int original_timestamp_index = duplicate_player_list[i].timestamp;
 
             if ((current_time - (iteration_delay * (i + 1))) >= timeline_memory[duplicate_player_list[i].timestamp + 2].timestamp + iteration_delay)
             {
@@ -912,91 +936,69 @@ public class Timeline_Manager : MonoBehaviour
                     is_skip_processing_valid = false;
                 }
             }
-        }
-            //    int dupe_timestamp = time_dupe.timestamp;
 
-            //    bool is_skip_done = false;
+            //---------------------------------------------------------------------------------------//
+            //----------------------------------Object spawning--------------------------------------//
+            //---------------------------------------------------------------------------------------//
 
-            //    foreach (var jump_timestamp in time_jump_timestamps)
-            //    {
-            //    //foreach (var jump_timestamp in jump_time_point.dupe_timestamp_indexes)
-            //    //{
-            //        if (!is_skip_done)
-            //        {
-            //            //if (jump_timestamp == dupe_timestamp)
-            //            //{
-            //            //    is_skip_done = true;
-            //            //}
-            //            /*else */if (jump_timestamp > dupe_timestamp)
-            //            {
-            //                if (timeline_memory[jump_timestamp].held_object_tag != timeline_memory[time_dupe.timestamp].held_object_tag)
-            //                {
-            //                    if ((timeline_memory[jump_timestamp].is_holding_object) && (!timeline_memory[time_dupe.timestamp].is_holding_object))
-            //                    {
-            //                        GameObject obj_to_be_held = null;
-            //                        foreach (var obj_type in object_type_list)
-            //                        {
-            //                            if (timeline_memory[jump_timestamp].held_object_tag == obj_type.tag)
-            //                            {
-            //                                obj_to_be_held = obj_type.obj;
-            //                            }
-            //                        }
+            if (timeline_memory[duplicate_player_list[i].timestamp].held_object_tag != timeline_memory[original_timestamp_index].held_object_tag)
+            {
+                if ((timeline_memory[duplicate_player_list[i].timestamp].is_holding_object) && (!timeline_memory[original_timestamp_index].is_holding_object))
+                {
+                    GameObject obj_to_be_held = null;
+                    foreach (var obj_type in object_type_list)
+                    {
+                        if (timeline_memory[duplicate_player_list[i].timestamp].held_object_tag == obj_type.tag)
+                        {
+                            obj_to_be_held = obj_type.obj;
+                        }
+                    }
 
-            //                        Set_Grabbed_Item(time_dupe, obj_to_be_held);
-            //                    }
-            //                    else if ((!timeline_memory[jump_timestamp].is_holding_object) && (timeline_memory[time_dupe.timestamp].is_holding_object))
-            //                    {
-            //                        Destroy_Grabbed_Item(time_dupe);
-            //                    }
-            //                    else
-            //                    {
-            //                        Destroy_Grabbed_Item(time_dupe);
+                    Set_Grabbed_Item(duplicate_player_list[i], obj_to_be_held);
+                }
+                else if ((!timeline_memory[duplicate_player_list[i].timestamp].is_holding_object) && (timeline_memory[original_timestamp_index].is_holding_object))
+                {
+                    Destroy_Grabbed_Item(duplicate_player_list[i]);
+                }
+                else
+                {
+                    Destroy_Grabbed_Item(duplicate_player_list[i]);
 
-            //                        GameObject obj_to_be_held = null;
-            //                        foreach (var obj_type in object_type_list)
-            //                        {
-            //                            if (timeline_memory[jump_timestamp].held_object_tag == obj_type.tag)
-            //                            {
-            //                                obj_to_be_held = obj_type.obj;
-            //                            }
-            //                        }
+                    GameObject obj_to_be_held = null;
+                    foreach (var obj_type in object_type_list)
+                    {
+                        if (timeline_memory[duplicate_player_list[i].timestamp].held_object_tag == obj_type.tag)
+                        {
+                            obj_to_be_held = obj_type.obj;
+                        }
+                    }
 
-            //                        Set_Grabbed_Item(time_dupe, obj_to_be_held);
-            //                    }
-            //                }
-
-            //                time_dupe.timestamp = jump_timestamp;
-            //                Debug.Log("JUMPED TO: " + jump_timestamp);
-
-            //                is_skip_done = true;
-            //            }
-            //        }
-            //    }
-            //}
+                    Set_Grabbed_Item(duplicate_player_list[i], obj_to_be_held);
+                }
+            }
 
 
-            //// Snap marker jump calculations
-            //foreach (var marker in snap_markers)
-            //{
-            //    if (marker != null)
-            //    {
-            //        Align_Check align_marker = marker.GetComponent<Align_Check>();
 
-            //        if (align_marker != null)
-            //        {
-            //            float completion_time = align_marker.completion_time;
 
-            //            if (completion_time < iteration_delay * iteration_num)
-            //            {
-            //                align_marker.completion_time += iteration_delay;
-            //                Debug.Log("Forward");
-            //            }
-            //        }
-            //    }
-            //}
+
+
+
+
 
 
         }
+
+        //---------------------------------------------------------------------------------------//
+        //----------------------------------Object spawning--------------------------------------//
+        //---------------------------------------------------------------------------------------//
+
+        foreach (var door_to_set in jump_time_point.door_data_states)
+        {
+            door_to_set.door_activation.is_door_opening = door_to_set.last_state;
+        }
+
+
+    }
 
     private void Skip_Dupes_Forward()
     {
@@ -1094,7 +1096,7 @@ public class Timeline_Manager : MonoBehaviour
 
     void Set_Grabbed_Item(Duplicate_Data i_time_dupe, GameObject i_object_to_be_held)
     {
-        GameObject created_obj = Instantiate(i_object_to_be_held, new Vector3(0.0f, 0.0f, 0.0f), new Quaternion());
+        GameObject created_obj = Instantiate(i_object_to_be_held, i_time_dupe.obj.transform.position + i_time_dupe.obj.transform.forward, new Quaternion());
         Duplicate_Data input_data = new Duplicate_Data();
         input_data.obj = created_obj;
         input_data.vis = created_obj.GetComponent<Visible_Check>();
