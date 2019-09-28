@@ -392,16 +392,18 @@ public class Timeline_Manager : MonoBehaviour
             time_point_list[selected_time_slot - 1] = jump_time_point;
         }
 
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            is_jumping = true;
+            is_jumping_to_custom_time = true;
+        }
+
         // Record Movement
         if ((current_time >= last_update_time + update_frequency) || is_grabbing)
         {
             last_update_time = current_time;
 
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-                is_jumping = true;
-                is_jumping_to_custom_time = true;
-            }
+
 
             bool is_seen_by_player_original = false;
             List<Object_Type> obj_pos_array = new List<Object_Type>();
