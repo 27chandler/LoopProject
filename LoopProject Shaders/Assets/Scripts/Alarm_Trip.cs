@@ -122,21 +122,6 @@ public class Alarm_Trip : MonoBehaviour
             yield return new WaitForSeconds(info_text_display_time);
             has_time_device = true;
         }
-
-
         yield return null;
     }
-
-
-    //private void OnTriggerEnter(Collider other)
-    //{
-        
-    //    foreach (var trigger in trigger_tag)
-    //    {
-    //        if (other.CompareTag(trigger))
-    //        {
-    //            is_activated = true;
-    //        }
-    //    }
-    //}
 }
