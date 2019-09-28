@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class Timeline_Manager : MonoBehaviour
 {
+    private bool is_jumping_to_custom_time_point = false;
+
     [SerializeField] private List<int> time_jump_timestamps = new List<int>();
 
     [SerializeField] public float iteration_delay;
@@ -144,6 +146,9 @@ public class Timeline_Manager : MonoBehaviour
 
         public List<int> dupe_timestamp_indexes = new List<int>();
         public List<GameObject> dupe_held_objects = new List<GameObject>();
+
+        public List<Transform> object_location_transforms = new List<Transform>();
+        public List<Object_Spawns> object_locations = new List<Object_Spawns>();
     };
 
     [SerializeField] List<Time_Point> time_point_list = new List<Time_Point>();
@@ -310,6 +315,25 @@ public class Timeline_Manager : MonoBehaviour
         jump_time_point = time_point_list[selected_time_slot - 1];
     }
 
+    void Log_Object_Positions()
+    {
+        jump_time_point.object_locations.Clear();
+        foreach (var obj_type in object_type_list)
+        {
+            GameObject[] object_array = GameObject.FindGameObjectsWithTag(obj_type.tag);
+            foreach (var obj in object_array)
+            {
+                jump_time_point.object_location_transforms.Add(obj.transform);
+
+                Object_Spawns new_spawn = new Object_Spawns();
+                new_spawn.position = obj.transform.position;
+                new_spawn.obj = obj_type.obj;
+
+                jump_time_point.object_locations.Add(new_spawn);
+            }
+        }
+    }
+
     void Record_Player_Actions()
     {
         bool is_jumping_to_custom_time = false;
@@ -334,6 +358,8 @@ public class Timeline_Manager : MonoBehaviour
                 jump_time_point.dupe_timestamp_indexes.Add(dupe_player.timestamp);
                 //jump_time_point.dupe_held_objects.Add()
             }
+
+            Log_Object_Positions();
 
             time_point_list[selected_time_slot - 1] = jump_time_point;
         }
@@ -420,6 +446,7 @@ public class Timeline_Manager : MonoBehaviour
 
                     if (is_jumping_to_custom_time)
                     {
+                        is_jumping_to_custom_time_point = true;
                         current_time += jump_time_point.normalized_timestamp;
                         Skip_Dupes_To_Custom();
                         
@@ -430,6 +457,8 @@ public class Timeline_Manager : MonoBehaviour
                         Skip_Dupes_To_Custom();
                         //Skip_Dupes_Forward();
                     }
+
+                    Reset_Objects(time_point_list[selected_time_slot - 1].object_locations);
 
                     Add_To_Buffer(player_target.position, player_look_pivot.localRotation, door_data_list.ToArray(), obj_pos_array.ToArray(), current_time, false, false);
 
@@ -700,17 +729,6 @@ public class Timeline_Manager : MonoBehaviour
                 }
             }
 
-            //if (dupe.paradox_suspicion >= paradox_sensitivity)
-            //{
-            //    Activate_Paradox_Increment(20.0f);
-            //    dupe.paradox_suspicion = 0;
-            //    //Debug.Log("MAX PARADOX");
-            //}
-            //else if (dupe.paradox_suspicion > 0)
-            //{
-            //    dupe.paradox_suspicion -= 1;
-            //}
-
             dupe.has_obj_check_completed = true;
             dupe.has_door_check_completed = true;
         }
@@ -733,9 +751,7 @@ public class Timeline_Manager : MonoBehaviour
                 {
                     door_check.current_time = current_time;
                     temp_markers.Add(marker);
-                    //Debug.Log("ADDED TIME");
                 }
-
             }
         }
 
@@ -752,7 +768,6 @@ public class Timeline_Manager : MonoBehaviour
 
         if ((timeline_memory[i_dupe.timestamp].is_grab_activated) && (i_dupe.has_grabbed_this_interval == false))
         {
-            //Debug.Log("GRABBED AT: " + i_dupe.timestamp);
             i_dupe.has_grabbed_this_interval = true;
             i_dupe.object_holder.trigger_grab = true;
         }
@@ -795,9 +810,9 @@ public class Timeline_Manager : MonoBehaviour
         timeline_memory.Add(timeline_memory.Count, input_data);
     }
 
-    void Reset_Objects()
+    void Reset_Objects(List<Object_Spawns> i_objects_to_spawn)
     {
-        foreach (var new_spawn in moveable_object_spawns)
+        foreach (var new_spawn in i_objects_to_spawn)
         {
             GameObject created_obj = Instantiate(new_spawn.obj, new_spawn.position, new Quaternion());
             Duplicate_Data input_data = new Duplicate_Data();
@@ -818,18 +833,15 @@ public class Timeline_Manager : MonoBehaviour
             door.is_door_opening = false;
         }
 
-        //foreach (var pickup in dupe_objs)
-        //{
-        //    if (pickup.obj != null)
-        //    {
-        //        if (!pickup.obj.GetComponent<Pickup_Loop>().is_picked_up)
-        //        {
-        //            Destroy(pickup.obj);
-        //        }
-        //    }
-        //}
+        if (!is_jumping_to_custom_time_point)
+        {
+            Reset_Objects(moveable_object_spawns);
+        }
+        else
+        {
+            is_jumping_to_custom_time_point = false;
+        }
 
-        Reset_Objects();
 
         GameObject spawned_obj = Instantiate(loop_obj);
 
@@ -840,7 +852,7 @@ public class Timeline_Manager : MonoBehaviour
         dupe_data.obj_look_pivot = spawned_obj.GetComponent<Movement_Playback>().this_pivot;
         dupe_data.object_holder = spawned_obj.GetComponentInChildren<Hold_Object>();
         dupe_data.has_grabbed_this_interval = false;
-
+        
         dupe_data.paradox_suspicion = 0;
 
         vis.Add_Camera(spawned_obj.GetComponentInChildren<Camera>());
@@ -871,15 +883,6 @@ public class Timeline_Manager : MonoBehaviour
 
     private void Skip_Dupes_To_Custom()
     {
-        //foreach (var time_dupe in duplicate_player_list)
-        //{
-        //    while ((current_time - (iteration_delay * (time_dupe.iter_num + 1))) >= timeline_memory[duplicate_player_list[time_dupe.iter_num].timestamp + 2].timestamp)
-        //    {
-        //        time_dupe.timestamp++;
-        //        //Debug.Log("++");
-        //    }
-        //}
-
         for (int i = 0; i < duplicate_player_list.Count; i++)
         {
             float skip_adjustment = 0.0f; // Skip by this amount if the playback has been skipped during time travel.
