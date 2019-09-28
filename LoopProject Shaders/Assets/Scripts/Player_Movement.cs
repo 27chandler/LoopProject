@@ -9,6 +9,8 @@ public class Player_Movement : MonoBehaviour
     private Timeline_Manager tm;
 
     [SerializeField] private float movement_speed;
+    [SerializeField] private float sprinting_speed;
+    [SerializeField] private KeyCode sprint_key;
     private Vector3 jump_movement = new Vector3();
     [SerializeField] private float jump_strength;
     [SerializeField] private Transform object_dir;
@@ -181,7 +183,14 @@ public class Player_Movement : MonoBehaviour
 
             time_device_display.text = "Jumps: " + num_of_jumps;
 
-            cc.Move((movement + jump_movement) * Time.deltaTime * movement_speed);
+            float speed_multiplier = movement_speed;
+
+            if (Input.GetKey(sprint_key))
+            {
+                speed_multiplier = sprinting_speed;
+            }
+
+            cc.Move((movement + jump_movement) * Time.deltaTime * speed_multiplier);
         }
         else if (tag == "Player")
         {

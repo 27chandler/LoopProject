@@ -97,6 +97,16 @@ PrefabInstance:
       propertyPath: is_controlled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1195624464444332472, guid: a42df1d82d3680a44964470114b0aa68,
+        type: 3}
+      propertyPath: sprint_key
+      value: 304
+      objectReference: {fileID: 0}
+    - target: {fileID: 1195624464444332472, guid: a42df1d82d3680a44964470114b0aa68,
+        type: 3}
+      propertyPath: sprinting_speed
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 5677447379092148236, guid: a42df1d82d3680a44964470114b0aa68,
         type: 3}
       propertyPath: is_playing
