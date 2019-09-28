@@ -8,6 +8,8 @@ public class Alarm_Trip : MonoBehaviour
     private Pop_Up_Control puc;
     private int iter_num_last;
 
+    private float activation_time;
+
     [SerializeField] private Player_Movement pm;
     [SerializeField] private GameObject object_check; //The alarm will trigger when this object is destroyed
     private int detection_counter = 0;
@@ -18,6 +20,9 @@ public class Alarm_Trip : MonoBehaviour
     [SerializeField] private string info_text;
     [SerializeField] private float info_text_display_time;
 
+    [SerializeField] private string warning_text;
+    [SerializeField] private float warning_text_display_time;
+
     [SerializeField] private Portal current_level_portal;
     [SerializeField] private Portal next_level_portal;
 
@@ -25,6 +30,8 @@ public class Alarm_Trip : MonoBehaviour
     [SerializeField] private bool has_alarm_started = false;
 
     private bool is_first_activation = true;
+
+    private bool has_time_device = false;
 
 
     // Start is called before the first frame update
@@ -55,8 +62,22 @@ public class Alarm_Trip : MonoBehaviour
         }
 
 
-        if (tm.iteration_num != iter_num_last)
+        if (tm.modified_current_time < activation_time)
         {
+            if (has_time_device)
+            {
+                StartCoroutine(Show_Warning());
+                has_time_device = false;
+            }
+
+            if (is_activated)
+            {
+                foreach (var door in door_list)
+                {
+                    door.is_door_opening = false;
+                }
+            }
+
             iter_num_last = tm.iteration_num;
             is_activated = false;
             has_alarm_started = false;
@@ -70,8 +91,19 @@ public class Alarm_Trip : MonoBehaviour
         }
     }
 
+    private IEnumerator Show_Warning()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        puc.Set_Pop_Up(warning_text, warning_text_display_time);
+
+        yield return null;
+    }
+
     private IEnumerator Activate_Alarm()
     {
+        activation_time = tm.modified_current_time;
+
         foreach (var door in door_list)
         {
             door.is_door_opening = true;
@@ -87,7 +119,8 @@ public class Alarm_Trip : MonoBehaviour
             next_level_portal.is_open = true;
             is_first_activation = false;
 
-
+            yield return new WaitForSeconds(info_text_display_time);
+            has_time_device = true;
         }
 
 

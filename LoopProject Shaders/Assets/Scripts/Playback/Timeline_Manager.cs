@@ -24,7 +24,8 @@ public class Timeline_Manager : MonoBehaviour
 
     [SerializeField] private GameObject door_marker;
 
-    [SerializeField] private float current_time = 0.0f;
+    [SerializeField] public float current_time = 0.0f;
+    [SerializeField] public float modified_current_time;
     [SerializeField] private Text time_display;
     [SerializeField] private Text health_display;
     public float health = 100.0f;
@@ -276,6 +277,8 @@ public class Timeline_Manager : MonoBehaviour
             iteration_num++;
             Restart_Loop();
         }
+
+        modified_current_time = current_time - (iteration_delay * (iteration_num - 1));
     }
 
     void Select_Time_Point_Slot_Input()

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1319293803746451726}
   - component: {fileID: 1319293803746451731}
   - component: {fileID: 1319293803746451730}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Storage_Box
   m_TagString: Storage_Box
   m_Icon: {fileID: 0}
@@ -29,7 +29,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1319293803746451720}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -87.583, y: 0.681, z: -47.99}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
   m_Children: []
@@ -144,6 +144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vc: {fileID: 1319293803746451731}
   hold_mat: {fileID: 2100000, guid: f2b06efc8568b294b9cb1facf68cf96b, type: 2}
+  max_hold_distance: 4
   is_picked_up: 0
   hold_pos: {x: 0, y: 0, z: 0}
   object_holding_this: {fileID: 0}
