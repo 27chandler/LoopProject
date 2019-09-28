@@ -356,6 +356,24 @@ public class Timeline_Manager : MonoBehaviour
         }
     }
 
+    void Save_Time_Point()
+    {
+        jump_time_point.timestamp = current_time;
+        jump_time_point.timestamp_index = timeline_memory.Count;
+        jump_time_point.normalized_timestamp = current_time - (iteration_delay * (iteration_num - 1));
+        jump_time_point.dupe_timestamp_indexes.Clear();
+
+        jump_time_point.dupe_timestamp_indexes.Add(jump_time_point.timestamp_index);
+        foreach (var dupe_player in duplicate_player_list)
+        {
+            jump_time_point.dupe_timestamp_indexes.Add(dupe_player.timestamp);
+            //jump_time_point.dupe_held_objects.Add()
+        }
+
+        Log_Object_Positions();
+        Log_Door_States();
+    }
+
     void Record_Player_Actions()
     {
         bool is_jumping_to_custom_time = false;
@@ -369,20 +387,7 @@ public class Timeline_Manager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.T))
         {
-            jump_time_point.timestamp = current_time;
-            jump_time_point.timestamp_index = timeline_memory.Count;
-            jump_time_point.normalized_timestamp = current_time - (iteration_delay * (iteration_num - 1));
-            jump_time_point.dupe_timestamp_indexes.Clear();
-
-            jump_time_point.dupe_timestamp_indexes.Add(jump_time_point.timestamp_index);
-            foreach (var dupe_player in duplicate_player_list)
-            {
-                jump_time_point.dupe_timestamp_indexes.Add(dupe_player.timestamp);
-                //jump_time_point.dupe_held_objects.Add()
-            }
-
-            Log_Object_Positions();
-            Log_Door_States();
+            Save_Time_Point();
 
             time_point_list[selected_time_slot - 1] = jump_time_point;
         }
@@ -531,6 +536,25 @@ public class Timeline_Manager : MonoBehaviour
 
         for (int i = 0; i < duplicate_player_list.Count; i++)
         {
+            // Resave time point
+
+            for (int j = 0; j < time_point_list.Count; j++)
+            {
+                if (duplicate_player_list[i].timestamp == time_point_list[j].timestamp_index)
+                {
+                    Save_Time_Point();
+
+                    time_point_list[j] = jump_time_point;
+
+                    Debug.Log("Saved time_point");
+                }
+            }
+
+
+            // End resave
+
+
+
             bool is_done = false;
 
             is_done = true;
