@@ -117,7 +117,7 @@ public class Pickup_Loop : MonoBehaviour
             //if (!Physics.Raycast(line_of_sight_ray, distance_between_objects))
             //{
             //rb.MovePosition(hold_pos);
-            transform.position = hold_pos;
+            transform.position = Vector3.Lerp(transform.position, hold_pos, 0.7f);
                 //rb.MovePosition(Vector3.Lerp(rb.position, hold_pos, 0.2f));
             //}
             //else if (distance_between_objects >= max_hold_distance)
@@ -133,9 +133,11 @@ public class Pickup_Loop : MonoBehaviour
             gameObject.layer = 0;
             meshrenderer.material = default_mat;
             rb.useGravity = true;
-            if ((Vector3.Distance(transform.position,snap_pos) <= 0.5f) && (rb.velocity.magnitude <= 0.1f))
+            if ((Vector3.Distance(transform.position,snap_pos) <= 0.5f) && (!is_moving))
             {
-                transform.position = snap_pos;
+                //transform.position = snap_pos;
+                rb.MovePosition(Vector3.Lerp(transform.position, snap_pos, 0.2f));
+                //transform.position = Vector3.Lerp(transform.position, snap_pos, 0.2f);
             }
         }
 
