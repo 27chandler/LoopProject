@@ -84,6 +84,14 @@ public class Alarm_Trip : MonoBehaviour
             detection_counter = 0;
         }
 
+        if ((tm.modified_current_time > activation_time + 1.5f) && (!is_first_activation))
+        {
+            foreach (var door in door_list)
+            {
+                door.is_door_opening = true;
+            }
+        }
+
         if (is_activated && !has_alarm_started)
         {
             has_alarm_started = true;
