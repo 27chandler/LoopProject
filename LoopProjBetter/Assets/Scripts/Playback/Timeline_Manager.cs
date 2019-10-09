@@ -24,6 +24,8 @@ public class Timeline_Manager : MonoBehaviour
 
     [SerializeField] private GameObject door_marker;
 
+    private Time_Jump_Effect tm_jump_effect;
+
     [SerializeField] public float current_time = 0.0f;
     [SerializeField] public float modified_current_time;
     [SerializeField] private Text time_display;
@@ -164,6 +166,8 @@ public class Timeline_Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        tm_jump_effect = GetComponent<Time_Jump_Effect>();
+
         for (int i = 0; i < 9; i++)
         {
             time_point_list.Add(new Time_Point());
@@ -406,6 +410,12 @@ public class Timeline_Manager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.G))
         {
+            tm_jump_effect.is_activated = true;
+        }
+
+        if (tm_jump_effect.has_jump_occured)
+        {
+            tm_jump_effect.has_jump_occured = false;
             is_jumping = true;
             is_jumping_to_custom_time_point = true;
         }
