@@ -95,6 +95,8 @@ public class Pickup_Loop : MonoBehaviour
 
         if (is_picked_up)
         {
+            rb.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+            rb.angularVelocity = new Vector3(0.0f, 0.0f, 0.0f);
             gameObject.layer = 2;
             meshrenderer.material = hold_mat;
             if (object_holding_this.activeInHierarchy == false)

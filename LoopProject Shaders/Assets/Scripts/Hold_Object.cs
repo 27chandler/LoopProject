@@ -62,14 +62,20 @@ public class Hold_Object : MonoBehaviour
             }
             else
             {
-                //Debug.Log("is holding");
-                if (grabbed_item != null)
+                Physics.Raycast(grabbed_item.transform.position, -transform.forward, out hit);
+
+                if ((hit.collider.gameObject.CompareTag("Player")) || (hit.collider.gameObject.CompareTag("Player_Dupe")))
                 {
-                    //Debug.Log("Dropped");
-                    grabbed_item.is_picked_up = false;
+                    //Debug.Log("is holding");
+                    if (grabbed_item != null)
+                    {
+                        //Debug.Log("Dropped");
+                        grabbed_item.is_picked_up = false;
+                    }
+                    grabbed_item = null;
+                    is_holding = false;
                 }
-                grabbed_item = null;
-                is_holding = false;
+
             }
         }
 
