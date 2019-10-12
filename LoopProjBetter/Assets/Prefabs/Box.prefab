@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3940395655078686941}
   - component: {fileID: 3940395655078686912}
   - component: {fileID: 3940395655078686913}
+  - component: {fileID: 1508761017772320360}
   m_Layer: 0
   m_Name: Box
   m_TagString: Power_Cell
@@ -144,6 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vc: {fileID: 3940395655078686912}
   hold_mat: {fileID: 2100000, guid: 60793f57df4cc124b8be799af6e0025b, type: 2}
+  max_hold_distance: 4
   is_picked_up: 0
   hold_pos: {x: 0, y: 0, z: 0}
   object_holding_this: {fileID: 0}
@@ -151,3 +153,18 @@ MonoBehaviour:
   delay: 30
   snap_pos: {x: 0, y: 0, z: 0}
   position_buffer: []
+--- !u!114 &1508761017772320360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3940395655078686939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c592108f5b514674f972cde389c6c88f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  is_jumping: 0
+  jump_distance: 20
+  is_hidden: 0
