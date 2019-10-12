@@ -280,7 +280,7 @@ PrefabInstance:
     - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
         type: 3}
       propertyPath: m_Name
-      value: Wall Triple (131)
+      value: Glass
       objectReference: {fileID: 0}
     - target: {fileID: 6011261235732106899, guid: eabc1c1a192854944aa6bf366d2bb3cf,
         type: 3}
@@ -356,7 +356,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: f2b06efc8568b294b9cb1facf68cf96b, type: 2}
+      objectReference: {fileID: 2100000, guid: 38f74d03c4b150d449372394fb409298, type: 2}
     - target: {fileID: 3730309888835058012, guid: eabc1c1a192854944aa6bf366d2bb3cf,
         type: 3}
       propertyPath: m_ReceiveShadows
