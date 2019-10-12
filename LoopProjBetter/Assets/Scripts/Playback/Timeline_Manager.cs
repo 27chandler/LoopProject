@@ -96,6 +96,17 @@ public class Timeline_Manager : MonoBehaviour
     };
 
     [Serializable]
+    public class Self_Jumping_Object
+    {
+        public string tag;
+        public Vector3 position;
+        public float destination_time;
+        public bool is_cooldown_active;
+    };
+    public List<Self_Jumping_Object> objects_to_time_travel = new List<Self_Jumping_Object>();
+    public List<Self_Jumping_Object> time_travelling_objects = new List<Self_Jumping_Object>();
+
+    [Serializable]
     public struct Object_Spawns
     {
         public Vector3 position;
@@ -546,7 +557,62 @@ public class Timeline_Manager : MonoBehaviour
 
     void Run_Playback()
     {
-        //Record_Player_Actions();
+        // Spawn time travelling objects
+        int index = 0;
+        foreach (var jumping_obj in time_travelling_objects)
+        {
+            if (!jumping_obj.is_cooldown_active)
+            {
+                if ((modified_current_time >= jumping_obj.destination_time) && (modified_current_time <= jumping_obj.destination_time + 0.5f))
+                {
+                    GameObject obj_to_be_held = null;
+                    foreach (var obj_type in object_type_list)
+                    {
+                        if (obj_type.tag == jumping_obj.tag)
+                        {
+                            obj_to_be_held = obj_type.obj;
+                            break;
+                        }
+                    }
+
+                    if (obj_to_be_held != null)
+                    {
+                        GameObject new_obj = Instantiate(obj_to_be_held, jumping_obj.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
+                        objects_vis.Add(new_obj.GetComponent <Visible_Check>());
+
+                        Duplicate_Data obj_data = new Duplicate_Data();
+                        obj_data.obj = new_obj;
+                        obj_data.vis = new_obj.GetComponent<Visible_Check>();
+
+                        dupe_objs.Add(obj_data);
+                        
+                        time_travelling_objects[index].is_cooldown_active = true;
+                    }
+                }
+            }
+            index++;
+        }
+
+        foreach (var jumping_obj in objects_to_time_travel)
+        {
+
+            if ((modified_current_time >= jumping_obj.destination_time) && (modified_current_time <= jumping_obj.destination_time + 0.5f))
+            {
+                Collider[] hit_colliders = Physics.OverlapSphere(jumping_obj.position, 0.1f);
+
+                for (int i = 0; i < hit_colliders.Length; i++)
+                {
+                    if (hit_colliders[i].tag == jumping_obj.tag)
+                    {
+                        Destroy(hit_colliders[i].gameObject);
+                        break;
+                    }
+                }
+            }
+
+        }
+
+                    //
 
         for (int i = 0; i < duplicate_player_list.Count; i++)
         {
@@ -889,6 +955,11 @@ public class Timeline_Manager : MonoBehaviour
     void Restart_Loop()
     {
         loop_restarted = true;
+
+        for (int i = 0; i < time_travelling_objects.Count; i++)
+        {
+            time_travelling_objects[i].is_cooldown_active = false;
+        }
 
         if (!is_jumping_to_custom_time_point)
         {

@@ -12,6 +12,8 @@ public class Pickup_Loop : MonoBehaviour
 
     [SerializeField] private float max_hold_distance = 4.0f;
 
+    public bool is_immune_to_jump_destruction = false;
+
     public bool is_picked_up;
     public Vector3 hold_pos;
     public GameObject object_holding_this; // The player object which is holding the object
@@ -154,7 +156,7 @@ public class Pickup_Loop : MonoBehaviour
             }
         }
 
-        if (last_iteration_num != timeline_manager.iteration_num)
+        if ((last_iteration_num != timeline_manager.iteration_num) && (!is_immune_to_jump_destruction))
         {
             last_iteration_num = timeline_manager.iteration_num;
 
@@ -162,6 +164,10 @@ public class Pickup_Loop : MonoBehaviour
             {
                 Destroy(gameObject);
             }
+        }
+        else if (is_immune_to_jump_destruction)
+        {
+            last_iteration_num = timeline_manager.iteration_num;
         }
     }
 
