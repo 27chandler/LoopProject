@@ -96,6 +96,7 @@ public class Align_Check : MonoBehaviour
                 {
                     is_destroying = true;
                     health = 99999999;
+
                     Destroy(this.gameObject);
                     //StartCoroutine(Destroy_In(0.5f));
                 }

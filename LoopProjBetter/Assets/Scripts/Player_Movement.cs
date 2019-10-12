@@ -18,8 +18,12 @@ public class Player_Movement : MonoBehaviour
 
     private float default_height;
     [SerializeField] private float crouch_height = 0.7f;
+    [SerializeField] private float climb_time;
+    private Vector3 climb_dir = new Vector3(0.0f, 0.0f, 0.0f);
+    [SerializeField] private float climb_force;
 
     private bool is_crouching = false;
+    private bool is_climb_valid = false;
 
     public bool is_controlled = false;
 
@@ -58,6 +62,28 @@ public class Player_Movement : MonoBehaviour
         }
     }
 
+    private IEnumerator Climb()
+    {
+        Vector3 flat_forward = object_dir.parent.transform.forward;
+        flat_forward.y = 0.0f;
+        flat_forward.Normalize();
+
+        Vector3 climb_waypoint = (object_dir.parent.transform.position + flat_forward + Vector3.up);
+        Vector3 start_pos = transform.position;
+        float climb_timer = 0.0f;
+        cc.enabled = false;
+        
+        while (climb_timer < 1.0f)
+        {
+            transform.position = Vector3.Lerp(start_pos, climb_waypoint, climb_timer);
+            climb_timer += 0.05f;
+            yield return null;
+        }
+
+        cc.enabled = true;
+        yield return null;
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "Levitate")
@@ -72,6 +98,80 @@ public class Player_Movement : MonoBehaviour
         else if (other.CompareTag("Time_Jump_Portal"))
         {
             tm.is_jumping = true;
+        }
+    }
+
+    private void Update()
+    {
+        Vector3 flat_forward = object_dir.parent.transform.forward;
+        flat_forward.y = 0.0f;
+        flat_forward.Normalize();
+
+        Debug.DrawLine(object_dir.parent.transform.position, object_dir.parent.transform.position + flat_forward, Color.magenta);
+        Debug.DrawLine(object_dir.parent.transform.position, object_dir.parent.transform.position + flat_forward + Vector3.up, Color.magenta);
+
+        if ((Physics.CheckSphere(object_dir.parent.transform.position + flat_forward, 0.1f) || (Physics.CheckSphere(object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f), 0.1f)))
+            && (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + Vector3.up, object_dir.parent.transform.position + flat_forward + (Vector3.up * cc.height), cc.radius)))
+        {
+            if (Physics.CheckSphere(object_dir.parent.transform.position + flat_forward, 0.1f))
+            {
+                Debug.Log("1");
+            }
+
+            if (Physics.CheckSphere(object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f), 0.1f))
+            {
+                Debug.Log("2");
+            }
+
+            if (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + Vector3.up, object_dir.parent.transform.position + flat_forward + (Vector3.up * cc.height), cc.radius))
+            {
+                Debug.Log("3");
+            }
+            is_climb_valid = true;
+            Debug.Log("Climb");
+        }
+        else
+        {
+            is_climb_valid = false;
+        }
+
+        // Jump controls
+        float feet_distance = cc.height * 0.55f;
+
+        if (is_crouching)
+        {
+            feet_distance += 0.15f;
+        }
+
+        Debug.DrawLine(transform.position, transform.position + (Vector3.down * (feet_distance)));
+
+        bool is_jump_valid = false;
+
+        if (Physics.Raycast(transform.position, Vector3.down, feet_distance))
+        {
+            is_jump_valid = true;
+            if (jump_movement.y < 0.0f)
+            {
+                //Debug.Log("ok");
+                //jump_movement.y = -(0.8f * Time.deltaTime);
+                jump_movement.y = 0.0f;
+            }
+        }
+        else
+        {
+            jump_movement.y -= (0.8f * Time.deltaTime);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (is_climb_valid)
+            {
+                StartCoroutine(Climb());
+            }
+            else if (is_jump_valid)
+            {
+                jump_movement.y = jump_strength;
+            }
         }
     }
 
@@ -99,34 +199,6 @@ public class Player_Movement : MonoBehaviour
                 are_time_jumps_regening = true;
                 tm.is_jumping = true;
                 num_of_jumps--;
-            }
-
-            float feet_distance = cc.height * 0.55f;
-
-            if (is_crouching)
-            {
-                feet_distance += 0.15f;
-            }
-
-            Debug.DrawLine(transform.position, transform.position + (Vector3.down * (feet_distance)));
-
-            if (Physics.Raycast(transform.position,Vector3.down, feet_distance))
-            {
-                if (jump_movement.y < 0.0f)
-                {
-                    //Debug.Log("ok");
-                    //jump_movement.y = -(0.8f * Time.deltaTime);
-                    jump_movement.y = 0.0f;
-                }
-
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    jump_movement.y = jump_strength;
-                }
-            }
-            else
-            {
-                jump_movement.y -= (0.8f * Time.deltaTime);
             }
 
             if (Input.GetKey(KeyCode.D))
@@ -190,7 +262,7 @@ public class Player_Movement : MonoBehaviour
                 speed_multiplier = sprinting_speed;
             }
 
-            cc.Move((movement + jump_movement) * Time.deltaTime * speed_multiplier);
+            cc.Move(((movement * speed_multiplier) + jump_movement + (climb_dir * climb_force)) * Time.deltaTime);
         }
         else if (tag == "Player")
         {
