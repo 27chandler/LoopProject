@@ -16,6 +16,9 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private Transform object_dir;
     private Movement_Playback mp;
 
+    private Vector3 movement = new Vector3();
+    private float speed_multiplier = 0.0f;
+
     private float default_height;
     [SerializeField] private float crouch_height = 0.7f;
     [SerializeField] private float climb_time;
@@ -24,6 +27,7 @@ public class Player_Movement : MonoBehaviour
 
     private bool is_crouching = false;
     private bool is_climb_valid = false;
+    private bool is_uncrouch_movement_ready = false;
 
     public bool is_controlled = false;
 
@@ -159,7 +163,7 @@ public class Player_Movement : MonoBehaviour
         }
         else
         {
-            jump_movement.y -= (0.8f * Time.deltaTime);
+            jump_movement.y -= (9.8f * Time.deltaTime);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -173,100 +177,97 @@ public class Player_Movement : MonoBehaviour
                 jump_movement.y = jump_strength;
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            Debug.Log("C Pressed");
+
+            Vector3 ceiling_check_pos = transform.position;
+            ceiling_check_pos.y += (default_height);
+
+            if (!Physics.CheckSphere(ceiling_check_pos, 0.1f))
+            {
+                is_crouching = !is_crouching;
+
+                if (!is_crouching)
+                {
+                    //Debug.Log("Up by: " + (default_height - cc.height).ToString());
+                    is_uncrouch_movement_ready = true;
+                    cc.height = default_height;
+                }
+                else
+                {
+                    cc.height = crouch_height;
+                }
+            }
+
+        }
+
+
+        if ((are_time_jumps_regening) && (num_of_jumps <= 0))
+        {
+            regen_time_counter += Time.deltaTime;
+            if (regen_time_counter >= regen_time)
+            {
+                num_of_jumps++;
+                regen_time_counter = 0.0f;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q) && (num_of_jumps > 0))
+        {
+            are_time_jumps_regening = true;
+            tm.is_jumping = true;
+            num_of_jumps--;
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            movement += object_dir.right;
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            movement -= object_dir.right;
+        }
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            movement += object_dir.forward;
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            movement -= object_dir.forward;
+        }
+
+        movement.y = 0.0f;
+        movement.Normalize();
+
+        if (is_flying)
+        {
+            movement += Vector3.up;
+            jump_movement.y = -(0.8f * Time.deltaTime);
+        }
+
+        time_device_display.text = "Jumps: " + num_of_jumps;
+
+        speed_multiplier = movement_speed;
+
+        if (Input.GetKey(sprint_key))
+        {
+            speed_multiplier = sprinting_speed;
+        }
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (is_controlled)
+        if (is_uncrouch_movement_ready)
         {
-
-
-            Vector3 movement = new Vector3();
-
-            if ((are_time_jumps_regening) && (num_of_jumps <= 0))
-            {
-                regen_time_counter += Time.deltaTime;
-                if (regen_time_counter >= regen_time)
-                {
-                    num_of_jumps++;
-                    regen_time_counter = 0.0f;
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.Q) && (num_of_jumps > 0))
-            {
-                are_time_jumps_regening = true;
-                tm.is_jumping = true;
-                num_of_jumps--;
-            }
-
-            if (Input.GetKey(KeyCode.D))
-            {
-                movement += object_dir.right;
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                movement -= object_dir.right;
-            }
-
-            if (Input.GetKey(KeyCode.W))
-            {
-                movement += object_dir.forward;
-            }
-            else if (Input.GetKey(KeyCode.S))
-            {
-                movement -= object_dir.forward;
-            }
-
-            movement.y = 0.0f;
-            movement.Normalize();
-
-            if (is_flying)
-            {
-                movement += Vector3.up;
-                jump_movement.y = -(0.8f * Time.deltaTime);
-            }
-
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                Debug.Log("C Pressed");
-
-                Vector3 ceiling_check_pos = transform.position;
-                ceiling_check_pos.y += (default_height);
-
-                if (!Physics.CheckSphere(ceiling_check_pos, 0.1f))
-                {
-                    is_crouching = !is_crouching;
-
-                    if (!is_crouching)
-                    {
-                        //Debug.Log("Up by: " + (default_height - cc.height).ToString());
-                        movement += new Vector3(0.0f, (default_height*3.5f), 0.0f);
-                        cc.height = default_height;
-                    }
-                    else
-                    {
-                        cc.height = crouch_height;
-                    }
-                }
-
-            }
-
-            time_device_display.text = "Jumps: " + num_of_jumps;
-
-            float speed_multiplier = movement_speed;
-
-            if (Input.GetKey(sprint_key))
-            {
-                speed_multiplier = sprinting_speed;
-            }
-
-            cc.Move(((movement * speed_multiplier) + jump_movement + (climb_dir * climb_force)) * Time.deltaTime);
+            is_uncrouch_movement_ready = false;
+            movement += new Vector3(0.0f, (default_height * 3.5f), 0.0f);
         }
-        else if (tag == "Player")
-        {
-            //Debug.Log("Not controlled");
-        }
+
+        cc.Move(((movement * speed_multiplier) + jump_movement + (climb_dir * climb_force)) * Time.deltaTime);
+        movement = new Vector3(0.0f, 0.0f, 0.0f);
     }
 }
