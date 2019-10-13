@@ -115,7 +115,8 @@ public class Player_Movement : MonoBehaviour
         Debug.DrawLine(object_dir.parent.transform.position, object_dir.parent.transform.position + flat_forward + Vector3.up, Color.magenta);
 
         if ((Physics.CheckSphere(object_dir.parent.transform.position + flat_forward, 0.1f) || (Physics.CheckSphere(object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f), 0.1f)))
-            && (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + Vector3.up, object_dir.parent.transform.position + flat_forward + (Vector3.up * cc.height), cc.radius)))
+            && (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + Vector3.up, object_dir.parent.transform.position + flat_forward + (Vector3.up * cc.height), 0.2f)
+            || !Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + (Vector3.up * 1.5f), object_dir.parent.transform.position + flat_forward + ((Vector3.up * 1.5f) * cc.height), 0.2f)))
         {
             if (Physics.CheckSphere(object_dir.parent.transform.position + flat_forward, 0.1f))
             {
