@@ -8,6 +8,10 @@ public class Player_Movement : MonoBehaviour
     private CharacterController cc;
     private Timeline_Manager tm;
 
+    
+    [Range(-1.0f, 1.0f)] [SerializeField] private float climb_offset_normal = 0.2f;
+    [Range(-1.0f, 1.0f)] [SerializeField] private float climb_offset_crouch = 0.2f;
+
     [SerializeField] private float movement_speed;
     [SerializeField] private float sprinting_speed;
     [SerializeField] private KeyCode sprint_key;
@@ -26,6 +30,7 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private float climb_force;
 
     private bool is_crouching = false;
+    private bool is_crouch_climb_valid = false;
     private bool is_climb_valid = false;
     private bool is_uncrouch_movement_ready = false;
 
@@ -66,13 +71,13 @@ public class Player_Movement : MonoBehaviour
         }
     }
 
-    private IEnumerator Climb()
+    private IEnumerator Climb(float i_offset)
     {
         Vector3 flat_forward = object_dir.parent.transform.forward;
         flat_forward.y = 0.0f;
         flat_forward.Normalize();
 
-        Vector3 climb_waypoint = (object_dir.parent.transform.position + flat_forward + Vector3.up);
+        Vector3 climb_waypoint = (object_dir.parent.transform.position + flat_forward + (Vector3.up * i_offset));
         Vector3 start_pos = transform.position;
         float climb_timer = 0.0f;
         cc.enabled = false;
@@ -111,33 +116,51 @@ public class Player_Movement : MonoBehaviour
         flat_forward.y = 0.0f;
         flat_forward.Normalize();
 
-        Debug.DrawLine(object_dir.parent.transform.position, object_dir.parent.transform.position + flat_forward, Color.magenta);
-        Debug.DrawLine(object_dir.parent.transform.position, object_dir.parent.transform.position + flat_forward + Vector3.up, Color.magenta);
+        // Standing valid climbing system
+        is_climb_valid = false;
+        float climb_offset = 1.0f;
 
-        if ((Physics.CheckSphere(object_dir.parent.transform.position + flat_forward, 0.1f) || (Physics.CheckSphere(object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f), 0.1f)))
-            && (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + Vector3.up, object_dir.parent.transform.position + flat_forward + (Vector3.up * cc.height), 0.2f)
-            || !Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + (Vector3.up * 1.5f), object_dir.parent.transform.position + flat_forward + ((Vector3.up * 1.5f) * cc.height), 0.2f)))
+        if (Physics.CheckSphere(object_dir.parent.transform.position + flat_forward, 0.1f))
         {
-            if (Physics.CheckSphere(object_dir.parent.transform.position + flat_forward, 0.1f))
+            if (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + (Vector3.up * 1.0f), object_dir.parent.transform.position + flat_forward + (Vector3.up * (1.0f + default_height + climb_offset_normal)), 0.1f))
             {
-                Debug.Log("1");
+                Debug.Log("Normal climb valid (UPPER EDGE)");
+                is_climb_valid = true;
             }
 
-            if (Physics.CheckSphere(object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f), 0.1f))
-            {
-                Debug.Log("2");
-            }
 
-            if (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + Vector3.up, object_dir.parent.transform.position + flat_forward + (Vector3.up * cc.height), cc.radius))
-            {
-                Debug.Log("3");
-            }
-            is_climb_valid = true;
-            Debug.Log("Climb");
         }
-        else
+        else if (Physics.CheckSphere(object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f), 0.1f))
         {
-            is_climb_valid = false;
+            if (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f) + (Vector3.up * 1.0f), object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f) + (Vector3.up * (1.0f + default_height + climb_offset_normal)), 0.1f))
+            {
+                Debug.Log("Normal climb valid (WAIST EDGE)");
+                is_climb_valid = true;
+                climb_offset = 1.0f;
+            }
+        }
+
+        // Crouching valid climbing system
+        is_crouch_climb_valid = false;
+
+        if (Physics.CheckSphere(object_dir.parent.transform.position + flat_forward, 0.1f))
+        {
+            if (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + (Vector3.up * 1.0f), object_dir.parent.transform.position + flat_forward + (Vector3.up * (1.0f + crouch_height + climb_offset_crouch)), 0.1f))
+            {
+                Debug.Log("Crouch climb valid (UPPER EDGE)");
+                is_crouch_climb_valid = true;
+            }
+
+
+        }
+        else if (Physics.CheckSphere(object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f), 0.1f))
+        {
+            if (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f) + (Vector3.up * 1.0f), object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f) + (Vector3.up * (1.0f + crouch_height + climb_offset_crouch)), 0.1f))
+            {
+                Debug.Log("Crouch climb valid (WAIST EDGE)");
+                is_crouch_climb_valid = true;
+                climb_offset = 1.0f;
+            }
         }
 
         // Jump controls
@@ -167,11 +190,18 @@ public class Player_Movement : MonoBehaviour
             jump_movement.y -= (9.8f * Time.deltaTime);
         }
 
+        bool do_force_crouch = false;
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (is_climb_valid)
             {
-                StartCoroutine(Climb());
+                StartCoroutine(Climb(climb_offset));
+            }
+            else if (is_crouch_climb_valid)
+            {
+                do_force_crouch = true;
+                StartCoroutine(Climb(climb_offset));
             }
             else if (is_jump_valid)
             {
@@ -179,28 +209,38 @@ public class Player_Movement : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) || (do_force_crouch && !is_crouching))
         {
-            Debug.Log("C Pressed");
+            Debug.Log("Crouch Activated");
 
-            Vector3 ceiling_check_pos = transform.position;
-            ceiling_check_pos.y += (default_height);
-
-            if (!Physics.CheckSphere(ceiling_check_pos, 0.1f))
+            if (do_force_crouch && !is_crouching)
             {
-                is_crouching = !is_crouching;
+                is_crouching = true;
+                //Debug.Log("Up by: " + (default_height - cc.height).ToString());
+                cc.height = crouch_height;
+            }
+            else
+            {
+                Vector3 ceiling_check_pos = transform.position;
+                ceiling_check_pos.y += (default_height);
 
-                if (!is_crouching)
+                if (!Physics.CheckSphere(ceiling_check_pos, 0.1f))
                 {
-                    //Debug.Log("Up by: " + (default_height - cc.height).ToString());
-                    is_uncrouch_movement_ready = true;
-                    cc.height = default_height;
-                }
-                else
-                {
-                    cc.height = crouch_height;
+                    is_crouching = !is_crouching;
+
+                    if (!is_crouching)
+                    {
+                        //Debug.Log("Up by: " + (default_height - cc.height).ToString());
+                        is_uncrouch_movement_ready = true;
+                        cc.height = default_height;
+                    }
+                    else
+                    {
+                        cc.height = crouch_height;
+                    }
                 }
             }
+
 
         }
 
