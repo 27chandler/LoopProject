@@ -14,6 +14,8 @@ public class Pickup_Loop : MonoBehaviour
 
     public bool is_immune_to_jump_destruction = false;
 
+    private RigidbodyConstraints rb_default_constraints;
+
     public bool is_picked_up;
     public Vector3 hold_pos;
     public GameObject object_holding_this; // The player object which is holding the object
@@ -63,6 +65,8 @@ public class Pickup_Loop : MonoBehaviour
 
         last_pos = transform.position;
 
+        rb_default_constraints = rb.constraints;
+
         //Add_To_Buffer(transform.position, transform.localRotation, current_time);
         //Add_To_Buffer(transform.position, transform.localRotation, current_time);
     }
@@ -85,7 +89,7 @@ public class Pickup_Loop : MonoBehaviour
         }
         //Run_Playback();
 
-        if (last_pos != transform.position)
+        if ((last_pos != transform.position) && (!is_picked_up))
         {
             is_moving = true;
             last_pos = transform.position;
@@ -97,6 +101,8 @@ public class Pickup_Loop : MonoBehaviour
 
         if (is_picked_up)
         {
+            rb.constraints = rb_default_constraints;
+            rb.mass = 1.0f;
             rb.velocity = new Vector3(0.0f, 0.0f, 0.0f);
             rb.angularVelocity = new Vector3(0.0f, 0.0f, 0.0f);
             gameObject.layer = 2;
@@ -134,6 +140,8 @@ public class Pickup_Loop : MonoBehaviour
         }
         else
         {
+            rb.constraints = rb_default_constraints | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+            rb.mass = 1000.0f;
             gameObject.layer = 0;
             meshrenderer.material = default_mat;
             rb.useGravity = true;
@@ -142,6 +150,11 @@ public class Pickup_Loop : MonoBehaviour
                 //transform.position = snap_pos;
                 rb.MovePosition(Vector3.Lerp(transform.position, snap_pos, 0.2f));
                 //transform.position = Vector3.Lerp(transform.position, snap_pos, 0.2f);
+            }
+
+            if (!is_moving)
+            {
+                rb.constraints = rb_default_constraints | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
             }
         }
 
