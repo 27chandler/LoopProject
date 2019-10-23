@@ -17,6 +17,8 @@ public class Timeline_Manager : MonoBehaviour
     [SerializeField] private float paradox_regeneration = 0.05f;
     private bool loop_restarted = false;
 
+    private float time_of_present = 0.0f; // The furthest point in the future which the player has been at
+
     private bool is_recording = true;
 
     [SerializeField] private List<GameObject> snap_markers = new List<GameObject>();
@@ -172,7 +174,9 @@ public class Timeline_Manager : MonoBehaviour
 
     [SerializeField] List<Time_Point> time_point_list = new List<Time_Point>();
     [SerializeField] int selected_time_slot = 1;
-    //[SerializeField] Time_Point jump_time_point = new Time_Point();
+
+    bool is_jumping_to_present = false;
+    bool is_jumping_to_start = false;
 
     // Start is called before the first frame update
     void Start()
@@ -183,7 +187,10 @@ public class Timeline_Manager : MonoBehaviour
         {
             time_point_list.Add(new Time_Point());
         }
-        
+
+        time_point_list.Add(new Time_Point()); // 9 Past (0)
+        time_point_list.Add(new Time_Point()); // 10 Future (furthest point forward)
+
         foreach (var obj_type in object_type_list)
         {
             GameObject[] object_array = GameObject.FindGameObjectsWithTag(obj_type.tag);
@@ -229,9 +236,28 @@ public class Timeline_Manager : MonoBehaviour
         Add_To_Buffer(hidden_start_pos, player_look_pivot.localRotation, door_data_list.ToArray(), obj_array.ToArray(), current_time, false, is_grabbing);
     }
 
+    void Check_If_Present()
+    {
+        if (modified_current_time >= time_of_present)
+        {
+            time_of_present = modified_current_time;
+
+            Save_Time_Point(10);
+        }
+    }
+
+    void Check_If_Start()
+    {
+        if ((modified_current_time >= 0.1f) && (modified_current_time <= 0.6f))
+        {
+            Save_Time_Point(9);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+
         time_display.text = Mathf.Ceil(current_time - (iteration_delay * (iteration_num-1))).ToString();
         health_display.text = "Health: " + Mathf.CeilToInt(health).ToString();
         selected_jump_display.text = "ID selected: " + selected_time_slot + "\nDestination: " + time_point_list[selected_time_slot - 1].normalized_timestamp;
@@ -415,13 +441,25 @@ public class Timeline_Manager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.T))
         {
             Save_Time_Point(selected_time_slot - 1);
-
-            //time_point_list[selected_time_slot - 1] = new Time_Point(jump_time_point;
         }
+
+        Check_If_Present();
 
         if (Input.GetKeyDown(KeyCode.G))
         {
             tm_jump_effect.is_activated = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.H)) // Present/Future
+        {
+            tm_jump_effect.is_activated = true;
+            is_jumping_to_present = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R)) // Past/Start
+        {
+            tm_jump_effect.is_activated = true;
+            is_jumping_to_start = true;
         }
 
         if (tm_jump_effect.has_jump_occured)
@@ -508,11 +546,25 @@ public class Timeline_Manager : MonoBehaviour
 
                     if (is_jumping_to_custom_time_point)
                     {
-                        current_time += time_point_list[selected_time_slot - 1].normalized_timestamp;
-                        Debug.Log("Jumped even more: " + time_point_list[selected_time_slot - 1].normalized_timestamp);
+                        int jump_index = selected_time_slot - 1;
+
+                        if (is_jumping_to_present)
+                        {
+                            jump_index = 10;
+                        }
+                        else if (is_jumping_to_start)
+                        {
+                            jump_index = 9;
+                        }
+
+                        is_jumping_to_present = false;
+                        is_jumping_to_start = false;
+
+                        current_time += time_point_list[jump_index].normalized_timestamp;
+                        Debug.Log("Jumped even more: " + time_point_list[jump_index].normalized_timestamp);
                         Skip_Dupes_To_Custom();
 
-                        Reset_Objects(time_point_list[selected_time_slot - 1].object_locations);
+                        Reset_Objects(time_point_list[jump_index].object_locations);
 
                         Debug.Log(current_time);
                     }
@@ -553,6 +605,9 @@ public class Timeline_Manager : MonoBehaviour
                 }
             }
         }
+
+        Check_If_Start();
+
     }
 
     void Run_Playback()
