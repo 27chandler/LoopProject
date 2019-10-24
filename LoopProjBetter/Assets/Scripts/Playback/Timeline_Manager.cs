@@ -544,10 +544,10 @@ public class Timeline_Manager : MonoBehaviour
 
                     time_point_list[selected_time_slot - 1].timestamp += iteration_delay;
 
+                    int jump_index = selected_time_slot - 1;
+
                     if (is_jumping_to_custom_time_point)
                     {
-                        int jump_index = selected_time_slot - 1;
-
                         if (is_jumping_to_present)
                         {
                             jump_index = 10;
@@ -562,7 +562,7 @@ public class Timeline_Manager : MonoBehaviour
 
                         current_time += time_point_list[jump_index].normalized_timestamp;
                         Debug.Log("Jumped even more: " + time_point_list[jump_index].normalized_timestamp);
-                        Skip_Dupes_To_Custom();
+                        Skip_Dupes_To_Custom(jump_index);
 
                         Reset_Objects(time_point_list[jump_index].object_locations);
 
@@ -570,7 +570,7 @@ public class Timeline_Manager : MonoBehaviour
                     }
                     else
                     {
-                        Skip_Dupes_To_Custom();
+                        Skip_Dupes_To_Custom(jump_index);
                     }
 
                     Add_To_Buffer(player_target.position, player_look_pivot.localRotation, door_data_list.ToArray(), obj_pos_array.ToArray(), current_time, false, false);
@@ -1068,7 +1068,7 @@ public class Timeline_Manager : MonoBehaviour
         time_jump_timestamps.Add(timeline_memory.Count);
     }
 
-    private void Skip_Dupes_To_Custom()
+    private void Skip_Dupes_To_Custom(int jump_index)
     {
         for (int i = 0; i < duplicate_player_list.Count; i++)
         {
@@ -1146,7 +1146,7 @@ public class Timeline_Manager : MonoBehaviour
         //----------------------------------Object spawning--------------------------------------//
         //---------------------------------------------------------------------------------------//
 
-        foreach (var door_to_set in time_point_list[selected_time_slot - 1].door_data_states)
+        foreach (var door_to_set in time_point_list[jump_index].door_data_states)
         {
             door_to_set.door_activation.is_door_opening = door_to_set.last_state;
         }
