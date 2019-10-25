@@ -145,7 +145,7 @@ public class Timeline_Manager : MonoBehaviour
         public Hold_Object object_holder;
         public bool has_grabbed_this_interval;
         public int iter_num;
-        public int paradox_suspicion;
+        public float paradox_suspicion;
         public bool is_seen;
 
         public bool has_obj_check_completed;
@@ -264,7 +264,7 @@ public class Timeline_Manager : MonoBehaviour
 
         if (health < 100.0f)
         {
-            health += paradox_regeneration;
+            health += (paradox_regeneration * time_speed);
         }
 
         if (is_recording)
@@ -300,14 +300,14 @@ public class Timeline_Manager : MonoBehaviour
                     dupe_objs.Add(dupe);
                 }
             }
-            //if (Input.GetKey(KeyCode.F))
-            //{
-            //    time_speed = 0.1f;
-            //}
-            //else
-            //{
-            //    time_speed = 1.0f;
-            //}
+            if (Input.GetKey(KeyCode.F))
+            {
+                time_speed = 0.2f;
+            }
+            else
+            {
+                time_speed = 1.0f;
+            }
 
             current_time += Time.deltaTime * time_speed;
             Record_Player_Actions();
@@ -743,9 +743,9 @@ public class Timeline_Manager : MonoBehaviour
         // Find out if an object was seen when it wasn't meant to be
         foreach (var dupe in duplicate_player_list)
         {
-            if (dupe.paradox_suspicion > 0)
+            if (dupe.paradox_suspicion > 0.0f)
             {
-                dupe.paradox_suspicion -= 1;
+                dupe.paradox_suspicion -= (1.0f * time_speed);
             }
 
 
@@ -774,15 +774,15 @@ public class Timeline_Manager : MonoBehaviour
                             if (is_obj_new)
                             {
                                 //Debug.Log("NEW");
-                                dupe.paradox_suspicion += 2;
+                                dupe.paradox_suspicion += (2.0f * time_speed);
                                 //Debug.Log("Suspicion: " + dupe.paradox_suspicion);
                             }
 
-                            if (dupe.paradox_suspicion >= 15)
+                            if (dupe.paradox_suspicion >= 15.0f)
                             {
                                 Debug.Log("NEW: OBJECT NAME: " + visible_obj.obj.name + " + POSITION: " + visible_obj.obj.transform.position);
                                 Activate_Paradox_Increment(1.0f);
-                                dupe.paradox_suspicion = 0;
+                                dupe.paradox_suspicion = 0.0f;
                             }
                         }
                     }
@@ -1060,7 +1060,7 @@ public class Timeline_Manager : MonoBehaviour
 
     public void Activate_Paradox_Increment(float i_value)
     {
-        health -= i_value;
+        health -= (i_value * time_speed);
     }
 
     private void Log_Current_Timestamp()
