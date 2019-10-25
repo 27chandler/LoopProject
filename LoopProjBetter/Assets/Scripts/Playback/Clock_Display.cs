@@ -17,6 +17,6 @@ public class Clock_Display : MonoBehaviour
     void Update()
     {
         rotation = (tm.modified_current_time * 360.0f) / cycle_time;
-        transform.eulerAngles = new Vector3(0.0f, 0.0f, -rotation);
+        transform.localEulerAngles = new Vector3(0.0f, 0.0f, -rotation);
     }
 }
