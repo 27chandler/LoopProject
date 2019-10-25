@@ -124,7 +124,6 @@ public class Player_Movement : MonoBehaviour
         {
             if (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + (Vector3.up * 1.0f), object_dir.parent.transform.position + flat_forward + (Vector3.up * (1.0f + default_height + climb_offset_normal)), 0.1f))
             {
-                Debug.Log("Normal climb valid (UPPER EDGE)");
                 is_climb_valid = true;
             }
 
@@ -134,7 +133,6 @@ public class Player_Movement : MonoBehaviour
         {
             if (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f) + (Vector3.up * 1.0f), object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f) + (Vector3.up * (1.0f + default_height + climb_offset_normal)), 0.1f))
             {
-                Debug.Log("Normal climb valid (WAIST EDGE)");
                 is_climb_valid = true;
                 climb_offset = 1.0f;
             }
@@ -147,7 +145,6 @@ public class Player_Movement : MonoBehaviour
         {
             if (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + (Vector3.up * 1.0f), object_dir.parent.transform.position + flat_forward + (Vector3.up * (1.0f + crouch_height + climb_offset_crouch)), 0.1f))
             {
-                Debug.Log("Crouch climb valid (UPPER EDGE)");
                 is_crouch_climb_valid = true;
             }
 
@@ -157,7 +154,6 @@ public class Player_Movement : MonoBehaviour
         {
             if (!Physics.CheckCapsule(object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f) + (Vector3.up * 1.0f), object_dir.parent.transform.position + flat_forward + (Vector3.down * 0.5f) + (Vector3.up * (1.0f + crouch_height + climb_offset_crouch)), 0.1f))
             {
-                Debug.Log("Crouch climb valid (WAIST EDGE)");
                 is_crouch_climb_valid = true;
                 climb_offset = 1.0f;
             }
@@ -211,8 +207,6 @@ public class Player_Movement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.C) || (do_force_crouch && !is_crouching))
         {
-            Debug.Log("Crouch Activated");
-
             if (do_force_crouch && !is_crouching)
             {
                 is_crouching = true;
