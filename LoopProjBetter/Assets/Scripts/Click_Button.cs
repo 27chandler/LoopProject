@@ -15,6 +15,7 @@ public class Click_Button : MonoBehaviour
 
     public bool is_activated = false;
     public bool is_highlighted = false;
+    [SerializeField] private bool is_auto_reset = false;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +28,11 @@ public class Click_Button : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if ((is_activated) && (is_auto_reset))
+        {
+            is_activated = false;
+        }
+
         if (tm.iteration_num != iter_num_last)
         {
             iter_num_last = tm.iteration_num;

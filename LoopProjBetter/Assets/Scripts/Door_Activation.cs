@@ -33,6 +33,8 @@ public class Door_Activation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+
         if (buttons.Count >= 1)
         {
             is_door_opening = true;
@@ -43,6 +45,23 @@ public class Door_Activation : MonoBehaviour
                 {
                     is_door_opening = false;
                 }
+            }
+        }
+
+        if (is_open && is_door_opening && !last_click_state && !last_click_state_opposite) // To prevent the door from becoming stuck when time travel occurs
+        {
+            last_click_state = true;
+            last_click_state_opposite = true;
+            is_open = true;
+            is_door_opening = false;
+            if (open_button != null)
+            {
+                open_button.is_activated = true;
+            }
+            
+            if (open_button_opposite != null)
+            {
+                open_button_opposite.is_activated = true;
             }
         }
 
