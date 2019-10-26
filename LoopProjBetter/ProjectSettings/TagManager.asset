@@ -16,6 +16,7 @@ TagManager:
   - HUD
   - Timeline_Manager
   - Time_Frozen
+  - Blueprint
   layers:
   - Default
   - TransparentFX

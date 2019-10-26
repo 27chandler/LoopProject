@@ -9,6 +9,8 @@ public class Reconstructor : MonoBehaviour
     [SerializeField] private Collider input_zone;
     [SerializeField] private Collider output_zone;
 
+    [SerializeField] private Collider blueprint_zone;
+
     [SerializeField] private Click_Button button;
 
     [SerializeField] private GameObject object_template;
@@ -33,18 +35,35 @@ public class Reconstructor : MonoBehaviour
         {
             is_activated = false;
 
-            Collider[] colliders = Physics.OverlapSphere(input_zone.transform.position, 0.1f);
+            Collider[] blueprint_colliders = Physics.OverlapSphere(blueprint_zone.transform.position, 0.5f);
 
-            bool has_converted = false;
-            for (int i = 0; i < colliders.Length; i++)
+            Blueprint_Data blueprint = null;
+
+            foreach (var col in blueprint_colliders)
             {
-                if (!has_converted)
+                Blueprint_Data temp_data = col.GetComponent<Blueprint_Data>();
+
+                if (temp_data != null)
                 {
-                    if ((colliders[i] != null) && (!colliders[i].isTrigger))
+                    blueprint = temp_data;
+                }
+            }
+
+            if (blueprint != null)
+            {
+                Collider[] colliders = Physics.OverlapSphere(input_zone.transform.position, 0.1f);
+
+                bool has_converted = false;
+                for (int i = 0; i < colliders.Length; i++)
+                {
+                    if (!has_converted)
                     {
-                        tm.Create_Object(object_template.tag, output_zone.transform.position);
-                        Destroy(colliders[i].gameObject);
-                        has_converted = true;
+                        if ((colliders[i] != null) && (!colliders[i].isTrigger))
+                        {
+                            tm.Create_Object(blueprint.blueprint_obj.tag, output_zone.transform.position);
+                            Destroy(colliders[i].gameObject);
+                            has_converted = true;
+                        }
                     }
                 }
             }
