@@ -610,6 +610,31 @@ public class Timeline_Manager : MonoBehaviour
 
     }
 
+    public void Create_Object(String i_tag,Vector3 i_pos)
+    {
+        GameObject obj_to_be_held = null;
+        foreach (var obj_type in object_type_list)
+        {
+            if (obj_type.tag == i_tag)
+            {
+                obj_to_be_held = obj_type.obj;
+                break;
+            }
+        }
+
+        if (obj_to_be_held != null)
+        {
+            GameObject new_obj = Instantiate(obj_to_be_held, i_pos, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
+            objects_vis.Add(new_obj.GetComponent<Visible_Check>());
+
+            Duplicate_Data obj_data = new Duplicate_Data();
+            obj_data.obj = new_obj;
+            obj_data.vis = new_obj.GetComponent<Visible_Check>();
+
+            dupe_objs.Add(obj_data);
+        }
+    }
+
     void Run_Playback()
     {
         // Spawn time travelling objects
@@ -620,29 +645,8 @@ public class Timeline_Manager : MonoBehaviour
             {
                 if ((modified_current_time >= jumping_obj.destination_time) && (modified_current_time <= jumping_obj.destination_time + 0.5f))
                 {
-                    GameObject obj_to_be_held = null;
-                    foreach (var obj_type in object_type_list)
-                    {
-                        if (obj_type.tag == jumping_obj.tag)
-                        {
-                            obj_to_be_held = obj_type.obj;
-                            break;
-                        }
-                    }
-
-                    if (obj_to_be_held != null)
-                    {
-                        GameObject new_obj = Instantiate(obj_to_be_held, jumping_obj.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
-                        objects_vis.Add(new_obj.GetComponent <Visible_Check>());
-
-                        Duplicate_Data obj_data = new Duplicate_Data();
-                        obj_data.obj = new_obj;
-                        obj_data.vis = new_obj.GetComponent<Visible_Check>();
-
-                        dupe_objs.Add(obj_data);
-                        
-                        time_travelling_objects[index].is_cooldown_active = true;
-                    }
+                    Create_Object(jumping_obj.tag, jumping_obj.position);
+                    time_travelling_objects[index].is_cooldown_active = true;
                 }
             }
             index++;
