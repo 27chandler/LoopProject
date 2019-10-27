@@ -17,7 +17,7 @@ public class Timeline_Manager : MonoBehaviour
     [SerializeField] private float paradox_regeneration = 0.05f;
     private bool loop_restarted = false;
 
-    private float time_of_present = 0.0f; // The furthest point in the future which the player has been at
+    public float time_of_present = 0.0f; // The furthest point in the future which the player has been at
 
     private bool is_recording = true;
 
@@ -61,7 +61,7 @@ public class Timeline_Manager : MonoBehaviour
 
     [SerializeField] private List<Duplicate_Data> duplicate_player_list = new List<Duplicate_Data>();
 
-    [SerializeField] private Dictionary<int, Record_Data> timeline_memory = new Dictionary<int, Record_Data>();
+    [SerializeField] public Dictionary<int, Record_Data> timeline_memory = new Dictionary<int, Record_Data>();
 
     [SerializeField] private List<Duplicate_Data> dupe_objs = new List<Duplicate_Data>();
     [SerializeField] private List<Door_Activation> door_list = new List<Door_Activation>();
@@ -134,6 +134,7 @@ public class Timeline_Manager : MonoBehaviour
         public bool is_holding_object;
         public string held_object_tag;
         public float timestamp;
+        public float normalized_timestamp;
     };
 
     [Serializable]
@@ -173,6 +174,7 @@ public class Timeline_Manager : MonoBehaviour
     };
 
     [SerializeField] List<Time_Point> time_point_list = new List<Time_Point>();
+    [SerializeField] List<Time_Point> time_point_global_list = new List<Time_Point>();
     [SerializeField] int selected_time_slot = 1;
 
     bool is_jumping_to_present = false;
@@ -411,6 +413,60 @@ public class Timeline_Manager : MonoBehaviour
         }
     }
 
+    void Save_Global_Time_Point()
+    {
+        Time_Point temp_point = new Time_Point();
+        
+        temp_point.timestamp = current_time;
+        temp_point.timestamp_index = timeline_memory.Count;
+        temp_point.normalized_timestamp = current_time - (iteration_delay * (iteration_num - 1));
+        temp_point.dupe_timestamp_indexes.Clear();
+
+        temp_point.dupe_timestamp_indexes.Add(temp_point.timestamp_index);
+        foreach (var dupe_player in duplicate_player_list)
+        {
+            temp_point.dupe_timestamp_indexes.Add(dupe_player.timestamp);
+            //jump_time_point.dupe_held_objects.Add()
+        }
+
+        // Objects
+        temp_point.object_locations.Clear();
+        foreach (var obj_type in object_type_list)
+        {
+            GameObject[] object_array = GameObject.FindGameObjectsWithTag(obj_type.tag);
+            foreach (var obj in object_array)
+            {
+                if (obj.GetComponent<Pickup_Loop>().is_picked_up == false)
+                {
+                    temp_point.object_location_transforms.Add(obj.transform);
+
+                    Object_Spawns new_spawn = new Object_Spawns();
+                    new_spawn.position = obj.transform.position;
+                    new_spawn.obj = obj_type.obj;
+
+                    temp_point.object_locations.Add(new_spawn);
+                }
+            }
+        }
+
+
+        // Doors
+        temp_point.door_data_states.Clear();
+
+        foreach (var door_activation in door_list)
+        {
+            Door_Data input_door = new Door_Data();
+            input_door.door_activation = door_activation;
+            input_door.door_obj = door_activation.gameObject;
+            input_door.last_state = door_activation.is_open;
+
+            temp_point.door_data_states.Add(input_door);
+        }
+
+        time_point_global_list.Add(temp_point);
+
+    }
+
     void Save_Time_Point(int i_index)
     {
         time_point_list[i_index].timestamp = current_time;
@@ -473,6 +529,8 @@ public class Timeline_Manager : MonoBehaviour
         if ((current_time >= last_update_time + update_frequency) || is_grabbing)
         {
             last_update_time = current_time;
+
+            //Save_Global_Time_Point();
 
 
 
@@ -969,6 +1027,7 @@ public class Timeline_Manager : MonoBehaviour
         Record_Data input_data = new Record_Data();
         input_data.position = i_pos;
         input_data.timestamp = i_time;
+        input_data.normalized_timestamp = i_time - (iteration_delay * (iteration_num - 1));
         input_data.view_rotation = i_local_rot;
         input_data.is_jumping = i_jump_state;
         input_data.is_grab_activated = i_is_grab_toggled;

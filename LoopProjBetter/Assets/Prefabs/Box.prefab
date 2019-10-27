@@ -126,7 +126,7 @@ MonoBehaviour:
   cams: []
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 2560
+    m_Bits: 6656
   origin_position: {fileID: 0}
   use_custom_origin: 0
   is_seen: 0
@@ -146,6 +146,7 @@ MonoBehaviour:
   vc: {fileID: 3940395655078686912}
   hold_mat: {fileID: 2100000, guid: 60793f57df4cc124b8be799af6e0025b, type: 2}
   max_hold_distance: 4
+  is_immune_to_jump_destruction: 0
   is_picked_up: 0
   hold_pos: {x: 0, y: 0, z: 0}
   object_holding_this: {fileID: 0}
