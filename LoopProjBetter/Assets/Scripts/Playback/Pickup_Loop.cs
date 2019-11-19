@@ -5,6 +5,8 @@ using System;
 
 public class Pickup_Loop : MonoBehaviour
 {
+
+    private Vector3 start_location; // location which the object begins at and will reset to
     [SerializeField] private Visible_Check vc;
 
     [SerializeField] private Material hold_mat;
@@ -50,6 +52,8 @@ public class Pickup_Loop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        start_location = transform.position;
+
         col = GetComponent<Collider>();
         col.enabled = false;
         
@@ -222,5 +226,17 @@ public class Pickup_Loop : MonoBehaviour
 
         //position_buffer.Add(input_data);
         position_buffer.Insert(timestamp_index, input_data);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Reset"))
+        {
+            transform.position = start_location;
+            if (object_holding_this != null)
+            {
+                object_holding_this.GetComponent<Hold_Object>().Drop_Item();
+            }
+        }
     }
 }

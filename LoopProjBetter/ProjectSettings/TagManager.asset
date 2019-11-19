@@ -17,6 +17,7 @@ TagManager:
   - Timeline_Manager
   - Time_Frozen
   - Blueprint
+  - Reset
   layers:
   - Default
   - TransparentFX
