@@ -68,6 +68,7 @@ public class Visible_Check : MonoBehaviour
                     }
                     else if ((hit.collider.gameObject.tag == "Player_Dupe") && (tag == "Player"))
                     {
+                        Debug.Log("Seen by " + hit.collider.gameObject.name);
                         is_seen = true;
                         seen_cams.Add(camera);
                         tm.Activate_Paradox_Increment(1.0f);
