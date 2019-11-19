@@ -18,6 +18,7 @@ TagManager:
   - Time_Frozen
   - Blueprint
   - Reset
+  - Receptor
   layers:
   - Default
   - TransparentFX

@@ -232,7 +232,14 @@ public class Pickup_Loop : MonoBehaviour
             {
                 object_holding_this.GetComponent<Hold_Object>().Drop_Item();
             }
-            Destroy(this.gameObject);
+
+            Vector3 recept_pos = other.GetComponent<Receptor_Control>().Recept(gameObject);
+
+            if (recept_pos != null)
+            {
+                transform.position = recept_pos;
+            }
+            
         }
     }
 }
