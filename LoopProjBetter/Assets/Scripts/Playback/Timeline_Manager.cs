@@ -1211,7 +1211,14 @@ public class Timeline_Manager : MonoBehaviour
 
         foreach (var door_to_set in time_point_list[jump_index].door_data_states)
         {
-            door_to_set.door_activation.is_door_opening = door_to_set.last_state;
+            if (door_to_set.door_activation.is_inverted)
+            {
+                door_to_set.door_activation.is_door_opening = !door_to_set.last_state;
+            }
+            else
+            {
+                door_to_set.door_activation.is_door_opening = door_to_set.last_state;
+            }
         }
     }
 
