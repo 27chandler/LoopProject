@@ -5,6 +5,7 @@ using UnityEngine;
 public class Button : MonoBehaviour
 {
     [SerializeField] private Collider trigger_area;
+    [SerializeField] private List<Door_Activation> doors = new List<Door_Activation>();
     private Timeline_Manager tm;
 
     public bool is_activated = false;
@@ -13,6 +14,11 @@ public class Button : MonoBehaviour
     void Start()
     {
         tm = GameObject.FindGameObjectWithTag("Timeline_Manager").GetComponent<Timeline_Manager>();
+
+        foreach (var door in doors)
+        {
+            door.Add_Object_Button(this);
+        }
     }
 
     // Update is called once per frame

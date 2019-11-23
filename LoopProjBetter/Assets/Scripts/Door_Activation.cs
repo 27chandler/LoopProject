@@ -30,6 +30,11 @@ public class Door_Activation : MonoBehaviour
         }
     }
 
+    public void Add_Object_Button(Button i_button_to_add)
+    {
+        buttons.Add(i_button_to_add);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -96,6 +101,20 @@ public class Door_Activation : MonoBehaviour
         //            open_button.is_activated = last_click_state;
         //        }
         //    }
+
+        // Section for object buttons
+        if (buttons.Count >= 1)
+        {
+            is_door_opening = true;
+            foreach (var button in buttons)
+            {
+                if (!button.is_activated)
+                {
+                    is_door_opening = false;
+                }
+            }
+        }
+        //
 
         if ((is_door_opening))
         {
