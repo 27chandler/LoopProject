@@ -102,16 +102,6 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
-    - target: {fileID: 2386570624366480538, guid: e35ad76fda30235438c10763415d3ffb,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2386570624366480538, guid: e35ad76fda30235438c10763415d3ffb,
-        type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1433905076180288644, guid: e35ad76fda30235438c10763415d3ffb,
         type: 3}
       propertyPath: m_StaticEditorFlags
@@ -132,6 +122,16 @@ PrefabInstance:
       propertyPath: open_button_opposite
       value: 
       objectReference: {fileID: 8704455377776324694}
+    - target: {fileID: 2386570624366480538, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2386570624366480538, guid: e35ad76fda30235438c10763415d3ffb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7030889585883446717, guid: e35ad76fda30235438c10763415d3ffb,
         type: 3}
       propertyPath: m_RootOrder
@@ -150,6 +150,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4108841973444607295}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2622289944929503962 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2117172100471683045, guid: e35ad76fda30235438c10763415d3ffb,
+    type: 3}
+  m_PrefabInstance: {fileID: 4108841973444607295}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a23d25e727e94874181e150ae5697824, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6522548296826366171
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -232,6 +244,16 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.12973104
       objectReference: {fileID: 0}
+    - target: {fileID: 2470452073795328141, guid: a0757daaf0bc4a4458e61948803c9db5,
+        type: 3}
+      propertyPath: doors.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2470452073795328141, guid: a0757daaf0bc4a4458e61948803c9db5,
+        type: 3}
+      propertyPath: doors.Array.data[0]
+      value: 
+      objectReference: {fileID: 2622289944929503962}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0757daaf0bc4a4458e61948803c9db5, type: 3}
 --- !u!114 &8704455377776324694 stripped

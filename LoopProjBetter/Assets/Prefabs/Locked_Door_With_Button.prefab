@@ -90,6 +90,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3845212407931005154}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2117172100471683045 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2899549056145399559, guid: 4264644f7eece8a41bbae41f7204c65c,
+    type: 3}
+  m_PrefabInstance: {fileID: 3845212407931005154}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a23d25e727e94874181e150ae5697824, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7271102129379861723
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -172,6 +184,16 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.12973104
       objectReference: {fileID: 0}
+    - target: {fileID: 2470452073795328141, guid: a0757daaf0bc4a4458e61948803c9db5,
+        type: 3}
+      propertyPath: doors.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2470452073795328141, guid: a0757daaf0bc4a4458e61948803c9db5,
+        type: 3}
+      propertyPath: doors.Array.data[0]
+      value: 
+      objectReference: {fileID: 2117172100471683045}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0757daaf0bc4a4458e61948803c9db5, type: 3}
 --- !u!114 &5089326851851517014 stripped
