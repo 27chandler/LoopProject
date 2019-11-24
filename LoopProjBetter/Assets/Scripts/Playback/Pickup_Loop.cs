@@ -33,6 +33,8 @@ public class Pickup_Loop : MonoBehaviour
     [SerializeField] public float delay = 30.0f;
     [SerializeField] public Vector3 snap_pos;
 
+    public Vector3 pickup_pos;
+
     private Vector3 last_pos;
     bool is_moving = false;
 
@@ -50,6 +52,7 @@ public class Pickup_Loop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        pickup_pos = transform.position;
         col = GetComponent<Collider>();
         col.enabled = false;
         
@@ -140,6 +143,11 @@ public class Pickup_Loop : MonoBehaviour
         }
         else
         {
+            if (pickup_pos != transform.position)
+            {
+                pickup_pos = transform.position;
+            }
+
             rb.constraints = rb_default_constraints | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
             rb.mass = 1000.0f;
             gameObject.layer = 0;

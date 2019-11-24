@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class Timeline_Manager : MonoBehaviour
 {
+    private TimePoint_Corrector tc;
+
     private bool is_jumping_to_custom_time_point = false;
 
     [SerializeField] private List<int> time_jump_timestamps = new List<int>();
@@ -85,7 +87,7 @@ public class Timeline_Manager : MonoBehaviour
     // Objects
     [SerializeField] private List<Visible_Check> objects_vis = new List<Visible_Check>();
 
-    [SerializeField] private List<Object_Type> object_type_list = new List<Object_Type>();
+    [SerializeField] public List<Object_Type> object_type_list = new List<Object_Type>();
     private List<Transform> moveable_object_spawn_transforms = new List<Transform>();
     private List<Object_Spawns> moveable_object_spawns = new List<Object_Spawns>();
 
@@ -173,7 +175,7 @@ public class Timeline_Manager : MonoBehaviour
         public List<Door_Data> door_data_states = new List<Door_Data>();
     };
 
-    [SerializeField] List<Time_Point> time_point_list = new List<Time_Point>();
+    [SerializeField] public List<Time_Point> time_point_list = new List<Time_Point>();
     [SerializeField] List<Time_Point> time_point_global_list = new List<Time_Point>();
     [SerializeField] int selected_time_slot = 1;
 
@@ -183,6 +185,7 @@ public class Timeline_Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        tc = GetComponent<TimePoint_Corrector>();
         tm_jump_effect = GetComponent<Time_Jump_Effect>();
 
         for (int i = 0; i < 9; i++)
@@ -302,14 +305,14 @@ public class Timeline_Manager : MonoBehaviour
                     dupe_objs.Add(dupe);
                 }
             }
-            if (Input.GetKey(KeyCode.F))
-            {
-                time_speed = 0.2f;
-            }
-            else
-            {
-                time_speed = 1.0f;
-            }
+            //if (Input.GetKey(KeyCode.F))
+            //{
+            //    time_speed = 0.2f;
+            //}
+            //else
+            //{
+            //    time_speed = 1.0f;
+            //}
 
             current_time += Time.deltaTime * time_speed;
             Record_Player_Actions();

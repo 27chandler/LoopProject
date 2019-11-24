@@ -12,7 +12,7 @@ public class Click_Button : MonoBehaviour
     [SerializeField] private Material mat_highlighted;
     [SerializeField] private Material mat_clicked;
 
-    [SerializeField] private List<Door_Activation> doors = new List<Door_Activation>();
+    [SerializeField] public List<Door_Activation> doors = new List<Door_Activation>();
 
 
     public bool is_activated = false;

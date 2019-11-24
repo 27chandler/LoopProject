@@ -9,6 +9,11 @@ public class Hold_Object : MonoBehaviour
     public Pickup_Loop grabbed_item;
     public GameObject grabbed_item_obj;
     [SerializeField] LayerMask layer_collision_raycasting;
+
+    public List<Door_Activation> doors = new List<Door_Activation>();
+    public List<GameObject> objects = new List<GameObject>();
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -52,10 +57,18 @@ public class Hold_Object : MonoBehaviour
                         is_holding = true;
                         pickup.is_picked_up = true;
                         grabbed_item = pickup;
+
+                        objects.Add(pickup.gameObject);
                     }
                     else if (click_button != null)
                     {
                         click_button.is_activated = !click_button.is_activated;
+
+                        foreach (var door in click_button.doors)
+                        {
+                            doors.Add(door);
+                        }
+                        
                     }
 
                 }
@@ -66,6 +79,7 @@ public class Hold_Object : MonoBehaviour
 
                 if ((hit.collider.gameObject.CompareTag("Player")) || (hit.collider.gameObject.CompareTag("Player_Dupe")))
                 {
+                    objects.Add(grabbed_item.gameObject);
                     //Debug.Log("is holding");
                     if (grabbed_item != null)
                     {
@@ -90,6 +104,7 @@ public class Hold_Object : MonoBehaviour
 
     public void Drop_Item()
     {
+        objects.Add(grabbed_item.gameObject);
         grabbed_item.is_picked_up = false;
         grabbed_item = null;
         grabbed_item_obj = null;
