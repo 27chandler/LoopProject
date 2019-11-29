@@ -11,7 +11,15 @@ public class Hold_Object : MonoBehaviour
     [SerializeField] LayerMask layer_collision_raycasting;
 
     public List<Door_Activation> doors = new List<Door_Activation>();
-    public List<GameObject> objects = new List<GameObject>();
+    public List<Object_Interaction> objects = new List<Object_Interaction>();
+
+    public struct Object_Interaction
+    {
+        public GameObject objects;
+        public bool grab_state;
+    }
+
+
 
 
     // Start is called before the first frame update
@@ -58,7 +66,11 @@ public class Hold_Object : MonoBehaviour
                         pickup.is_picked_up = true;
                         grabbed_item = pickup;
 
-                        objects.Add(pickup.gameObject);
+                        Object_Interaction temp_obj_interaction = new Object_Interaction();
+                        temp_obj_interaction.objects = pickup.gameObject;
+                        temp_obj_interaction.grab_state = true;
+
+                        objects.Add(temp_obj_interaction);
                     }
                     else if (click_button != null)
                     {
@@ -79,7 +91,11 @@ public class Hold_Object : MonoBehaviour
 
                 if ((hit.collider.gameObject.CompareTag("Player")) || (hit.collider.gameObject.CompareTag("Player_Dupe")))
                 {
-                    objects.Add(grabbed_item.gameObject);
+                    Object_Interaction temp_obj_interaction = new Object_Interaction();
+                    temp_obj_interaction.objects = grabbed_item.gameObject;
+                    temp_obj_interaction.grab_state = false;
+
+                    objects.Add(temp_obj_interaction);
                     //Debug.Log("is holding");
                     if (grabbed_item != null)
                     {
@@ -104,7 +120,11 @@ public class Hold_Object : MonoBehaviour
 
     public void Drop_Item()
     {
-        objects.Add(grabbed_item.gameObject);
+        Object_Interaction temp_obj_interaction = new Object_Interaction();
+        temp_obj_interaction.objects = grabbed_item.gameObject;
+        temp_obj_interaction.grab_state = false;
+
+        objects.Add(temp_obj_interaction);
         grabbed_item.is_picked_up = false;
         grabbed_item = null;
         grabbed_item_obj = null;

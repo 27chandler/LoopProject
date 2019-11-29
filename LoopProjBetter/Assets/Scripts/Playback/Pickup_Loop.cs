@@ -35,7 +35,7 @@ public class Pickup_Loop : MonoBehaviour
 
     public Vector3 pickup_pos;
 
-    private Vector3 last_pos;
+    public Vector3 last_pos;
     bool is_moving = false;
 
     [SerializeField] private List<Record_Data> position_buffer = new List<Record_Data>();

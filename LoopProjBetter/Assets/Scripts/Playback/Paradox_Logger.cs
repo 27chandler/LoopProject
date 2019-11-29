@@ -7,6 +7,8 @@ public class Paradox_Logger : MonoBehaviour
     private Timeline_Manager tm;
     // Start is called before the first frame update
 
+    [SerializeField] Pardox_Warning_Popup warning_system;
+
     private float present_time;
     private float modified_current_time;
 
@@ -17,6 +19,10 @@ public class Paradox_Logger : MonoBehaviour
 
     public bool is_done = true;
     public bool is_seen = false;
+
+    public bool is_grab = true;
+
+    public bool is_obj_timeline_original = false; // If the object is valid in the original timeline
     private bool activate_camera_check = false;
     private float lowest_seen_time = 9999999.0f;
 
@@ -45,6 +51,13 @@ public class Paradox_Logger : MonoBehaviour
     public void Activate_Custom_Check(GameObject i_check_obj)
     {
         check_obj = i_check_obj;
+        Activate_Check();
+    }
+
+    public void Activate_Object_Check(Hold_Object.Object_Interaction i_new_obj_interaction)
+    {
+        check_obj = i_new_obj_interaction.objects;
+        is_grab = i_new_obj_interaction.grab_state;
         Activate_Check();
     }
 
@@ -109,7 +122,7 @@ public class Paradox_Logger : MonoBehaviour
                     {
                         Set_Check_Position(i);
                         yield return null;
-                        Camera_Check(tm.timeline_memory[i].normalized_timestamp);
+                        Camera_Check(tm.timeline_memory[i].normalized_timestamp,i);
                         activate_camera_check = false;
                     }
 
@@ -129,6 +142,20 @@ public class Paradox_Logger : MonoBehaviour
             {
                 Debug.Log("This object is in an UNSAFE place");
                 Debug.Log("Lowest seen is: " + lowest_seen_time);
+                if (is_obj_timeline_original)
+                {
+                    Debug.Log("Object is valid");
+                }
+                else
+                {
+                    Debug.Log("Object is INVALID");
+                }
+                Debug.Log("IS GRAB = " + is_grab);
+
+                if (is_obj_timeline_original == is_grab)
+                {
+                    warning_system.Add_Warning("WARNING, PARADOX IMMINENT", is_obj_timeline_original,check_obj.tag, lowest_seen_time, check_obj.transform.position);
+                }
             }
             else
             {
@@ -164,7 +191,7 @@ public class Paradox_Logger : MonoBehaviour
         check_player_rotator.localRotation = tm.timeline_memory[i_index].view_rotation;
     }
 
-    void Camera_Check(float i_normalized_time)
+    void Camera_Check(float i_normalized_time, int timestamp_index)
     {
         Plane[] planes;
 
@@ -173,6 +200,37 @@ public class Paradox_Logger : MonoBehaviour
         {
             is_seen = true;
             lowest_seen_time = i_normalized_time;
+
+            bool is_original = false;
+
+            foreach (var obj in tm.timeline_memory[timestamp_index].seen_objs)
+            {
+                Pickup_Loop temp_pickup = check_obj.GetComponent<Pickup_Loop>();
+                Vector3 check_pos;
+                if (temp_pickup != null)
+                {
+                    check_pos = temp_pickup.last_pos;
+                }
+                else
+                {
+                    check_pos = check_obj.transform.position;
+                }
+
+
+                if (Vector3.Distance(obj.position, check_pos) <= 0.4f)
+                {
+                    is_original = true;
+                }
+            }
+
+            if (is_original)
+            {
+                is_obj_timeline_original = true;
+            }
+            else
+            {
+                is_obj_timeline_original = false;
+            }
         }
     }
 

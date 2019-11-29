@@ -84,7 +84,7 @@ public class TimePoint_Corrector : MonoBehaviour
         // Objects section
         if (controlled_player_object_holder.objects.Count >= 1)
         {
-            pl.Activate_Custom_Check(controlled_player_object_holder.objects[0]);
+            pl.Activate_Object_Check(controlled_player_object_holder.objects[0]);
             controlled_player_object_holder.objects.Clear();
         }
 
@@ -99,7 +99,7 @@ public class TimePoint_Corrector : MonoBehaviour
 
     private void Door_Correction()
     {
-        Debug.Log("Running door calc");
+        //Debug.Log("Running door calc");
         for (int i = 0; i < tm.time_point_list.Count; i++)
         {
             if (tm.time_point_list[i].normalized_timestamp >= tm.modified_current_time)
@@ -114,7 +114,7 @@ public class TimePoint_Corrector : MonoBehaviour
                             Door_Activation temp_door = door.GetComponentInChildren<Door_Activation>();
                             if (temp_door == tm.time_point_list[i].door_data_states[j].door_activation)
                             {
-                                Debug.Log("MATCHING DOOR");
+                                //Debug.Log("MATCHING DOOR");
                                 tm.time_point_list[i].door_data_states[j].last_state = temp_door.is_open;
                             }
 
@@ -128,7 +128,7 @@ public class TimePoint_Corrector : MonoBehaviour
 
     private void Object_Correction()
     {
-        Debug.Log("Running object calc");
+        //Debug.Log("Running object calc");
         for (int i = 0; i < tm.time_point_list.Count; i++)
         {
             if (tm.time_point_list[i].normalized_timestamp >= tm.modified_current_time)
@@ -143,7 +143,7 @@ public class TimePoint_Corrector : MonoBehaviour
                             Pickup_Loop temp_pickup = obj.GetComponent<Pickup_Loop>();
                             if (Vector3.Distance(temp_pickup.pickup_pos, tm.time_point_list[i].object_locations[j].position) < 0.5f)
                             {
-                                Debug.Log("MATCHING OBJECT");
+                                //Debug.Log("MATCHING OBJECT");
                                 has_match = true;
 
                                 tm.time_point_list[i].object_locations.RemoveAt(j);
@@ -162,7 +162,7 @@ public class TimePoint_Corrector : MonoBehaviour
                                 {
                                     if (obj_type.tag == obj.tag)
                                     {
-                                        Debug.Log("NO MATCH SPAWN");
+                                        //Debug.Log("NO MATCH SPAWN");
 
                                         Timeline_Manager.Object_Spawns temp_spawn;
                                         temp_spawn.position = obj.transform.position;
