@@ -121,9 +121,10 @@ public class Paradox_Logger : MonoBehaviour
                     if (activate_camera_check)
                     {
                         Set_Check_Position(i);
+                        activate_camera_check = false;
                         yield return null;
                         Camera_Check(tm.timeline_memory[i].normalized_timestamp,i);
-                        activate_camera_check = false;
+                        //activate_camera_check = false;
                     }
 
                     check_counter++;
@@ -140,17 +141,17 @@ public class Paradox_Logger : MonoBehaviour
 
             if (is_seen)
             {
-                Debug.Log("This object is in an UNSAFE place");
-                Debug.Log("Lowest seen is: " + lowest_seen_time);
+                //Debug.Log("This object is in an UNSAFE place");
+                //Debug.Log("Lowest seen is: " + lowest_seen_time);
                 if (is_obj_timeline_original)
                 {
-                    Debug.Log("Object is valid");
+                    //Debug.Log("Object is valid");
                 }
                 else
                 {
-                    Debug.Log("Object is INVALID");
+                    //Debug.Log("Object is INVALID");
                 }
-                Debug.Log("IS GRAB = " + is_grab);
+                //Debug.Log("IS GRAB = " + is_grab);
 
                 if (is_obj_timeline_original == is_grab)
                 {
@@ -166,7 +167,7 @@ public class Paradox_Logger : MonoBehaviour
                 }
                 else
                 {
-                    tc.Add_Pickup_To_Safety(check_obj);
+                    tc.Add_Pickup_To_Safety(check_obj,check_obj.transform.position);
                 }
             }
 
@@ -176,10 +177,15 @@ public class Paradox_Logger : MonoBehaviour
             {
                 controlled_player_object_holder.doors.Clear();
             }
+
+            if (controlled_player_object_holder.objects.Count >= 1)
+            {
+                controlled_player_object_holder.objects.Clear();
+            }
         }
         else
         {
-            Debug.Log("Check object for paradox logger came back as NULL?");
+            Debug.LogAssertion("Check object for paradox logger came back as NULL?");
         }
         is_done = true;
         yield return null;

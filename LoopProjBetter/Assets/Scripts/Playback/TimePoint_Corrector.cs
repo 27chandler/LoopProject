@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TimePoint_Corrector : MonoBehaviour
 {
@@ -13,11 +14,32 @@ public class TimePoint_Corrector : MonoBehaviour
     private bool was_holding_obj = false;
 
     [SerializeField] public List<Door_Activation> safe_doors = new List<Door_Activation>();
-    [SerializeField] public List<GameObject> safe_objects = new List<GameObject>();
+    [SerializeField] public List<Object_Data> safe_objects = new List<Object_Data>();
 
     private Queue<GameObject> door_queue = new Queue<GameObject>();
 
     private bool is_past = false;
+
+    [Serializable]
+    public struct Object_Data
+    {
+        public GameObject obj;
+        public Vector3 pos;
+    }
+
+    [Serializable]
+    public class Time_Point_Correction_Data
+    {
+        public int index;
+        public bool is_remove;
+        public int removal_index;
+
+        public bool is_create;
+        public Vector3 create_pos;
+        public GameObject obj_type;
+    }
+
+    [SerializeField] private List<Time_Point_Correction_Data> time_point_corrections = new List<Time_Point_Correction_Data>();
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +67,12 @@ public class TimePoint_Corrector : MonoBehaviour
         if (is_past)
         {
             Log_Objects();
+        }
+        else
+        {
+            Reset_Safe_Objects();
+            controlled_player_object_holder.objects.Clear();
+            controlled_player_object_holder.doors.Clear();
         }
 
         if (safe_doors.Count > 0)
@@ -125,28 +153,37 @@ public class TimePoint_Corrector : MonoBehaviour
         }
     }
 
-
     private void Object_Correction()
     {
-        //Debug.Log("Running object calc");
+        Debug.Log("Running object calc");
         for (int i = 0; i < tm.time_point_list.Count; i++)
         {
             if (tm.time_point_list[i].normalized_timestamp >= tm.modified_current_time)
             {
                 if (safe_objects.Count > 0)
                 {
-                    foreach (var obj in safe_objects)
+                    foreach (var data in safe_objects)
                     {
                         bool has_match = false;
+                        Time_Point_Correction_Data temp_correction = new Time_Point_Correction_Data();
+                        temp_correction.index = i;
                         for (int j = 0; j < tm.time_point_list[i].object_locations.Count; j++)
                         {
-                            Pickup_Loop temp_pickup = obj.GetComponent<Pickup_Loop>();
-                            if (Vector3.Distance(temp_pickup.pickup_pos, tm.time_point_list[i].object_locations[j].position) < 0.5f)
+                            Pickup_Loop temp_pickup = data.obj.GetComponent<Pickup_Loop>();
+                            if (Vector3.Distance(data.pos, tm.time_point_list[i].object_locations[j].position) < 0.5f)
                             {
+                                if (tm.time_point_list[i].object_locations[j].obj.tag == "Blue_Box")
+                                {
+                                    Debug.Log("BLUE BOX");
+                                }
                                 //Debug.Log("MATCHING OBJECT");
                                 has_match = true;
 
+                                temp_correction.is_remove = true;
+                                temp_correction.removal_index = j;
+
                                 tm.time_point_list[i].object_locations.RemoveAt(j);
+                                Debug.Log("Object Removed");
                                 held_obj = temp_pickup.gameObject;
 
                                 j = tm.time_point_list[i].object_locations.Count;
@@ -156,30 +193,43 @@ public class TimePoint_Corrector : MonoBehaviour
 
                         if (!has_match)
                         {
-                            //if ((held_obj != controlled_player_object_holder.grabbed_item_obj) && (controlled_player_object_holder.grabbed_item_obj == null))
+                            //for (int j = 0; j < tm.time_point_list[i].object_locations.Count; j++)
                             //{
-                                foreach (var obj_type in tm.object_type_list)
-                                {
-                                    if (obj_type.tag == obj.tag)
-                                    {
-                                        //Debug.Log("NO MATCH SPAWN");
+                            //    Debug.Log("");
+                            //    if (Vector3.Distance(data.pos, tm.time_point_list[i].object_locations[j].position) < 0.4f)
+                            //    {
+                                    
+                            //    }
 
-                                        Timeline_Manager.Object_Spawns temp_spawn;
-                                        temp_spawn.position = obj.transform.position;
-                                        temp_spawn.obj = obj_type.obj;
-
-                                        tm.time_point_list[i].object_locations.Add(temp_spawn);
-                                        //temp_spawn = tm.time_point_list[i].object_locations[j];
-                                    }
-
-
-                                }
                             //}
+
+                            foreach (var obj_type in tm.object_type_list)
+                            {
+                                if (obj_type.tag == data.obj.tag)
+                                {
+                                    temp_correction.is_create = true;
+                                    temp_correction.obj_type = obj_type.obj;
+                                    temp_correction.create_pos = data.pos;
+
+                                    //Debug.Log("NO MATCH SPAWN");
+                                    Debug.Log("Object Added");
+                                    Timeline_Manager.Object_Spawns temp_spawn = new Timeline_Manager.Object_Spawns();
+                                    temp_spawn.position = data.pos;
+                                    temp_spawn.obj = obj_type.obj;
+
+                                    tm.time_point_list[i].object_locations.Add(temp_spawn);
+                                    //temp_spawn = tm.time_point_list[i].object_locations[j];
+                                }
+                            }
                         }
+
+                        time_point_corrections.Add(temp_correction);
+                        Debug.Log("DIFFERENCE: " + (Vector3.Distance(data.pos, data.obj.transform.position)));
                     }
                 }
             }
         }
+        Debug.Log("Finished check");
     }
 
     public void Add_Door_To_Safety(Door_Activation i_door)
@@ -200,13 +250,13 @@ public class TimePoint_Corrector : MonoBehaviour
         }
     }
 
-    public void Add_Pickup_To_Safety(GameObject i_obj)
+    public void Add_Pickup_To_Safety(GameObject i_obj, Vector3 i_pos)
     {
         bool is_object_already_present = false;
 
-        foreach (var obj in safe_objects)
+        foreach (var data in safe_objects)
         {
-            if (obj == i_obj)
+            if (data.obj == i_obj)
             {
                 is_object_already_present = true;
             }
@@ -214,7 +264,11 @@ public class TimePoint_Corrector : MonoBehaviour
 
         if (!is_object_already_present)
         {
-            safe_objects.Add(i_obj);
+            Object_Data temp_data = new Object_Data();
+            temp_data.obj = i_obj;
+            temp_data.pos = i_pos;
+
+            safe_objects.Add(temp_data);
         }
     }
 }
