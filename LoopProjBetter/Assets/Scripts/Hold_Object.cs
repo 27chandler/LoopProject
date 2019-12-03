@@ -16,6 +16,7 @@ public class Hold_Object : MonoBehaviour
     public struct Object_Interaction
     {
         public GameObject objects;
+        public Vector3 pos;
         public bool grab_state;
     }
 
@@ -68,6 +69,7 @@ public class Hold_Object : MonoBehaviour
 
                         Object_Interaction temp_obj_interaction = new Object_Interaction();
                         temp_obj_interaction.objects = pickup.gameObject;
+                        temp_obj_interaction.pos = pickup.transform.position;
                         temp_obj_interaction.grab_state = true;
 
                         objects.Add(temp_obj_interaction);
@@ -93,6 +95,7 @@ public class Hold_Object : MonoBehaviour
                 {
                     Object_Interaction temp_obj_interaction = new Object_Interaction();
                     temp_obj_interaction.objects = grabbed_item.gameObject;
+                    temp_obj_interaction.pos = grabbed_item.transform.position;
                     temp_obj_interaction.grab_state = false;
 
                     objects.Add(temp_obj_interaction);
@@ -122,6 +125,7 @@ public class Hold_Object : MonoBehaviour
     {
         Object_Interaction temp_obj_interaction = new Object_Interaction();
         temp_obj_interaction.objects = grabbed_item.gameObject;
+        temp_obj_interaction.pos = grabbed_item.transform.position;
         temp_obj_interaction.grab_state = false;
 
         objects.Add(temp_obj_interaction);

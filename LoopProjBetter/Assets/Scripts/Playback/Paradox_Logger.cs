@@ -15,6 +15,7 @@ public class Paradox_Logger : MonoBehaviour
     [SerializeField] private bool do_check = false;
     [SerializeField] private GameObject check_obj;
     private Vector3 check_pos;
+    private Vector3 corrector_obj_pos;
     private Collider check_obj_collider;
 
     public bool is_done = true;
@@ -58,6 +59,7 @@ public class Paradox_Logger : MonoBehaviour
     {
         check_obj = i_new_obj_interaction.objects;
         is_grab = i_new_obj_interaction.grab_state;
+        corrector_obj_pos = i_new_obj_interaction.pos;
         Activate_Check();
     }
 
@@ -167,7 +169,7 @@ public class Paradox_Logger : MonoBehaviour
                 }
                 else
                 {
-                    tc.Add_Pickup_To_Safety(check_obj,check_obj.transform.position);
+                    tc.Add_Pickup_To_Safety(check_obj, corrector_obj_pos);
                 }
             }
 

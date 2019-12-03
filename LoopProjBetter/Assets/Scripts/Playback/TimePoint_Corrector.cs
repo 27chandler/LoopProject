@@ -17,6 +17,7 @@ public class TimePoint_Corrector : MonoBehaviour
     [SerializeField] public List<Object_Data> safe_objects = new List<Object_Data>();
 
     private Queue<GameObject> door_queue = new Queue<GameObject>();
+    private Queue<Hold_Object.Object_Interaction> object_queue = new Queue<Hold_Object.Object_Interaction>();
 
     private bool is_past = false;
 
@@ -93,6 +94,11 @@ public class TimePoint_Corrector : MonoBehaviour
             pl.is_done = false;
             pl.Activate_Custom_Check(door_queue.Dequeue());
         }
+        else if ((object_queue.Count > 0) && (pl.is_done))
+        {
+            pl.is_done = false;
+            pl.Activate_Object_Check(object_queue.Dequeue());
+        }
 
         held_obj = controlled_player_object_holder.grabbed_item_obj;
     }
@@ -112,7 +118,10 @@ public class TimePoint_Corrector : MonoBehaviour
         // Objects section
         if (controlled_player_object_holder.objects.Count >= 1)
         {
-            pl.Activate_Object_Check(controlled_player_object_holder.objects[0]);
+            for (int i = 0; i < controlled_player_object_holder.objects.Count; i++)
+            {
+                object_queue.Enqueue(controlled_player_object_holder.objects[i]);
+            }
             controlled_player_object_holder.objects.Clear();
         }
 
@@ -224,12 +233,12 @@ public class TimePoint_Corrector : MonoBehaviour
                         }
 
                         time_point_corrections.Add(temp_correction);
-                        Debug.Log("DIFFERENCE: " + (Vector3.Distance(data.pos, data.obj.transform.position)));
                     }
                 }
             }
         }
         Debug.Log("Finished check");
+        Debug.Log("==========================");
     }
 
     public void Add_Door_To_Safety(Door_Activation i_door)
