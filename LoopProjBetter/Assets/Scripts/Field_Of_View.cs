@@ -142,7 +142,7 @@ public class Field_Of_View : MonoBehaviour
             Quaternion rotation_holder = target_transform.rotation;
             Vector3 scale_holder = target_transform.localScale;
             temp_trans.localRotation = new Quaternion();
-            temp_trans.localScale = new Vector3(2.0f,1.0f,2.0f);
+            temp_trans.localScale = new Vector3(1.0f,1.0f,1.0f);
             vertices[i + 1] = temp_trans.InverseTransformPoint(viewPoints[i]) + Vector3.forward * maskCutawayDst;
 
             target_transform.rotation = rotation_holder;
