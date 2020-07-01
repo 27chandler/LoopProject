@@ -47,6 +47,11 @@ public class Time_Jump_Effect : MonoBehaviour
         }
     }
 
+    public void Start_Jump()
+    {
+        is_activated = true;
+    }
+
     IEnumerator Activate_Jump_Effect()
     {
         float curve_value = 0.0f;
