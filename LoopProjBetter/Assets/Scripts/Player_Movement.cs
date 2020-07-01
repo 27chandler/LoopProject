@@ -289,7 +289,8 @@ public class Player_Movement : MonoBehaviour
             jump_movement.y = -(0.8f * Time.deltaTime);
         }
 
-        time_device_display.text = "Jumps: " + num_of_jumps;
+        if (time_device_display != null)
+            time_device_display.text = "Jumps: " + num_of_jumps;
 
         speed_multiplier = movement_speed;
 
