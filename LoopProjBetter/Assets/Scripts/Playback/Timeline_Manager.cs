@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class Timeline_Manager : MonoBehaviour
 {
+    //[SerializeField] public UnityEvent Reset_Time_Event;
+    [SerializeField] private UnityEvent Paradox_Death_Event;
+
     private TimePoint_Corrector tc;
 
     private bool is_jumping_to_custom_time_point = false;
@@ -259,18 +263,28 @@ public class Timeline_Manager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    void Health_Regen()
     {
-
-        time_display.text = Mathf.Ceil(current_time - (iteration_delay * (iteration_num-1))).ToString();
-        health_display.text = "Health: " + Mathf.CeilToInt(health).ToString();
-        selected_jump_display.text = "ID selected: " + selected_time_slot + "\nDestination: " + time_point_list[selected_time_slot - 1].normalized_timestamp;
-
         if (health < 100.0f)
         {
             health += (paradox_regeneration * time_speed);
         }
+    }
+
+    void Text_Update()
+    {
+        time_display.text = Mathf.Ceil(current_time - (iteration_delay * (iteration_num - 1))).ToString();
+        health_display.text = "Health: " + Mathf.CeilToInt(health).ToString();
+        selected_jump_display.text = "ID selected: " + selected_time_slot + "\nDestination: " + time_point_list[selected_time_slot - 1].normalized_timestamp;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        Text_Update();
+
+        // Regen health slowly over time
+        Health_Regen();
 
         if (is_recording)
         {
@@ -488,6 +502,11 @@ public class Timeline_Manager : MonoBehaviour
         Log_Door_States(i_index);
     }
 
+    public void Reset_Time()
+    {
+        is_jumping_to_start = true;
+    }
+
     void Record_Player_Actions()
     {
         if (Input.GetKeyDown(KeyCode.E))
@@ -517,8 +536,7 @@ public class Timeline_Manager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R)) // Past/Start
         {
-            tm_jump_effect.is_activated = true;
-            is_jumping_to_start = true;
+            //Reset_Time_Event.Invoke();
         }
 
         if (tm_jump_effect.has_jump_occured)
@@ -1127,6 +1145,11 @@ public class Timeline_Manager : MonoBehaviour
     public void Activate_Paradox_Increment(float i_value)
     {
         health -= (i_value * time_speed);
+
+        if (health <= 0.0f)
+        {
+            Paradox_Death_Event.Invoke();
+        }
     }
 
     private void Log_Current_Timestamp()
