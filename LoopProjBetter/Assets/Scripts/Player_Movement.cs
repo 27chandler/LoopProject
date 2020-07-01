@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class Player_Movement : MonoBehaviour
 {
+    [SerializeField] private UnityEvent Time_Portal_Event;
+
     private CharacterController cc;
     private Timeline_Manager tm;
 
@@ -106,7 +109,10 @@ public class Player_Movement : MonoBehaviour
         }
         else if (other.CompareTag("Time_Jump_Portal"))
         {
-            tm.is_jumping = true;
+            Time_Portal_Event.Invoke();
+
+            Portal portal = other.GetComponent<Portal>();
+            portal.is_entered = true;
         }
     }
 
