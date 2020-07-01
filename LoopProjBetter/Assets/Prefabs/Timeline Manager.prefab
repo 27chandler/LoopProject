@@ -1,0 +1,256 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4205926423529300059
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4205926423529300057}
+  - component: {fileID: 4205926423529300056}
+  - component: {fileID: 4205926423529300050}
+  - component: {fileID: 4205926423529300052}
+  - component: {fileID: 4205926423529300054}
+  - component: {fileID: 4205926423529300053}
+  - component: {fileID: 4205926423529300055}
+  m_Layer: 0
+  m_Name: Timeline Manager
+  m_TagString: Timeline_Manager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4205926423529300057
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4205926423529300059}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.7489119, y: 31.005919, z: 15.11248}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4205926423529300056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4205926423529300059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a47aa639dc180f143b1855037b171403, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Paradox_Death_Event:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4205926423529300050}
+        m_MethodName: Load_Defined_Scene
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Menu
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  time_jump_timestamps: 
+  iteration_delay: 10000
+  iteration_num: 0
+  time_speed: 1
+  paradox_sensitivity: 100
+  paradox_regeneration: 0.05
+  time_of_present: 0
+  snap_markers: []
+  marker: {fileID: 6717994496484154846, guid: 8ee75cf50708a254f904f4641e8a347a, type: 3}
+  door_marker: {fileID: 791995992367496461, guid: 0fe4510333a3eb044a5d0efc2021214e,
+    type: 3}
+  current_time: 0
+  modified_current_time: 0
+  time_display: {fileID: 0}
+  health_display: {fileID: 0}
+  selected_jump_display: {fileID: 0}
+  health: 100
+  is_jumping: 0
+  update_frequency: 0.05
+  player_target: {fileID: 0}
+  player_cam: {fileID: 0}
+  player_look_pivot: {fileID: 0}
+  player_obj_holder: {fileID: 0}
+  hidden_start_pos: {x: 0, y: 99999, z: 0}
+  vis: {fileID: 0}
+  loop_obj: {fileID: 1195624464444332471, guid: a42df1d82d3680a44964470114b0aa68,
+    type: 3}
+  original_obj: {fileID: 0}
+  duplicate_player_list: []
+  dupe_objs: []
+  door_list: []
+  objects_vis: []
+  object_type_list:
+  - tag: Power_Cell
+    obj: {fileID: 3940395655078686939, guid: ff87a89d919800c4ab9c32483600dcb8, type: 3}
+    position: {x: 0, y: 0, z: 0}
+  - tag: Blue_Box
+    obj: {fileID: 1936387538715762889, guid: 38223be8789ed9a40bb6ccbb3d0c7c06, type: 3}
+    position: {x: 0, y: 0, z: 0}
+  - tag: Time_Device
+    obj: {fileID: 1037658929165123882, guid: 2a5207395829a4c42ab3992452b154ae, type: 3}
+    position: {x: 0, y: 0, z: 0}
+  - tag: Storage_Box
+    obj: {fileID: 1319293803746451720, guid: 690fa7e1a5c6487459bc01486be8ab23, type: 3}
+    position: {x: 0, y: 0, z: 0}
+  - tag: Blueprint
+    obj: {fileID: 3897965318639322355, guid: 336fb4a72e9626b43ba6383fe5b5b045, type: 3}
+    position: {x: 0, y: 0, z: 0}
+  objects_to_time_travel: []
+  time_travelling_objects: []
+  box_prefab: {fileID: 3940395655078686939, guid: ff87a89d919800c4ab9c32483600dcb8,
+    type: 3}
+  time_point_list: []
+  time_point_global_list: []
+  selected_time_slot: 1
+--- !u!114 &4205926423529300050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4205926423529300059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11080e7be3265e14892ca0cc304cba64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4205926423529300052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4205926423529300059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faf1242abbb7af84bb26b7a3ed28651d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  warning_system: {fileID: 0}
+  do_check: 0
+  check_obj: {fileID: 0}
+  is_done: 1
+  is_seen: 0
+  is_grab: 1
+  is_obj_timeline_original: 0
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 2560
+  check_player: {fileID: 0}
+  check_player_rotator: {fileID: 0}
+  check_player_camera: {fileID: 0}
+  controlled_player_object_holder: {fileID: 0}
+--- !u!114 &4205926423529300054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4205926423529300059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33cd41672f0a9c8449771806e8f3ad94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.10074184
+      outSlope: 0.10074184
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.16617177
+    - serializedVersion: 3
+      time: 0.38275325
+      value: 0.6676511
+      inSlope: 1.0604811
+      outSlope: 1.0604811
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2852466
+      outWeight: 0.08262966
+    - serializedVersion: 3
+      time: 0.8496094
+      value: 0.9940376
+      inSlope: -0.018345058
+      outSlope: -0.018345058
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.44652304
+    - serializedVersion: 3
+      time: 1.049296
+      value: 0.33580643
+      inSlope: -2.9979398
+      outSlope: -2.9979398
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.06402316
+    - serializedVersion: 3
+      time: 1.4699179
+      value: 0.00001486059
+      inSlope: -0.06958169
+      outSlope: -0.06958169
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.322542
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  is_activated: 0
+  has_jump_occured: 0
+  profile: {fileID: 11400000, guid: 5e364b40b50ce514f849aaea4b871174, type: 2}
+  max_time: 1
+  max_fov_increase: 30
+--- !u!114 &4205926423529300053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4205926423529300059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4586dea99cfccc849b5136ce6a695a19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controlled_player_object_holder: {fileID: 0}
+  safe_doors: []
+  safe_objects: []
+  time_point_corrections: []
+--- !u!114 &4205926423529300055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4205926423529300059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9d10b62321aad24d9c63d7f94f6d52f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 5e364b40b50ce514f849aaea4b871174, type: 2}
